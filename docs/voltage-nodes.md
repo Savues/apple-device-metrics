@@ -60,15 +60,18 @@ numbers should be treated as an empirical hypothesis, not a specification.
 ## Relation to this dataset
 
 `iphone-01` has a **4.50 V nameplate charge limit**, matching the iPhone 17
-series 1–199 row. At 208 cycles it should be in the **4.48 V** row — and the
-2026-11-15 analytics file confirms `VacVoltageLimit = 4480 mV` exactly.
-This is the first direct device-level confirmation in this repo.
+series 1–199 row. The 2026-11-09 analytics file reports
+`VacVoltageLimit = 4480 mV` at **`CycleCount = 200` exactly** — the step is
+active at the node itself, not after it. Six further snapshots (202–208
+cycles) confirm 4480 mV throughout. This is direct device-level confirmation
+of both the node and the −0.02 V magnitude.
 
 - The nameplate value (4.50 V) is the cell's **hardware ceiling**; the iOS
   software target is set at or below it. A nameplate reading of 4.50 V
   therefore does **not** contradict an active 4.48 V software target.
-- The largest observed health step (194 → 208 cycles, −0.43 pp) straddles
-  cycle 200.
+- The health cliff is bracketed to **cycles 194 → 200** (6 cycles / 4 days),
+  coincident with the voltage step. The earliest independent gauge write is
+  2026-11-08 17:08 local.
 - Order of magnitude: with a high-end OCV slope of ~0.020 V per SOC point,
   a 0.02 V reduction corresponds to ~1 pp of full-charge capacity. Observed
   0.43 pp — compatible once smoothing / re-baselining is allowed, but not a
@@ -76,9 +79,8 @@ This is the first direct device-level confirmation in this repo.
 
 ## How to verify
 
-**Confirmed on `iphone-01` (2026-11-15).** The daily analytics file contains a
-`VacVoltageLimit` aggregate reporting `last_value_VacVoltageLimit = 4480`
-(mV) at `CycleCount = 208`. With a 4.50 V nameplate ceiling, this is exactly
+**Confirmed on `iphone-01`.** The daily analytics `VacVoltageLimit` aggregate
+gives `last_value_VacVoltageLimit = 4480` (mV) at `CycleCount = 200`, exactly
 the −0.02 V step predicted by the 200–249 row. No 100% charge test is needed.
 See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
 
@@ -90,8 +92,8 @@ python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips
 
 Remaining checks:
 
-1. **Pre-200 snapshot**: expect `VacVoltageLimit = 4500` — direct before/after
-   pair for the step.
+1. **Pre-200 snapshot** (files from 11-06 … 11-08): expect
+   `VacVoltageLimit = 4500` — direct before/after pair for the step.
 2. **Post-250 snapshot**: expect `VacVoltageLimit = 4460`.
 3. **Qmax hypothesis**: a snapshot near cycle 138 to test whether the first
    health cliff was a gauge recalibration.

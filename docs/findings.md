@@ -38,18 +38,18 @@ Consequences:
   The convergence on the 3692 nameplate was coincidental.
 - Therefore the −0.43 pp drop is a real **−16 mAh** reduction in reported
   nominal capacity (3675→3659), not an artefact of a moving denominator or
-  rounding noise. Six consecutive analytics snapshots (11-10…11-15,
-  cycles 202/203/203/205/207/208) all report NCC 3658–3659, so the drop is
-  bracketed to **cycles 194 → 202** — 8 cycles over 5 days (1.60 cycles/day),
-  a window containing the 200 node (≈ 2026-11-08 at this rate).
-  `VacVoltageLimit` was already 4480 mV at cycle 202. The 11-10 snapshot is
-  independent and its `UpdateTime` = **2026-11-09 21:58 local** bounds the
-  step to before that evening. The 11-11/11-12 files share the later
-  `UpdateTime` (11-10 22:03) with identical payloads, so 11-12 is a stale
-  re-report of the same gauge state, not an independent observation.
-- **Noise scale**: over the six archived files NCC is 3658 ×3 → 3659 ×3 mAh,
+  rounding noise. Seven consecutive analytics snapshots (11-09…11-15,
+  cycles 200/202/203/203/205/207/208) all report NCC 3658–3659, so the drop
+  is bracketed to **cycles 194 → 200** — 6 cycles over 4 days (1.50
+  cycles/day). **The 11-09 file shows `VacVoltageLimit = 4480 mV` at exactly
+  cycle 200**, i.e. the step fires at the node itself. That file is
+  independent (`UpdateTime` = **2026-11-08 17:08 local**), bounding the step
+  to before that evening. The 11-11/11-12 files share the later `UpdateTime`
+  (11-10 22:03) with identical payloads, so 11-12 is a stale re-report of
+  the same gauge state, not an independent observation.
+- **Noise scale**: over the seven archived files NCC is 3658–3659 mAh,
   i.e. 1 mAh = 0.027 pp of jitter (including a rebound), while
-  `AppleRawMaxCapacity` swings 3708 → 3678 → 3678 → 3690 → 3683 → 3692
+  `AppleRawMaxCapacity` swings 3707 → 3708 → 3678 → 3678 → 3690 → 3683 → 3692
   (30 mAh = 0.813 pp, **30× noisier**). The −0.43 pp cliff is ~16× the daily
   NCC noise — a genuine step, not sampling jitter. NCC is *not* strictly
   monotonic day-to-day, even though the sparse 6-row export is.
@@ -78,24 +78,28 @@ Full span: 57 days, +86 cycles (1.51 cycles/day), 100.05% → 99.11%
 
 ### The 200-cycle node — CONFIRMED
 
-The largest step (194 → 208 cycles) **straddles cycle 200**. A widely
-circulated third-party account says iOS lowers its software charge-voltage
-target at 200 / 250 / 300 / 1000 cycles by 0.02 V each (0.05 V at ≥1000),
-which reduces the chargeable capacity and is reflected in the reported
-health figure.
+A widely circulated third-party account says iOS lowers its software
+charge-voltage target at 200 / 250 / 300 / 1000 cycles by 0.02 V each
+(0.05 V at ≥1000), which reduces the chargeable capacity and is reflected in
+the reported health figure.
 
-**This is now directly confirmed from the 2026-11-15 analytics file**:
-`last_value_VacVoltageLimit = 4480 mV` at `CycleCount = 208`, versus the
-4.50 V nameplate hardware ceiling. The software target is 0.02 V below the
-nameplate, exactly as the 200–249 row of the table predicts.
-See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
-Details and provenance: [`voltage-nodes.md`](voltage-nodes.md).
+**Confirmed on this device**: the 2026-11-09 analytics file reports
+`last_value_VacVoltageLimit = 4480 mV` at **`CycleCount = 200`** — the step
+is already active at the node itself, not after it. The 4.50 V nameplate is
+the hardware ceiling, so the software target is exactly 0.02 V below it,
+matching the 200–249 row. Six further snapshots (202–208 cycles) all show
+4480 mV. The earliest independent gauge write is 2026-11-08 17:08 local.
+See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md)
+and [`voltage-nodes.md`](voltage-nodes.md).
 
-Order-of-magnitude check with a typical 4.5V-platform OCV curve: high-end
-slope ≈ 0.020 V per SOC point, so 0.02 V ⇒ ~1 pp of full-charge capacity.
-Observed 0.43 pp. Same order of magnitude; the reported value is smoothed /
-re-baselined, so this is consistency, **not proof** — but the analytics
-voltage field is direct evidence.
+The health cliff is now bracketed to cycles 194 → 200 (6 cycles / 4 days),
+coincident with the voltage step. Order-of-magnitude check with a typical
+4.5V-platform OCV curve: high-end slope ≈ 0.020 V per SOC point, so 0.02 V
+⇒ ~1 pp of full-charge capacity; observed 0.43 pp. Same order of magnitude,
+with the reported value smoothed / re-baselined.
+
+**Still missing**: a pre-200 snapshot (expected 4500 mV) for a direct
+before/after pair. Everything from 200 onward is a post-step observation.
 
 ### The first cliff — Qmax recalibration candidate
 
@@ -202,11 +206,12 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
 ## 5. Open questions
 
 1. ~~**Decisive test**: charge to 100%, rest 10–20 min, read terminal voltage.~~
-   **Resolved**: the 2026-11-15 analytics file reports
-   `VacVoltageLimit = 4480 mV` at cycle 208 — the 200-cycle step is active.
-   See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
-2. **Pre-200 snapshot**: an analytics file with `CycleCount < 200` should show
-   `VacVoltageLimit = 4500 mV`, giving a direct before/after pair.
+   **Resolved**: analytics report `VacVoltageLimit = 4480 mV` at exactly
+   cycle 200 — the step fires at the node. See
+   [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
+2. **Pre-200 snapshot** (now the main open item): an analytics file with
+   `CycleCount < 200` should show `VacVoltageLimit = 4500 mV`, giving the
+   direct before/after pair. Files from 11-06 … 11-08 are the best candidates.
 3. **Qmax hypothesis**: a snapshot near cycle 138 to test whether the first
    cliff was a gauge recalibration rather than a voltage node.
 4. **Post-250 snapshot**: expect `VacVoltageLimit = 4460 mV`.

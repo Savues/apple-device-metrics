@@ -57,13 +57,13 @@ More devices can be added as sibling directories under `devices/`.
    `NominalChargeCapacity` and health unchanged. Its convergence on the 3692
    nameplate at 11-15 was coincidental.
 
-8. **The −0.43 pp cliff is 16× the daily noise.** Six consecutive analytics
+8. **The −0.43 pp cliff is 16× the daily noise.** Seven consecutive analytics
    snapshots give NCC 3658–3659 mAh (0.027 pp jitter), while
    `AppleRawMaxCapacity` swings 30 mAh (30× noisier). The cliff is bracketed
-   to cycles 194→202 (1.60 cycles/day, 200 node ≈ 11-08). The earliest
-   independent snapshot (11-10) has gauge `UpdateTime` 2026-11-09 21:58
-   local, bounding the step to before that evening; 11-12 is a stale
-   re-report of 11-11, not an independent sample.
+   to cycles 194→200 (1.50 cycles/day). The 11-09 file shows
+   **4480 mV at exactly cycle 200** — the step fires at the node, not after
+   it — and its gauge `UpdateTime` (2026-11-08 17:08 local) bounds the step
+   to before that. 11-12 is a stale re-report of 11-11.
 
 See [`docs/findings.md`](docs/findings.md) for the full analysis, including
 corrections to earlier misreadings.
@@ -126,12 +126,14 @@ documentation. Apple's public material only states "80% capacity at 1000
 cycles" and documents performance management / optimised charging. Everything
 in this repo is labelled accordingly.
 
-**Update (2026-11-15)**: the 200-cycle step is now directly confirmed on this
-device by `VacVoltageLimit = 4480 mV` at cycle 208 in the iOS analytics file —
-see [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
-The mid-SOC voltage test is no longer needed. Remaining open questions: the
-exact voltage before cycle 200, and whether the first cliff is a Qmax
-recalibration. A pre-200 analytics snapshot would settle both.
+**Update (2026-11-15)**: the 200-cycle step is directly confirmed on this
+device — `VacVoltageLimit = 4480 mV` at **exactly `CycleCount = 200`**
+(2026-11-09 analytics), with six further snapshots at 202–208 cycles all
+showing 4480 mV. See
+[`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
+The mid-SOC voltage test is no longer needed. Remaining open question: a
+pre-200 snapshot (expected 4500 mV) for the before/after pair, and whether
+the first cliff was a Qmax recalibration.
 
 ## Feeding in new analytics files
 

@@ -81,10 +81,10 @@ So the two cliffs plausibly have **different** causes:
 | Interval | Cycles | Δ health | Likely cause |
 |----------|--------|----------|--------------|
 | 09-23 → 10-13 | 126→152, contains **138** | −0.41 pp | Qmax / gauge recalibration |
-| 11-05 → 11-10 | 194→202, contains **200** | −0.43 pp | `VacVoltageLimit` 4500→4480 |
+| 11-05 → 11-09 | 194→200, ends at the **200** node | −0.43 pp | `VacVoltageLimit` 4500→4480 |
 
-This is a hypothesis, not yet proven: the six analytics files we have all
-sit at 202–208 cycles, i.e. after the step. An analytics snapshot from
+This is a hypothesis, not yet proven: the seven analytics files we have all
+sit at 200–208 cycles, i.e. at or after the step. An analytics snapshot from
 **before 200 cycles** (and ideally one from around 138) would show whether
 `VacVoltageLimit` was 4500 mV and
 whether the Qmax update coincides with the first drop.
@@ -120,8 +120,9 @@ timestamp determines the archive filename — no manual naming needed.
 
 Most valuable for closing the remaining questions:
 
-1. **A snapshot with `CycleCount` < 200** — expect `VacVoltageLimit = 4500`.
-   Direct before/after proof of the step.
+1. **11-06 / 11-07 / 11-08 (`CycleCount` < 200)** — expect
+   `VacVoltageLimit = 4500`. Direct before/after proof of the step; 11-08 is
+   the last day before the step's upper bound (11-08 17:08 local).
 2. **A snapshot near cycle 138** — to test the Qmax-recalibration hypothesis
    for the first cliff.
 3. Any snapshot after cycle 250 — expect `VacVoltageLimit = 4460`.
@@ -138,6 +139,7 @@ python3 scripts/verify.py
 
 | Date (file) | Gauge `UpdateTime` (UTC) | Cycles | `VacVoltageLimit` | Band | `AppleRawMaxCapacity` | NCC | Health | DailyMinSoc |
 |-------------|--------------------------|--------|-------------------|------|------------------------|-----|--------|-------------|
+| 2026-11-09 | 11-08 09:08:37 | **200** | 4480 mV (4.48V) | 200–249 ✓ | 3707 | 3658 | 99.079% | 33 |
 | 2026-11-10 | 11-09 13:58:20 | 202 | 4480 mV (4.48V) | 200–249 ✓ | 3708 | 3658 | 99.079% | 17 |
 | 2026-11-11 | 11-10 14:03:43 | 203 | 4480 mV (4.48V) | 200–249 ✓ | 3678 | 3658 | 99.079% | 30 |
 | 2026-11-12 | 11-10 14:03:43 (stale) | 203 | 4480 mV (4.48V) | 200–249 ✓ | 3678 | 3658 | 99.079% | 30 |
@@ -149,24 +151,28 @@ Full machine-readable version:
 [`analytics-timeline.csv`](analytics-timeline.csv). Each import adds a row;
 `verify.py` asserts every row's voltage matches its node band.
 
-### 5.0 The 11-10 snapshot: the step is older than the files
+### 5.0 The 11-09 snapshot: the step fires exactly at cycle 200
 
-The 2026-11-10 file reports `CycleCount = 202`, `VacVoltageLimit = 4480 mV`
-and `NCC = 3658` (99.079%). Combined with the 11-05 export (cycle 194,
-NCC 3675, 99.54%):
+The 2026-11-09 file reports **`CycleCount = 200`** together with
+`VacVoltageLimit = 4480 mV` and `NCC = 3658` (99.079%). The software target
+has **already stepped down at exactly 200 cycles** — not at 201 or later.
+This is the strongest device-level confirmation of the cycle-node rule in
+this dataset.
 
-- The −17 mAh / −0.46 pp drop happened **within cycles 194 → 202** — 8
-  cycles over 5 days (1.60 cycles/day). The window contains the 200 node,
-  which at this rate falls around **2026-11-08**.
-- The 4480 mV target was already active at cycle 202, so the voltage step
-  also occurred no later than cycle 202 — consistent with a 200-cycle node.
-- Six consecutive snapshots (202/203/203/205/207/208) all show NCC 3658–3659
-  and 4480 mV: the state is stable after the step, not a transient.
-- The 11-10 file is an **independent** snapshot: its gauge state was written
-  at `UpdateTime = 2026-11-09T13:58:20Z` = **2026-11-09 21:58 local
-  (+0800)**, and `WeightedRa` (77→75), `MinimumFCC` (3574→3543) and
-  `AppleRawMaxCapacity` (3708→3678) all differ from 11-11. So the step is
-  bounded to **no later than 2026-11-09 21:58 local**.
+Combined with the 11-05 export (cycle 194, NCC 3675, 99.54%):
+
+- The −17 mAh / −0.46 pp drop happened **within cycles 194 → 200** — 6
+  cycles over 4 days (1.50 cycles/day). The window ends exactly at the 200
+  node, so the voltage step and the capacity cliff are coincident with it.
+- The 11-09 file is **independent**: its gauge state was written at
+  `UpdateTime = 2026-11-08T09:08:37Z` = **2026-11-08 17:08 local (+0800)**,
+  and `CycleCount`, `TotalOperatingTime`, SOC range and Raw all differ from
+  11-10. So the step is bounded to **no later than 2026-11-08 17:08 local**.
+- Seven consecutive snapshots (200/202/203/203/205/207/208) all show NCC
+  3658–3659 and 4480 mV: a stable post-step state, not a transient.
+- Note 11-09 was a light-use day: `DailyMinSoc = 33`, `DailyMaxSoc = 42`
+  (only a 9-point SOC band), consistent with the cycle counter sitting at
+  exactly 200 all day.
 
 **11-11 and 11-12 are the same gauge snapshot.** Their
 `BatteryConfigValueHistogramFinal_V2` payloads are byte-identical except for
@@ -180,15 +186,15 @@ does not fail on) consecutive files with identical battery state.
 `analytics-timeline.csv`, so each row records when its battery state was
 actually written rather than when the file was generated.
 
-- A snapshot from 11-06 … 11-09 would pin the exact step time; a snapshot
-  below cycle 200 should show 4500 mV.
+- A snapshot from 11-06 … 11-08 (cycles < 200) should show **4500 mV** and
+  would give the direct before/after pair.
 
-**Noise scale.** Over the six archived files NCC varies by only **1 mAh =
+**Noise scale.** Over the seven archived files NCC varies by only **1 mAh =
 0.027 pp** (including a +1 mAh rebound), while `AppleRawMaxCapacity` swings
-**3708 → 3678 → 3678 → 3690 → 3683 → 3692 mAh = 30 mAh = 0.813 pp**. The raw
-estimate is ~**30× noisier** than the nominal capacity, which is exactly why
-it is not used for the health figure. The −0.43 pp cliff is ~16× the daily
-NCC noise, so it is a real step, not sampling jitter.
+**3707 → 3708 → 3678 → 3678 → 3690 → 3683 → 3692 mAh = 30 mAh = 0.813 pp**.
+The raw estimate is ~**30× noisier** than the nominal capacity, which is
+exactly why it is not used for the health figure. The −0.43 pp cliff is ~16×
+the daily NCC noise, so it is a real step, not sampling jitter.
 
 ### 5.1 Two findings from the 11-14 snapshot
 
@@ -212,9 +218,9 @@ two days; only the raw estimate moved.
 shows it was 3683 the day before. It is not a fixed design-capacity field.
 
 **(c) The −0.43 pp cliff is bracketed, not dated.** See §5.0 above: the window
-is cycles 194 → 202, with 4480 mV already active at cycle 202 and the 11-10
-file's `UpdateTime` bounding the step to no later than 2026-11-09 21:58
-local. A file from 11-06 … 11-09 would pin the day.
+is cycles 194 → 200, with 4480 mV already active at exactly cycle 200 and the
+11-09 file's `UpdateTime` bounding the step to no later than 2026-11-08 17:08
+local. A file from 11-06 … 11-08 would pin the day.
 
 ### 5.2 Aggregation window (why the cross-check is not exactly 1.00)
 
