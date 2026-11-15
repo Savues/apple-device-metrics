@@ -33,8 +33,10 @@ voltage limit changed. Full data:
 
 **Qmax does not move.** Changing the voltage limit alone removed 8.0 pp from
 the reported capacity without any chemical change — it is a **reversible
-charge-limit effect**, not ageing. (A separate UI item reading 4.08 V is
-present in both screenshots and is not the variable.)
+charge-limit effect**, not ageing. A 4.08 V reading also appears in both
+screenshots; per the owner it is the battery's current level/voltage and is
+irrelevant to the comparison (the independent variable is the configured
+voltage limit: 4500 vs 4390 mV).
 
 Critically, 4500 mV → 4390 mV is exactly the span from `iphone-01`'s top
 band to the extrapolated ≥1000 band. So this is a directly relevant
