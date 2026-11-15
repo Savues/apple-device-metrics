@@ -131,9 +131,11 @@ device — `VacVoltageLimit = 4480 mV` at **exactly `CycleCount = 200`**
 (2026-11-09 analytics), with six further snapshots at 202–208 cycles all
 showing 4480 mV. See
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
-The mid-SOC voltage test is no longer needed. Remaining open question: a
-pre-200 snapshot (expected 4500 mV) for the before/after pair, and whether
-the first cliff was a Qmax recalibration.
+The mid-SOC voltage test is no longer needed. iOS retains only ~7 days of
+analytics, so a pre-200 snapshot (4500 mV) is **unobtainable**; the lifetime
+peak `MaximumPackVoltage = 4496 mV` — impossible under the current 4480 mV
+target — serves as indirect evidence of the earlier 4.50 V ceiling. See
+[`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
 
 ## Feeding in new analytics files
 

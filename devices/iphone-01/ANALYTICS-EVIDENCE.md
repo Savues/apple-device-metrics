@@ -16,20 +16,46 @@ of numeric battery fields is emitted.
 | Field | Value | Meaning |
 |-------|-------|---------|
 | `last_value_VacVoltageLimit` | **4480 mV = 4.480 V** | currently effective charge-voltage ceiling |
-| `last_value_CycleCount` | 208 | in the 200–249 band |
-| `last_value_MaximumPackVoltage` | 4496 mV = 4.496 V | historical peak pack voltage |
+| `last_value_CycleCount` | **200** (11-09 file) | the step is active at the node itself |
+| `last_value_MaximumPackVoltage` | 4496 mV = 4.496 V | **lifetime** peak pack voltage |
 
 The nameplate hardware ceiling is 4.50 V. The **live** software target is
 **4.48 V**, exactly the −0.02 V step predicted for the 200-cycle node in
-[`voltage-nodes.md`](../docs/voltage-nodes.md).
+[`voltage-nodes.md`](../docs/voltage-nodes.md). The 11-09 file shows this at
+`CycleCount = 200` exactly, not 201 or later.
 
 This resolves the open question in `docs/findings.md`: the pending
 "charge to 100% and read the voltage" experiment is no longer needed. The
 analytics file reports the configured limit directly.
 
-`MaximumPackVoltage` 4496 mV is a *historical* aggregate (paired with
-`MinimumPackVoltage` 2765 mV over the device lifetime), so it does not
-contradict the current 4480 mV target.
+### 1.1 The pre-200 voltage, without a pre-200 file
+
+iOS retains only ~7 days of analytics, so no snapshot with
+`CycleCount < 200` is obtainable — a direct 4500 mV reading is **not
+available**. There is, however, independent physical evidence of the earlier
+target:
+
+| Quantity | Value | Relation |
+|----------|-------|----------|
+| `MaximumPackVoltage` (lifetime peak) | **4496 mV** | 16 mV **above** the current 4480 mV target |
+| Nameplate / 1–199 band | 4500 mV | only 4 mV above the peak |
+| Current software target | 4480 mV | cannot produce a 4496 mV pack voltage |
+
+`MaximumPackVoltage` is a lifetime maximum (paired with
+`MinimumPackVoltage = 2765`), constant across all seven archived snapshots.
+A pack cannot reach 4496 mV while the charge target is 4480 mV, so the peak
+was necessarily recorded **before** the step, under the ~4.50 V target.
+Supporting fact: the 76-day charging diary (09-01…11-15) never exceeds
+**81% SOC**, so no full charge inside the observed window could have created
+that peak — it predates the log as well.
+
+This is indirect evidence (the peak is a measured pack voltage, not a
+configured target), but it closes the qualitative gap: the device did once
+run at a voltage ceiling above 4.48 V, consistent with 4.50 → 4.48.
+
+**What remains impossible to recover**: the exact 4500 mV configuration
+reading and the precise timestamp of the step. The upper bound is
+2026-11-08 17:08 local (the 11-09 file's gauge `UpdateTime`).
 
 ---
 
@@ -118,14 +144,19 @@ The parser reads the first header line plus two named records
 aggregated files are fine as long as those records are present. The header
 timestamp determines the archive filename — no manual naming needed.
 
-Most valuable for closing the remaining questions:
+**Retention limit**: iOS keeps only about 7 days of analytics. The seven
+files archived here (11-09 … 11-15) are the complete obtainable window. No
+pre-200 snapshot exists, so a direct `VacVoltageLimit = 4500 mV` reading is
+unobtainable; see §1.1 for the indirect evidence that replaces it. Snapshots
+near cycle 138 (the Qmax hypothesis) are likewise out of reach.
 
-1. **11-06 / 11-07 / 11-08 (`CycleCount` < 200)** — expect
-   `VacVoltageLimit = 4500`. Direct before/after proof of the step; 11-08 is
-   the last day before the step's upper bound (11-08 17:08 local).
-2. **A snapshot near cycle 138** — to test the Qmax-recalibration hypothesis
-   for the first cliff.
-3. Any snapshot after cycle 250 — expect `VacVoltageLimit = 4460`.
+Still worth sending as new files appear:
+
+1. **Cycle 250 (~2026-12-12)** — expect `VacVoltageLimit = 4460 mV`; this is
+   fully observable with the rolling 7-day window and would confirm the
+   node table's next step.
+2. **Cycle 300 (~2027-01-14)** — expect 4440 mV.
+3. Any intermediate dates — to keep the health/cycle timeline continuous.
 
 Import any number at once; the timeline CSV is rebuilt from the full archive:
 
@@ -186,8 +217,9 @@ does not fail on) consecutive files with identical battery state.
 `analytics-timeline.csv`, so each row records when its battery state was
 actually written rather than when the file was generated.
 
-- A snapshot from 11-06 … 11-08 (cycles < 200) should show **4500 mV** and
-  would give the direct before/after pair.
+- A snapshot from 11-06 … 11-08 would show 4500 mV, but iOS retains only
+  ~7 days of analytics, so none is obtainable. See §1.1 for the indirect
+  evidence that substitutes for it.
 
 **Noise scale.** Over the seven archived files NCC varies by only **1 mAh =
 0.027 pp** (including a +1 mAh rebound), while `AppleRawMaxCapacity` swings
@@ -220,7 +252,8 @@ shows it was 3683 the day before. It is not a fixed design-capacity field.
 **(c) The −0.43 pp cliff is bracketed, not dated.** See §5.0 above: the window
 is cycles 194 → 200, with 4480 mV already active at exactly cycle 200 and the
 11-09 file's `UpdateTime` bounding the step to no later than 2026-11-08 17:08
-local. A file from 11-06 … 11-08 would pin the day.
+local. No file from 11-06 … 11-08 survives the 7-day retention, so the exact
+day cannot be determined.
 
 ### 5.2 Aggregation window (why the cross-check is not exactly 1.00)
 

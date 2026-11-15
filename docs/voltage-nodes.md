@@ -92,12 +92,15 @@ python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips
 
 Remaining checks:
 
-1. **Pre-200 snapshot** (files from 11-06 … 11-08): expect
-   `VacVoltageLimit = 4500` — direct before/after pair for the step.
-2. **Post-250 snapshot**: expect `VacVoltageLimit = 4460`.
-3. **Qmax hypothesis**: a snapshot near cycle 138 to test whether the first
-   health cliff was a gauge recalibration.
-4. Watch for another ~−0.4 pp step at 250 cycles (~2026-12-12) and 300
+1. ~~**Pre-200 snapshot**~~ **Unobtainable** — iOS retains only ~7 days of
+   analytics; all seven files available sit at 200–208 cycles. A direct
+   4500 mV reading cannot be recovered. Indirect evidence: lifetime
+   `MaximumPackVoltage = 4496 mV`, 16 mV above the current 4480 mV target,
+   which must have been recorded under the earlier ~4.50 V ceiling.
+2. **Cycle 250 (~2026-12-12)**: expect `VacVoltageLimit = 4460` — the next
+   node, fully observable with the rolling window.
+3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138.
+4. Watch for another ~−0.4 pp health step at 250 (~2026-12-12) and 300
    (~2027-01-14), with flat plateaus between.
 
 ## References

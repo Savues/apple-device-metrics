@@ -98,8 +98,13 @@ coincident with the voltage step. Order-of-magnitude check with a typical
 ⇒ ~1 pp of full-charge capacity; observed 0.43 pp. Same order of magnitude,
 with the reported value smoothed / re-baselined.
 
-**Still missing**: a pre-200 snapshot (expected 4500 mV) for a direct
-before/after pair. Everything from 200 onward is a post-step observation.
+**Data boundary**: iOS retains only ~7 days of analytics, so no pre-200
+snapshot exists and a direct 4500 mV reading is unobtainable. Indirect
+evidence fills the gap: the lifetime `MaximumPackVoltage = 4496 mV` exceeds
+the current 4480 mV target by 16 mV, so it must have been recorded under a
+higher ceiling (~4.50 V). The 76-day charging diary never exceeds 81% SOC,
+so that peak also predates the log. See
+[`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §1.1.
 
 ### The first cliff — Qmax recalibration candidate
 
@@ -209,12 +214,16 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
    **Resolved**: analytics report `VacVoltageLimit = 4480 mV` at exactly
    cycle 200 — the step fires at the node. See
    [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
-2. **Pre-200 snapshot** (now the main open item): an analytics file with
-   `CycleCount < 200` should show `VacVoltageLimit = 4500 mV`, giving the
-   direct before/after pair. Files from 11-06 … 11-08 are the best candidates.
-3. **Qmax hypothesis**: a snapshot near cycle 138 to test whether the first
-   cliff was a gauge recalibration rather than a voltage node.
-4. **Post-250 snapshot**: expect `VacVoltageLimit = 4460 mV`.
+2. ~~**Pre-200 snapshot**~~ **Unobtainable**: iOS keeps only ~7 days of
+   analytics, so no `CycleCount < 200` file exists. A direct 4500 mV reading
+   cannot be recovered. Substituted by the lifetime `MaximumPackVoltage =
+   4496 mV` argument (see §3 above and `ANALYTICS-EVIDENCE.md` §1.1).
+3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138 can
+   be recovered. `CycleCountLastQmax = 138` remains a plausible but untestable
+   explanation for the first cliff.
+4. **Next observable node — cycle 250 (~2026-12-12)**: expect
+   `VacVoltageLimit = 4460 mV` and another ~−0.4 pp health step. This is
+   fully within reach of the rolling 7-day window.
 5. Meaning of the `hrs_soc` column (always 0) is still unknown — no matching
    field found in the analytics file.
 6. `MaximumCapacityPercent = 101` in analytics vs exported `Nominal Health`

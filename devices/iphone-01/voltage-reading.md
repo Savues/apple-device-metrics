@@ -42,5 +42,8 @@ step-down. See [`ANALYTICS-EVIDENCE.md`](ANALYTICS-EVIDENCE.md).
 This mid-SOC reading remains useful only as a sanity check that the cell has
 no voltage collapse or elevated internal resistance.
 
-The open question is now the **before** value: a pre-200 analytics snapshot
-should show `VacVoltageLimit = 4500 mV`.
+The **before** value cannot be read directly: iOS keeps only ~7 days of
+analytics, so no pre-200 snapshot exists. As indirect evidence, the lifetime
+`MaximumPackVoltage = 4496 mV` is 16 mV above the current 4480 mV target and
+can only have been recorded under the earlier ~4.50 V ceiling. See
+[`ANALYTICS-EVIDENCE.md`](ANALYTICS-EVIDENCE.md) §1.1.
