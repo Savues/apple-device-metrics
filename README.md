@@ -134,7 +134,10 @@ showing 4480 mV. See
 The mid-SOC voltage test is no longer needed. iOS retains only ~7 days of
 analytics, so a pre-200 snapshot (4500 mV) is **unobtainable**; the lifetime
 peak `MaximumPackVoltage = 4496 mV` — impossible under the current 4480 mV
-target — serves as indirect evidence of the earlier 4.50 V ceiling. See
+target — is a fossil from a full charge before 09-01 (≈101 cycles), when the
+4.50 V ceiling was active. The charging diary never exceeds 81% SOC
+(69/79% clustering ⇒ ~80% charge limit), so the peak could not be refreshed
+later. See
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
 
 ## Feeding in new analytics files

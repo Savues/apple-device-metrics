@@ -45,13 +45,27 @@ target:
 `MinimumPackVoltage = 2765`), constant across all seven archived snapshots.
 A pack cannot reach 4496 mV while the charge target is 4480 mV, so the peak
 was necessarily recorded **before** the step, under the ~4.50 V target.
-Supporting fact: the 76-day charging diary (09-01…11-15) never exceeds
-**81% SOC**, so no full charge inside the observed window could have created
-that peak — it predates the log as well.
+
+**When was that peak recorded?** The 76-day charging diary (09-01…11-15)
+never exceeds **81% SOC** — only 4 sessions reach ≥80% (80/80/80/81) and the
+termination SOC piles up at 69% (45 sessions) and 79% (26 sessions),
+consistent with an **80% charge limit / habit of unplugging near 79%**. A
+near-full charge is required to reach ~4.50 V, so no session inside the log
+window could have produced 4496 mV.
+
+Back-projecting the cycle counter: the diary's 09-01…09-18 equivalent full
+cycles are 21.26, and the 09-19 export reads `CycleCount = 122`, giving
+**≈101 cycles on 09-01** (the 09-19→11-05 rate is 1.53/day). `DOFU =
+2026-03-05`, so there are ~180 days before the diary starts. Conclusion:
+
+> The 4496 mV peak was left by a **full charge before 09-01**, at roughly
+> 100 cycles or fewer — well inside the 1–199 band (4500 mV). It is a
+> fossil from the pre-limit era, not a recent event.
 
 This is indirect evidence (the peak is a measured pack voltage, not a
 configured target), but it closes the qualitative gap: the device did once
-run at a voltage ceiling above 4.48 V, consistent with 4.50 → 4.48.
+run at a voltage ceiling above 4.48 V, consistent with 4.50 → 4.48. It also
+means a later full charge under the 80% limit would not refresh this peak.
 
 **What remains impossible to recover**: the exact 4500 mV configuration
 reading and the precise timestamp of the step. The upper bound is

@@ -102,8 +102,10 @@ with the reported value smoothed / re-baselined.
 snapshot exists and a direct 4500 mV reading is unobtainable. Indirect
 evidence fills the gap: the lifetime `MaximumPackVoltage = 4496 mV` exceeds
 the current 4480 mV target by 16 mV, so it must have been recorded under a
-higher ceiling (~4.50 V). The 76-day charging diary never exceeds 81% SOC,
-so that peak also predates the log. See
+higher ceiling (~4.50 V). The diary never exceeds 81% SOC (termination piles
+up at 69/79%, i.e. an 80% charge limit), so the peak must come from a full
+charge **before 09-01**, at ≈101 cycles or fewer — well inside the 1–199
+band. See
 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §1.1.
 
 ### The first cliff — Qmax recalibration candidate
@@ -171,8 +173,18 @@ By starting SOC:
 | 60–80% | 9 | 3.7% | 0.45 %/min |
 
 Charging is dominated by shallow 20–60% top-ups; sessions ending above 80%
-are rare. Charge rate falls monotonically with starting SOC, consistent with
-CC/CV taper.
+are rare (4 of 325). Charge rate falls monotonically with starting SOC,
+consistent with CC/CV taper.
+
+Termination SOC is strongly clustered: **69% (45 sessions)** and **79% (26
+sessions)** are the two most common end points, with 203/325 sessions ending
+in 65–81%. This is the signature of an **80% charge limit / habit of
+unplugging near 79%**, and it explains why the device never reached a full
+charge during the 76-day window. Consequence: the lifetime
+`MaximumPackVoltage = 4496 mV` cannot have been produced inside this window —
+it is a fossil from a full charge before 09-01, when the 4.50 V target was
+still in effect (see
+[`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §1.1).
 
 **Integrity checks on the source log**: 0 parse errors, 0 SOC-delta
 mismatches, 0 rate mismatches >0.06 %/min. The declared durations, SOC deltas
