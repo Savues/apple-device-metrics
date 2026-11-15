@@ -121,9 +121,11 @@ and `MaximumFCC = 3837` are yet other quantities (cell chemical capacity and
 full-charge-capacity extremes), neither of which is that baseline. We do
 **not** know Apple's exact formula and do not guess one.
 
-A second, 1420-cycle device makes this unmistakable: its
-`MaximumCapacityPercent = 73` while `NCC / AppleRawMaxCapacity = 98.36%`
-— a **25 pp** gap, far too large to be rounding. See
+A second, 1420-cycle device makes this unmistakable. With its 2815 mAh
+nameplate: `NCC / rated = 57.66%` but Apple reports **73** — a **15.34 pp**
+gap, versus only 1.89 pp on `iphone-01`. The gap grows with age, so it is
+not a fixed offset or rounding; Apple uses its own calibrated baseline and
+ageing model. See
 [`devices/reference-01/README.md`](../reference-01/README.md).
 
 **Consequence for this repo's conclusions**: the −0.43 pp "cliff", the

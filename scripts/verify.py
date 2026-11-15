@@ -36,6 +36,12 @@ check("rated capacity matches health denominator", dev["rated_capacity_mah"] == 
 check("rated energy consistent",
       abs(dev["rated_energy_wh"] - dev["nominal_voltage_v"] * RATED / 1000) < 0.001,
       f"{dev['nominal_voltage_v']}V x {RATED}mAh = {dev['nominal_voltage_v']*RATED/1000:.3f}Wh")
+check("nameplate battery energy matches V x mAh",
+      abs(dev.get("battery_energy_wh", 0) -
+          dev["nominal_voltage_v"] * RATED / 1000) < 0.001)
+check("cell energy exceeds pack energy",
+      dev.get("cell_energy_wh", 0) > dev.get("battery_energy_wh", 0),
+      f"{dev.get('cell_energy_wh')} vs {dev.get('battery_energy_wh')} Wh")
 
 print("\n=== health snapshots ===")
 check("6 snapshots", len(health) == 6, str(len(health)))
@@ -183,17 +189,30 @@ check("reference: cycles >= 1000 band", ref["cycle_count"] >= 1000,
       str(ref["cycle_count"]))
 check("reference: VacVoltageLimit 4340 mV",
       ref["vac_voltage_limit_mv"] == 4340)
-# Back-project the ladder: >=1000 is -50mV from 300-999, then -20mV per step.
-inferred_first = ref["vac_voltage_limit_mv"] + 50 + 20 * 3
+np = ref["nameplate"]
+check("reference: battery energy = nominal V x rated mAh",
+      abs(np["nominal_voltage_v"] * np["rated_capacity_mah"] / 1000 -
+          np["battery_energy_wh"]) < 0.005,
+      f"{np['nominal_voltage_v']}V x {np['rated_capacity_mah']}mAh "
+      f"= {np['nominal_voltage_v']*np['rated_capacity_mah']/1000:.3f}Wh")
+# Forward prediction from the known nameplate using the node table:
+# -20mV at 200/250/300, extra -50mV at >=1000.
+predicted = int(round((np["charge_limit_voltage_v"] - 0.02 * 3 - 0.05) * 1000))
+check("reference: nameplate minus node steps equals measured VacVoltageLimit",
+      predicted == ref["vac_voltage_limit_mv"],
+      f"{np['charge_limit_voltage_v']}V - 0.02x3 - 0.05 = {predicted} mV")
+check("reference: nameplate voltage equals lifetime peak pack voltage",
+      int(round(np["charge_limit_voltage_v"] * 1000)) ==
+      ref["maximum_pack_voltage_mv"])
+# Back-project the ladder: >=1000 is -110mV from the first band.
+inferred_first = ref["vac_voltage_limit_mv"] + 110
 check("reference: inferred 1-199 band equals lifetime peak pack voltage",
       inferred_first == ref["maximum_pack_voltage_mv"],
       f"{inferred_first} mV vs {ref['maximum_pack_voltage_mv']} mV")
-check("reference: Apple health differs from NCC/Raw ratio",
-      abs(ref["maximum_capacity_percent_reported"] -
-          ref["nominal_charge_capacity_mah"] /
-          ref["apple_raw_max_capacity_mah"] * 100) > 10,
-      f"{ref['maximum_capacity_percent_reported']} vs "
-      f"{ref['nominal_charge_capacity_mah']/ref['apple_raw_max_capacity_mah']*100:.1f}%")
+health_gap = ref["maximum_capacity_percent_reported"] - \
+    ref["nominal_charge_capacity_mah"] / np["rated_capacity_mah"] * 100
+check("reference: Apple health differs from NCC/nameplate by >10pp",
+      health_gap > 10, f"gap {health_gap:.2f} pp")
 
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

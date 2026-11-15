@@ -45,17 +45,22 @@ The same node set is repeated in Chinese repair-forum and Q&A material
 
 ## Independent cross-check on a second device
 
-A second device (`reference-01`, iOS 17.6.1, **1420 cycles**) reports
-`VacVoltageLimit = 4340 mV`. Back-projecting the same step sizes from the
-≥1000 band gives a 1–199 band of **4450 mV** — which exactly equals that
-device's lifetime `MaximumPackVoltage = 4450 mV`, an unrelated field. See
+A second device (`reference-01`, iOS 17.6.1, **1420 cycles**) has a
+manufacturer nameplate charge limit of **4.45 V**. Applying the step table
+forward: `4.45 − 0.02×3 − 0.05 = 4.34 V`, which **exactly equals** its
+measured `VacVoltageLimit = 4340 mV`. Its lifetime
+`MaximumPackVoltage = 4450 mV` also matches the 4.45 V top rung. See
 [`devices/reference-01/README.md`](../devices/reference-01/README.md).
 
-Two devices on different iOS versions and different cell platforms both
-produce a self-consistent ladder whose top rung matches the observed peak
-pack voltage. The **absolute** voltages differ (4500 mV vs 4450 mV), so the
-table is platform-relative. This materially strengthens the −0.02 V /
-−0.05 V step sizes, though it still does not make them Apple-official.
+`iphone-01` validates the first step from its own 4.50 V nameplate: 4.48 V
+measured at exactly cycle 200, with a 4496 mV lifetime peak just under
+4.50 V. Two nameplates, two iOS versions, two cell platforms, one consistent
+ladder — verified in both directions.
+
+The **absolute** voltages differ (4.50 V vs 4.45 V), so the table is
+platform-relative and must be applied per device. This materially
+strengthens the −0.02 V / −0.05 V step sizes, though the node boundaries
+remain third-party reverse-engineering rather than Apple documentation.
 
 ## Variant accounts (important)
 

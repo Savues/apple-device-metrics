@@ -7,6 +7,10 @@ in a separate directory and is deliberately **not** merged into the
 | | `iphone-01` (main) | `reference-01` (this device) |
 |---|---|---|
 | iOS | 26.4.2 | **17.6.1** |
+| **Rated capacity (nameplate)** | **3692 mAh** | **2815 mAh** |
+| **Nominal voltage** | **3.887 V** | **3.83 V** |
+| **Charge limit (nameplate)** | **4.50 V** | **4.45 V** |
+| **Cell / battery energy** | **14.499 / 14.351 Wh** | **10.90 / 10.78 Wh** |
 | Analytics date | 11-09 … 11-15 (7 files) | 2026-11-15 (1 file) |
 | Cycles | 200 → 208 | **1420** |
 | `VacVoltageLimit` | 4480 mV | **4340 mV** |
@@ -17,6 +21,11 @@ in a separate directory and is deliberately **not** merged into the
 | `WeightedRa` | 75–77 | 468 |
 | `TotalOperatingTime` | 4780–4928 h | 54014 h |
 
+Both nameplates satisfy `battery_energy = nominal_voltage × rated_capacity`
+exactly (14.351 Wh and 10.781 Wh). The cell-energy figures imply a voltage
+~0.04 V above nominal on both devices, i.e. the cell rating uses a higher
+reference voltage than the pack rating.
+
 Only a whitelist of numeric fields is stored in
 [`reference.json`](reference.json). The raw `.ips` contains deviceId, UUIDs,
 incident_id, carrier/country and SKU, so it is not published.
@@ -25,50 +34,61 @@ incident_id, carrier/country and SKU, so it is not published.
 
 ## 1. Independent confirmation of the cycle-node voltage table
 
-At 1420 cycles this device is in the **≥1000** band. Working backwards with
-the third-party step sizes (−0.02 V at 200/250/300, −0.05 V at ≥1000):
+The manufacturer nameplate for this device gives a charge limit of
+**4.45 V**. Applying the third-party node steps (−0.02 V at 200/250/300 and
+an extra −0.05 V at ≥1000):
 
-| Band | Inferred limit |
-|------|----------------|
-| ≥1000 (**measured**) | **4340 mV** |
-| 300–999 | 4390 mV |
-| 250–299 | 4410 mV |
+| Band | Limit |
+|------|-------|
+| 1–199 (nameplate) | **4450 mV** |
 | 200–249 | 4430 mV |
-| 1–199 | **4450 mV** |
+| 250–299 | 4410 mV |
+| 300–999 | 4390 mV |
+| ≥1000 (**predicted**) | **4340 mV** |
 
-The inferred first-band value **4450 mV exactly matches this device's
-lifetime `MaximumPackVoltage = 4450 mV`** — a completely independent field.
-Two devices on different iOS versions and different cell platforms both
-land on a self-consistent ladder whose top rung equals the observed peak
-pack voltage. This does not prove the table is Apple-official, but it makes
-the step sizes (−0.02 V, −0.05 V at ≥1000) substantially more credible than
-the single-device evidence alone.
+The predicted ≥1000 value **equals the measured `VacVoltageLimit = 4340 mV`
+exactly**. And 4450 mV also equals this device's lifetime
+`MaximumPackVoltage = 4450 mV` — a separate field. So the ladder is
+validated in **both directions** from a known nameplate, not merely
+back-projected.
 
-Note the top rung differs between devices (4500 mV on `iphone-01`, 4450 mV
-here), i.e. the table is **platform-relative**, not a universal absolute
-voltage. This is consistent with the variant accounts in
-[`docs/voltage-nodes.md`](../../docs/voltage-nodes.md).
+On `iphone-01` the same arithmetic holds with its 4.50 V nameplate:
+4.50 → 4.48 V at cycle 200, matching the measured 4480 mV at exactly
+`CycleCount = 200`, and 4496 mV lifetime peak sits just below 4500 mV.
+
+**Two nameplates, two independent iOS versions, two cell platforms, one
+consistent step table.** This substantially strengthens the −0.02 V /
+−0.05 V step sizes. Note the absolute voltages are platform-relative
+(4.50 V vs 4.45 V top rung), so the table must be applied per device, not
+as a universal absolute ladder. It is still not Apple-official
+documentation — the node boundaries and step sizes remain third-party
+reverse-engineering that happens to fit both devices exactly.
 
 ## 2. Strong support for §6 (two different health numbers)
 
-`reference-01` makes the distinction impossible to miss:
+`reference-01` makes the distinction impossible to miss. With its
+manufacturer nameplate (2815 mAh / 3.83 V / 4.45 V), the comparison against
+`iphone-01` (3692 mAh / 3.887 V / 4.50 V) is now apples-to-apples:
 
-| Quantity | Value |
-|----------|-------|
-| `MaximumCapacityPercent` (Apple's displayed health) | **73** |
-| `NCC / AppleRawMaxCapacity` | 1623/1650 = **98.36%** |
-| Gap | **25 pp** |
+| Quantity | `reference-01` | `iphone-01` |
+|----------|----------------|-------------|
+| `NCC / rated capacity` | 1623/2815 = **57.66%** | 3659/3692 = **99.11%** |
+| `MaximumCapacityPercent` (Apple) | **73** | **101** |
+| Gap | **+15.34 pp** | **+1.89 pp** |
 
-On `iphone-01` the same gap is only 1.89 pp (101 vs 99.11), easy to dismiss
-as calibration noise. On a heavily aged 1420-cycle battery it becomes 25 pp,
-which confirms the two figures use **different baselines**, not just different
-rounding. Apple's internal baseline here is roughly 1623/0.73 ≈ 2223 mAh,
-far above `AppleRawMaxCapacity` (1650) and `QmaxCell0` (1975) — so it is not
-any of the published mAh fields.
+The gap is not a fixed offset: it grows ~8× as the battery ages. That rules
+out "different rounding" and confirms Apple's health figure uses its own
+calibrated baseline (and likely a different ageing model), not a plain
+division by the nameplate rated capacity.
+
+`NCC / AppleRawMaxCapacity` here is 1623/1650 = 98.36%, which is *not* the
+health figure either — Raw is a drifting gauge estimate (§5-6 of the main
+evidence doc), so that ratio is meaningless as health.
 
 Also note `MaximumFCC = 2311` and `MinimumFCC = 64` are lifetime extremes,
 not the current capacity; using either as a health denominator would be
-wrong.
+wrong. An `AppleRawMaxCapacity`-derived "design capacity" of ~2223 mAh
+(1623/0.73) has no counterpart among the published nameplate fields.
 
 ## 3. Ageing signals that `iphone-01` does not yet show
 

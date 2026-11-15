@@ -3,6 +3,15 @@
   "purpose": "Cross-device reference only. NOT part of the iphone-01 longitudinal dataset.",
   "source_date": "2026-11-15",
   "os_version": "17.6.1",
+  "nameplate": {
+    "source": "manufacturer specifications supplied with the device",
+    "cell_energy_wh": 10.90,
+    "battery_energy_wh": 10.78,
+    "nominal_voltage_v": 3.83,
+    "rated_capacity_mah": 2815,
+    "charge_limit_voltage_v": 4.45
+  },
+  "energy_consistency": "battery_energy_wh = 3.83V × 2815mAh = 10.781 Wh ≈ 10.78 Wh. cell_energy_wh / rated capacity = 3.872 V, 0.042 V above nominal — same +0.04 V offset as iphone-01.",
   "cycle_count": 1420,
   "apple_raw_max_capacity_mah": 1650,
   "nominal_charge_capacity_mah": 1623,
@@ -21,7 +30,7 @@
   "gauge_update_time_utc": "2026-11-14T15:45:32Z",
   "notes": [
     "BatteryConfigValueHistogramFinal_V2, _V1 and _DOFU all report identical values: one gauge snapshot, three aggregate variants.",
-    "Nameplate rated capacity is unknown for this device; no derived health ratio is computed.",
+    "Nameplate charge limit 4.45V minus the node steps (3 x 0.02V + 0.05V at >=1000) equals 4.34V, exactly the measured VacVoltageLimit.",
     "Raw .ips file is not published (contains deviceId, UUIDs, incident_id, carrier/country, SKU)."
   ]
 }

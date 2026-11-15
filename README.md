@@ -49,12 +49,14 @@ More devices can be added as sibling directories under `devices/`.
    ≥1000). The nameplate 4.50V is the hardware ceiling; the software target is
    set below it. See [`docs/voltage-nodes.md`](docs/voltage-nodes.md).
 
-4. **The 200-cycle step is confirmed by analytics**, not just inferred:
-   `last_value_VacVoltageLimit = 4480 mV` at cycle 208, versus the 4.50 V
-   nameplate ceiling — exactly the predicted −0.02 V step. The first cliff
-   (126→152) instead contains `CycleCountLastQmax = 138`, pointing to a
-   gauge recalibration. See
-   [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
+4. **The 200-cycle step is confirmed by analytics**: `VacVoltageLimit =
+   4480 mV` at **exactly cycle 200**, versus the 4.50 V nameplate — the
+   predicted −0.02 V step. A second device (4.45 V nameplate, 1420 cycles)
+   independently confirms the whole ladder:
+   `4.45 − 0.02×3 − 0.05 = 4.34 V` equals its measured 4340 mV. Two
+   nameplates, two iOS versions, one consistent step table. See
+   [`docs/voltage-nodes.md`](docs/voltage-nodes.md) and
+   [`devices/reference-01/`](devices/reference-01/).
 
 5. **Linear extrapolation to 80% is wrong for this device.** Middle-term
    behaviour is better described by a step model: ~96% at cycle 1000 before
