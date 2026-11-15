@@ -1,0 +1,21 @@
+{
+  "sessions": 325,
+  "clean_sessions": 306,
+  "parse_errors": 0,
+  "span_days": 76,
+  "days_with_sessions": 76,
+  "total_duration_hours": 99.4,
+  "total_charged_pct": 9883,
+  "equivalent_full_cycles": 98.83,
+  "avg_duration_min": 18.35,
+  "avg_charged_pct": 30.41,
+  "avg_rate_pct_per_min": 1.652,
+  "avg_rate_excl_anomaly": 1.757,
+  "zero_charge_sessions": 18,
+  "soc_dropped_sessions": 1,
+  "soc_delta_mismatch": 0,
+  "rate_mismatch_gt_0_06": 0,
+  "max_sessions_one_day": 15,
+  "min_sessions_one_day": 2,
+  "avg_sessions_per_day": 4.28
+}

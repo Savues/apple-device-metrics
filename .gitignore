@@ -1,0 +1,7 @@
+# Private raw diaries must never be committed
+*raw*.txt
+*diary*.txt
+*_private*
+.DS_Store
+__pycache__/
+*.pyc
