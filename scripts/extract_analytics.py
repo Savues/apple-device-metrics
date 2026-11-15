@@ -24,7 +24,7 @@ import argparse
 import csv
 import json
 import os
-import sys
+from datetime import datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARCHIVE_DIR = os.path.join(ROOT, "devices", "iphone-01", "analytics")
@@ -54,6 +54,7 @@ FIELDS = {
     "qmax_max_mah": "MaximumQmax",
     "qmax_min_mah": "MinimumQmax",
     "cycle_count_last_qmax": "CycleCountLastQmax",
+    "gauge_update_time_utc": "UpdateTime",
     "average_temperature_c": "AverageTemperature",
     "battery_health_metric": "BatteryHealthMetric",
     "weighted_ra": "WeightedRa",
@@ -64,7 +65,8 @@ TIMELINE_COLS = ["date", "cycle_count", "vac_voltage_limit_mv",
                  "expected_voltage_mv", "node_band", "voltage_matches_band",
                  "nominal_charge_capacity_mah", "apple_raw_max_capacity_mah",
                  "nominal_health_pct", "daily_min_soc_pct", "daily_max_soc_pct",
-                 "cycle_count_last_qmax", "qmax_cell0_mah", "ios_version"]
+                 "cycle_count_last_qmax", "qmax_cell0_mah",
+                 "gauge_update_time_utc", "ios_version"]
 
 # iPhone 17 series, third-party table (see docs/voltage-nodes.md).
 # (upper_bound_exclusive, limit_mV, label)
@@ -130,6 +132,10 @@ def extract(path, rated=3692):
         out["nominal_health_pct"] = round(ncc / rated * 100, 3)
         out["health_denominator_mah"] = rated
     out["rated_capacity_mah"] = rated
+    u = out.get("gauge_update_time_utc")
+    if isinstance(u, (int, float)) and u > 0:
+        out["gauge_update_time_utc"] = datetime.fromtimestamp(
+            u, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     return out
 
 
@@ -182,6 +188,7 @@ def build_timeline(records):
                 "daily_max_soc_pct": r.get("daily_max_soc_pct"),
                 "cycle_count_last_qmax": r.get("cycle_count_last_qmax"),
                 "qmax_cell0_mah": r.get("qmax_cell0_mah"),
+                "gauge_update_time_utc": r.get("gauge_update_time_utc", ""),
                 "ios_version": r.get("ios_version", ""),
             })
 

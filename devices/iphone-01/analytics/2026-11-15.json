@@ -7,6 +7,7 @@
   "daily_max_soc_pct": 63,
   "daily_min_soc_pct": 39,
   "date": "2026-11-15",
+  "gauge_update_time_utc": "2026-11-14T14:40:15Z",
   "health_denominator_mah": 3692,
   "ios_version": "26.4.2",
   "maximum_capacity_percent_reported": 101,

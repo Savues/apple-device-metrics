@@ -124,7 +124,16 @@ only — no serial, UDID, model identifier or analytics filename.
 5. CSV contains no absolute date, clock time, or device-identifier strings;
 6. every archived analytics JSON is identifier-free, dated correctly, and
    its `VacVoltageLimit` matches the cycle-node band;
-7. `analytics-timeline.csv` is an exact projection of the archive.
+7. `analytics-timeline.csv` is an exact projection of the archive;
+8. every archived snapshot records `gauge_update_time_utc`, and consecutive
+   files with identical battery state are flagged as stale re-reports
+   (informational, not a failure).
+
+`gauge_update_time_utc` comes from `last_value_UpdateTime` (Unix seconds)
+and is normalised to ISO-8601 UTC. It records **when the gauge state was
+actually written**, which can predate the file's generation date — e.g. the
+11-11 and 11-12 files both carry `2026-11-10T14:03:43Z` (22:03 local),
+meaning the 11-12 file merely re-reported a stale snapshot.
 
 Source-log integrity: 325/325 sessions parsed, 0 parse errors.
 

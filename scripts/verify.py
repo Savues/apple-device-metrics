@@ -136,6 +136,19 @@ for fn in ana_files:
 check("snapshot dates sorted & unique",
       [r["date"] for r in snaps] == sorted({r["date"] for r in snaps}))
 
+# A daily analytics file may re-report a stale gauge snapshot. Flag (do not
+# fail) consecutive files whose whitelisted battery state is byte-identical
+# apart from the date, so repeats are not mistaken for independent samples.
+def state_without_date(r):
+    return json.dumps({k: v for k, v in sorted(r.items()) if k != "date"},
+                      sort_keys=True)
+stale = [b["date"] for a, b in zip(snaps, snaps[1:])
+         if state_without_date(a) == state_without_date(b)]
+if stale:
+    print(f"  NOTE  stale gauge snapshot repeated on: {', '.join(stale)}")
+check("gauge_update_time_utc present on all snapshots",
+      all(r.get("gauge_update_time_utc") for r in snaps))
+
 # Timeline CSV must be exactly the projection of the archive.
 tl = load("devices/iphone-01/analytics-timeline.csv")
 check("timeline row count matches archive", len(tl) == len(snaps),

@@ -57,10 +57,12 @@ More devices can be added as sibling directories under `devices/`.
    `NominalChargeCapacity` and health unchanged. Its convergence on the 3692
    nameplate at 11-15 was coincidental.
 
-8. **The −0.43 pp cliff is 16× the daily noise.** Four consecutive analytics
-   snapshots give NCC 3658 / 3658 / 3659 / 3659 mAh (0.027 pp jitter), while
+8. **The −0.43 pp cliff is 16× the daily noise.** Five consecutive analytics
+   snapshots give NCC 3658–3659 mAh (0.027 pp jitter), while
    `AppleRawMaxCapacity` swings 14 mAh (14× noisier). The cliff is bracketed
-   to cycles 194→203, with 4480 mV already active at cycle 203.
+   to cycles 194→203. The 11-11 and 11-12 files share the same gauge
+   `UpdateTime` (2026-11-10 22:03 local), so the step is no later than that
+   evening; 11-12 is a stale re-report, not an independent sample.
 
 See [`docs/findings.md`](docs/findings.md) for the full analysis, including
 corrections to earlier misreadings.
