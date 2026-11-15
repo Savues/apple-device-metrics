@@ -43,6 +43,20 @@ Source: a Weibo-verified digital-hardware blogger's post mirrored at
 The same node set is repeated in Chinese repair-forum and Q&A material
 (Baidu Wenku, NGA, Tieba, Zhihu, Bilibili repair channels).
 
+## Independent cross-check on a second device
+
+A second device (`reference-01`, iOS 17.6.1, **1420 cycles**) reports
+`VacVoltageLimit = 4340 mV`. Back-projecting the same step sizes from the
+≥1000 band gives a 1–199 band of **4450 mV** — which exactly equals that
+device's lifetime `MaximumPackVoltage = 4450 mV`, an unrelated field. See
+[`devices/reference-01/README.md`](../devices/reference-01/README.md).
+
+Two devices on different iOS versions and different cell platforms both
+produce a self-consistent ladder whose top rung matches the observed peak
+pack voltage. The **absolute** voltages differ (4500 mV vs 4450 mV), so the
+table is platform-relative. This materially strengthens the −0.02 V /
+−0.05 V step sizes, though it still does not make them Apple-official.
+
 ## Variant accounts (important)
 
 The community is **not** consistent:

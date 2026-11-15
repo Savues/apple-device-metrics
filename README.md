@@ -13,7 +13,12 @@ reported battery health figure actually behaves over time.
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | 6 health snapshots, 325 charge sessions, 1 voltage reading | 2026-09-01 → 2026-11-15 (76 days) |
+| [`iphone-01`](devices/iphone-01/) | iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | 7 analytics snapshots + 6-row health export, 325 charge sessions, 1 voltage reading | 2026-09-01 → 2026-11-15 (76 days) |
+| [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles | single analytics snapshot, **reference only** | 2026-11-15 |
+
+`reference-01` is a second, heavily aged device used purely to cross-check
+the voltage-node ladder and the two-health-metric distinction. It is kept in
+a separate directory and contributes to **none** of the findings' statistics.
 
 More devices can be added as sibling directories under `devices/`.
 

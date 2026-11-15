@@ -1,0 +1,27 @@
+{
+  "device_id": "reference-01",
+  "purpose": "Cross-device reference only. NOT part of the iphone-01 longitudinal dataset.",
+  "source_date": "2026-11-15",
+  "os_version": "17.6.1",
+  "cycle_count": 1420,
+  "apple_raw_max_capacity_mah": 1650,
+  "nominal_charge_capacity_mah": 1623,
+  "maximum_capacity_percent_reported": 73,
+  "vac_voltage_limit_mv": 4340,
+  "maximum_pack_voltage_mv": 4450,
+  "minimum_pack_voltage_mv": 2549,
+  "cycle_count_last_qmax": 57,
+  "qmax_cell0_mah": 1975,
+  "maximum_fcc_mah": 2311,
+  "minimum_fcc_mah": 64,
+  "daily_min_soc_pct": 17,
+  "daily_max_soc_pct": 80,
+  "weighted_ra": 468,
+  "total_operating_time_h": 54014,
+  "gauge_update_time_utc": "2026-11-14T15:45:32Z",
+  "notes": [
+    "BatteryConfigValueHistogramFinal_V2, _V1 and _DOFU all report identical values: one gauge snapshot, three aggregate variants.",
+    "Nameplate rated capacity is unknown for this device; no derived health ratio is computed.",
+    "Raw .ips file is not published (contains deviceId, UUIDs, incident_id, carrier/country, SKU)."
+  ]
+}

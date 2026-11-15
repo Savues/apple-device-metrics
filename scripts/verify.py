@@ -176,5 +176,24 @@ if snaps:
     check("newest analytics DailyMinSoc == last health sample",
           newest["daily_min_soc_pct"] == int(health[-1]["min_soc_pct"]))
 
+print("\n=== reference device (cross-check only) ===")
+ref = json.load(open(os.path.join(ROOT, "devices/reference-01/reference.json"),
+                     encoding="utf-8"))
+check("reference: cycles >= 1000 band", ref["cycle_count"] >= 1000,
+      str(ref["cycle_count"]))
+check("reference: VacVoltageLimit 4340 mV",
+      ref["vac_voltage_limit_mv"] == 4340)
+# Back-project the ladder: >=1000 is -50mV from 300-999, then -20mV per step.
+inferred_first = ref["vac_voltage_limit_mv"] + 50 + 20 * 3
+check("reference: inferred 1-199 band equals lifetime peak pack voltage",
+      inferred_first == ref["maximum_pack_voltage_mv"],
+      f"{inferred_first} mV vs {ref['maximum_pack_voltage_mv']} mV")
+check("reference: Apple health differs from NCC/Raw ratio",
+      abs(ref["maximum_capacity_percent_reported"] -
+          ref["nominal_charge_capacity_mah"] /
+          ref["apple_raw_max_capacity_mah"] * 100) > 10,
+      f"{ref['maximum_capacity_percent_reported']} vs "
+      f"{ref['nominal_charge_capacity_mah']/ref['apple_raw_max_capacity_mah']*100:.1f}%")
+
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

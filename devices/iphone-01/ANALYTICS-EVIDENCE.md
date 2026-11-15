@@ -121,6 +121,11 @@ and `MaximumFCC = 3837` are yet other quantities (cell chemical capacity and
 full-charge-capacity extremes), neither of which is that baseline. We do
 **not** know Apple's exact formula and do not guess one.
 
+A second, 1420-cycle device makes this unmistakable: its
+`MaximumCapacityPercent = 73` while `NCC / AppleRawMaxCapacity = 98.36%`
+— a **25 pp** gap, far too large to be rounding. See
+[`devices/reference-01/README.md`](../reference-01/README.md).
+
 **Consequence for this repo's conclusions**: the −0.43 pp "cliff", the
 stepwise-decay model and the 16×-noise argument all describe the **export
 tool's NCC-derived ratio**, not `MaximumCapacityPercent`. Apple's own
