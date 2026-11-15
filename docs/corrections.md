@@ -69,6 +69,29 @@ recomputed at the 2026-11-15 sample. In fact only `Raw Capacity` drifts
 (throughout the whole series), while `Nominal Capacity` decreases and the
 denominator stays fixed. The health percentage is a plain division.
 
+## 7. "OriginalBattery = 0 means a replacement battery" (withdrawn)
+
+The `reference-02` gauge record has `OriginalBattery = 0`. It was read as
+"battery has been replaced" and used to explain why the
+`NCC / nameplate` vs `MaximumCapacityPercent` gap reversed sign (−4.13 pp).
+
+That inference was **unfounded**: public sources only document `null` / `1`
+for this field, and the device owner confirms the battery is **original and
+never replaced** (`BatterySerialChanged = False` is consistent with that).
+The field's `0` value is now recorded with **unconfirmed semantics**.
+
+Consequences:
+
+- The "replacement battery" explanation for the sign reversal is withdrawn;
+  the reversal is now labelled **unexplained**.
+- The claim in §6 that the health gap "grows with age" is withdrawn too.
+  With three devices the gap is +1.89 / +15.34 / −4.13 pp — clearly
+  device-dependent, not monotonic in age.
+- Apple's implied baseline on `reference-02` is 3301 mAh, **6% above** its
+  3110 mAh nameplate, while it sits below the nameplate on the other two
+  devices. The core §6 conclusion (Apple's health figure is not
+  `NCC / nameplate`) is unaffected and in fact strengthened.
+
 ---
 
 All final numbers in `README.md`, `docs/findings.md` and

@@ -246,9 +246,13 @@ check("ref-02: peak pack voltage ~= 4.45V nameplate",
       f"{int(n2['charge_limit_voltage_v']*1000)} mV")
 check("ref-02: VacVoltageLimit explicitly absent",
       r2["vac_voltage_limit_available"] is False)
-check("ref-02: replacement battery flagged",
-      g2["original_battery"] == 0)
-check("ref-02: NCC/nameplate gap reverses sign (boundary condition)",
+check("ref-02: battery status recorded as original (owner-confirmed)",
+      "original" in r2["battery_status"].lower() and
+      g2["battery_serial_changed"] is False)
+check("ref-02: OriginalBattery=0 semantics left unconfirmed",
+      g2["original_battery"] == 0 and
+      "unconfirmed" in str(r2["caveats"]).lower() + r2["battery_status"].lower())
+check("ref-02: NCC/nameplate gap reverses sign (unexplained)",
       g2["maximum_capacity_percent_reported"] -
       g2["nominal_charge_capacity_mah"] / n2["rated_capacity_mah"] * 100 < 0,
       f"{g2['maximum_capacity_percent_reported'] - g2['nominal_charge_capacity_mah']/n2['rated_capacity_mah']*100:+.2f} pp")

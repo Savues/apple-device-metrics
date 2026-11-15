@@ -6,9 +6,13 @@ analytics files. One (`Analytics-Daily-*`) has no gauge records; a second
 snapshot. This device is kept separate and is **not** merged into
 `iphone-01` or any statistics.
 
-> ⚠️ `OriginalBattery = 0` — a replacement battery. The 3110 mAh nameplate
-> may describe the replacement cell rather than the cell that accumulated
-> 2919 cycles, so `NCC / nameplate` is **not** a valid health measure here.
+> ⚠️ `OriginalBattery = 0` appears in the gauge record. Public references
+> only document `null` / `1` for this field, so **`0` has no confirmed
+> meaning**; an earlier note in this repo read it as "replacement battery"
+> and that was an unfounded inference. The owner confirms this device has
+> its **original, never-replaced battery**, consistent with
+> `BatterySerialChanged = False`. See
+> [`docs/corrections.md`](../../docs/corrections.md).
 
 ## Manufacturer nameplate
 
@@ -55,7 +59,8 @@ values below were extracted manually and whitelisted.
 | `WeightedRa` | 338 |
 | `CycleCountLastQmax` | 87 |
 | `TotalOperatingTime` | 61934 h |
-| `OriginalBattery` | **0** (replacement) |
+| `OriginalBattery` | **0** (meaning unconfirmed) |
+| `BatterySerialChanged` | False (consistent with an original battery) |
 | `BatterySerialChanged` | False |
 | gauge `UpdateTime` | 2026-11-13 18:10:56 UTC |
 
@@ -76,7 +81,7 @@ predicts a current target near 4340 mV — but **this cannot be verified**
 without a `VacVoltageLimit` record. Older iOS versions may use a different
 aggregate set entirely.
 
-### 2. A boundary condition for the two-health-metric distinction
+### 2. An unexplained sign reversal in the health gap
 
 | Device | Cycles | `NCC / nameplate` | Apple `MaximumCapacityPercent` | Gap |
 |--------|--------|-------------------|--------------------------------|-----|
@@ -84,13 +89,31 @@ aggregate set entirely.
 | `reference-01` | 1420 | 57.66% | 73 | +15.34 pp |
 | **`reference-02`** | **2919** | **71.13%** | **67** | **−4.13 pp** |
 
-The gap **reverses sign** here. With `OriginalBattery = 0`, the 3110 mAh
-nameplate presumably describes the replacement cell while `CycleCount =
-2919` and the gauge state belong to the whole device's history. So this row
-does **not** contradict §6; it shows that `NCC / nameplate` is only
-meaningful for an original, matched battery. Apple's
-`MaximumCapacityPercent` (67) remains the reliable cross-device health
-figure.
+The gap **reverses sign** on this device. An earlier version of this repo
+attributed that to a replacement battery; **that explanation was withdrawn**
+— the owner confirms an original, never-replaced battery. The sign reversal
+is currently **unexplained**.
+
+What can be computed is the baseline implied by Apple's figure
+(`NCC / (MaximumCapacityPercent/100)`):
+
+| Device | Nameplate | Implied baseline | Baseline / nameplate |
+|--------|-----------|------------------|----------------------|
+| `iphone-01` | 3692 mAh | 3623 mAh | 0.981 |
+| `reference-01` | 2815 mAh | 2223 mAh | 0.790 |
+| **`reference-02`** | **3110 mAh** | **3301 mAh** | **1.062** |
+
+On the first two devices Apple's baseline sits **below** the nameplate;
+here it sits **6% above** it. That is why the sign flips. Note the implied
+3301 mAh is close to `MaximumFCC = 3265 mAh` and `NCCMax = 3211 mAh`, but
+with only aggregate values we cannot establish the exact formula — and we
+do not guess one.
+
+This still **supports §6** rather than contradicting it: Apple's health
+figure is demonstrably not `NCC / nameplate`, and its internal baseline is
+not even consistently on the same side of the nameplate across devices.
+What it removes is the tidy claim that the gap simply "grows with age" —
+with three devices it is clearly device-dependent.
 
 Note also `NCC / AppleRawMaxCapacity = 2212/2272 = 97.36%` while Apple says
 67 — another demonstration that Raw is a drifting gauge estimate, not a

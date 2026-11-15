@@ -123,17 +123,18 @@ full-charge-capacity extremes), neither of which is that baseline. We do
 
 A second, 1420-cycle device makes this unmistakable. With its 2815 mAh
 nameplate: `NCC / rated = 57.66%` but Apple reports **73** — a **15.34 pp**
-gap, versus only 1.89 pp on `iphone-01`. The gap grows with age, so it is
-not a fixed offset or rounding; Apple uses its own calibrated baseline and
-ageing model. See
+gap, versus only 1.89 pp on `iphone-01`. Two devices show the gap is not a
+fixed offset or rounding; Apple uses its own calibrated baseline. See
 [`devices/reference-01/README.md`](../reference-01/README.md).
-
-**Boundary condition**: on a third device with a **replacement battery**
-([`reference-02`](../reference-02/README.md), `OriginalBattery = 0`, 2919
-cycles), the gap reverses sign (−4.13 pp). There the 3110 mAh nameplate
-describes the replacement cell, not the cell that accumulated the cycles,
-so `NCC / nameplate` is no longer meaningful. Apple's
-`MaximumCapacityPercent = 67` is the reliable cross-device figure.
+**Third device — sign reversal, unexplained.** `reference-02` (2919
+cycles, **original battery**, owner-confirmed) gives `NCC/nameplate =
+71.13%` vs Apple **67**, a **−4.13 pp** gap. So the "gap grows with age"
+statement above does **not** generalise — with three devices the gap is
+clearly device-dependent. Apple's implied baseline there is 3301 mAh,
+**6% above** the 3110 mAh nameplate, whereas it is below the nameplate on
+the other two devices. We do not know why and do not guess. See
+[`devices/reference-02/README.md`](../reference-02/README.md) §2. What
+remains firm: `MaximumCapacityPercent` is not `NCC / nameplate`.
 
 **Consequence for this repo's conclusions**: the −0.43 pp "cliff", the
 stepwise-decay model and the 16×-noise argument all describe the **export
