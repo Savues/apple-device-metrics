@@ -21,6 +21,14 @@ More devices can be added as sibling directories under `devices/`.
 
 ## Headline findings
 
+> **Read this first**: there are two different "battery health" numbers.
+> `nominal_health_pct` (99.11%) is a ratio computed by the third-party export
+> tool from `NominalChargeCapacity / 3692`. Apple's own analytics field
+> `MaximumCapacityPercent` is **101** and **did not change** across the
+> 200-cycle step. Every decay figure below describes the NCC-derived ratio,
+> not the value iOS displays. See
+> [`ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md) §6.
+
 1. **`nominal_health_pct = nominal_capacity_mah / 3692`**, using the *fixed*
    nameplate rated capacity. Verified against all 6 snapshots with error
    ≤ 0.005 percentage points. The `raw_capacity_mah` column (3742→3692,

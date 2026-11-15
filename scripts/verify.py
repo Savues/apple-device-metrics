@@ -124,6 +124,9 @@ for fn in ana_files:
                                       "carrier", "productSku", "Serial", "ChemID")))
     check(f"{fn}: filename matches header date",
           fn == r.get("date", "") + ".json")
+    check(f"{fn}: Apple health field present",
+          isinstance(r.get("maximum_capacity_percent_reported"), int),
+          f"MaximumCapacityPercent={r.get('maximum_capacity_percent_reported')}")
     check(f"{fn}: health matches NCC/3692",
           abs(r.get("nominal_health_pct", 0) -
               r.get("nominal_charge_capacity_mah", 0) / RATED * 100) < 0.01)

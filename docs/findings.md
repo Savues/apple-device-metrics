@@ -62,6 +62,11 @@ Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal
 
 ## 2. Degradation shape: steps, not a slope
 
+> Scope note: every percentage in this section is the **export tool's
+> NCC-derived ratio**. Apple's `MaximumCapacityPercent` remained 101 on all
+> seven analytics files and shows no step. See
+> [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6.
+
 | Interval | Days | +Cycles | Δ health | %/day | %/cycle |
 |----------|------|---------|----------|-------|---------|
 | 09-19 → 09-23 | 4 | 4 | 0.02 | 0.0050 | 0.0050 |
@@ -239,7 +244,10 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
 5. Meaning of the `hrs_soc` column (always 0) is still unknown — no matching
    field found in the analytics file.
 6. `MaximumCapacityPercent = 101` in analytics vs exported `Nominal Health`
-   99.11% — different definitions; the export tool computes its own ratio.
+   99.11% — different baselines; the former is Apple's displayed health and
+   stayed constant across the 200-cycle step. All decay analysis here uses
+   the NCC-derived ratio. See
+   [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6.
 
 ---
 

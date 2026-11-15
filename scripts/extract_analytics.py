@@ -64,7 +64,8 @@ FIELDS = {
 TIMELINE_COLS = ["date", "cycle_count", "vac_voltage_limit_mv",
                  "expected_voltage_mv", "node_band", "voltage_matches_band",
                  "nominal_charge_capacity_mah", "apple_raw_max_capacity_mah",
-                 "nominal_health_pct", "daily_min_soc_pct", "daily_max_soc_pct",
+                 "nominal_health_pct", "maximum_capacity_percent_reported",
+                 "daily_min_soc_pct", "daily_max_soc_pct",
                  "cycle_count_last_qmax", "qmax_cell0_mah",
                  "gauge_update_time_utc", "ios_version"]
 
@@ -184,6 +185,7 @@ def build_timeline(records):
                 "nominal_charge_capacity_mah": r.get("nominal_charge_capacity_mah"),
                 "apple_raw_max_capacity_mah": r.get("apple_raw_max_capacity_mah"),
                 "nominal_health_pct": r.get("nominal_health_pct"),
+                "maximum_capacity_percent_reported": r.get("maximum_capacity_percent_reported", ""),
                 "daily_min_soc_pct": r.get("daily_min_soc_pct"),
                 "daily_max_soc_pct": r.get("daily_max_soc_pct"),
                 "cycle_count_last_qmax": r.get("cycle_count_last_qmax"),

@@ -95,8 +95,53 @@ Two corrections to earlier notes:
   equal the nameplate 3692 at this snapshot. It is **not** the health
   denominator; the denominator is the fixed nameplate rated capacity.
 - `MaximumCapacityPercent` in the analytics is **101**, which does **not**
-  equal the exported `Nominal Health` 99.11%. These are different quantities;
-  the export tool computes its own ratio. Do not treat the two as the same.
+  equal the exported `Nominal Health` 99.11%. See **§6** for the full
+  distinction — these are different quantities and the gap matters.
+
+---
+
+## 6. Two different "battery health" numbers
+
+There are **two** percentages in this dataset. conflating them is wrong.
+
+| | `Nominal Health` (export) | `MaximumCapacityPercent` (analytics) |
+|---|---|---|
+| Source | third-party export tool | Apple's own gauge field (`last_value_MaximumCapacityPercent`) |
+| Formula | `NominalChargeCapacity / 3692 × 100` (verified ≤0.005 pp over 6 rows) | Apple internal algorithm, uses its own design-capacity / calibration baseline — **not** a simple division by 3692 |
+| 11-15 value | **99.11%** | **101** (integer) |
+| 11-09 … 11-15 | 99.079 → 99.106 (and 99.54 → 99.11 across the 6-row export) | **101 on all seven days, unchanged** |
+| Granularity | 0.01 pp, derived from mAh | coarse integer, only moves on recalibration |
+| What it is | a ratio of two published numbers | the value Apple's battery-health feature uses (per multiple iOS analytics references) |
+
+**Why the 1.89 pp gap?** With the nameplate 3692 as denominator, NCC 3659
+gives 99.11%. Apple's 101 implies a different baseline (roughly
+3659/1.01 ≈ 3623 mAh), i.e. its internal design capacity / calibration
+reference is lower than the nameplate rated capacity. `QmaxCell0 = 3824`
+and `MaximumFCC = 3837` are yet other quantities (cell chemical capacity and
+full-charge-capacity extremes), neither of which is that baseline. We do
+**not** know Apple's exact formula and do not guess one.
+
+**Consequence for this repo's conclusions**: the −0.43 pp "cliff", the
+stepwise-decay model and the 16×-noise argument all describe the **export
+tool's NCC-derived ratio**, not `MaximumCapacityPercent`. Apple's own
+health field stayed at 101 throughout the 200-cycle step — so the step is
+**not visible in Apple's displayed battery health**. It is visible in the
+gauge's `NominalChargeCapacity` (3675 → 3658 mAh) and in
+`VacVoltageLimit` (4500 → 4480 mV).
+
+Which is "accurate"? Both are internally consistent for their own
+definitions. `Nominal Health` is exactly reproducible from published mAh,
+which makes it the better **measurement signal** for this analysis;
+`MaximumCapacityPercent` is what the OS reports to the user. Neither is a
+direct laboratory measurement of cell capacity. Both are exposed in
+[`analytics-timeline.csv`](analytics-timeline.csv) side by side.
+
+### References for field semantics
+
+- [How to check Battery Health on iPadOS/macOS (DEV)](https://dev.to/tetra2000/how-to-check-battery-health-on-ipadosmacos-154) — `last_value_MaximumCapacityPercent` "seems to be 'Battery Health' which [is] available on iPhone"; `NominalChargeCapacity` is the normalized value used to calculate it.
+- [iPad Battery Health (Lei Mao)](https://leimao.github.io/blog/iPad-Battery-Health/) — uses `MaximumCapacityPercent` to obtain battery health on iPad, where Settings has no such page.
+- [Apple StackExchange: interpreting iPhone analytics battery data](https://apple.stackexchange.com/questions/458960/how-to-interpret-the-very-rich-iphone-analytics-data-about-battery-use-health) — discussion showing `MaximumCapacityPercent` can exceed 100 (e.g. 103 after a battery swap), confirming it is a calibrated relative figure, not a simple mAh ratio.
+
 
 ---
 

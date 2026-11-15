@@ -75,6 +75,9 @@ This file confirms the exact source of each health-table column:
 
 Note `MaximumCapacityPercent` in the analytics is **101**, not 99.11 — the
 export tool's `Nominal Health` is its own ratio, not that system field.
+See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6:
+all stepwise-decay conclusions in this repo describe the NCC-derived ratio,
+whereas Apple's own health field stayed at 101 across the 200-cycle step.
 
 ### Single voltage reading
 
