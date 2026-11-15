@@ -1,6 +1,6 @@
 {
   "device_id": "reference-02",
-  "purpose": "Nameplate-only reference. No battery gauge data available in the supplied analytics file.",
+  "purpose": "Cross-device reference. NOT part of the iphone-01 longitudinal dataset.",
   "source_date": "2026-11-15",
   "os_version": "15.1",
   "nameplate": {
@@ -12,8 +12,32 @@
     "charge_limit_voltage_v": 4.45
   },
   "energy_consistency": "battery_energy_wh = 3.83V x 3110mAh = 11.911 Wh ~ 11.91 Wh. cell_energy_wh / rated capacity = 3.865 V, 0.035 V above nominal.",
-  "analytics_file_type": "Analytics-Daily-*.ips.ca.synced (bug_type 211, 70 records, 27.6 KB)",
-  "analytics_limitation": "Contains only JetsamAggregationV3, WlpFixApsCountPerScanType1, HomeKit, Health and CableTypeChangedV2 records. No BatteryConfigValueHistogramFinal_V2 and no VacVoltageLimit, so CycleCount, NominalChargeCapacity, MaximumCapacityPercent and VacVoltageLimit cannot be obtained. The raw .ips is not published (contains crashreporter_key, incident_id and other identifiers).",
+  "gauge": {
+    "source_record": "BatteryConfigValueHistogram_Final (from Analytics-Never-2026-11-15-080005.0005.ips.ca.synced)",
+    "cycle_count": 2919,
+    "apple_raw_max_capacity_mah": 2272,
+    "nominal_charge_capacity_mah": 2212,
+    "maximum_capacity_percent_reported": 67,
+    "maximum_pack_voltage_mv": 4449,
+    "minimum_pack_voltage_mv": 2541,
+    "cycle_count_last_qmax": 87,
+    "qmax_cell0_mah": 2488,
+    "maximum_fcc_mah": 3265,
+    "minimum_fcc_mah": 617,
+    "maximum_qmax_mah": 3289,
+    "ncc_max_mah": 3211,
+    "ncc_min_mah": 2037,
+    "daily_min_soc_pct": 26,
+    "daily_max_soc_pct": 85,
+    "weighted_ra": 338,
+    "battery_health_metric": 338,
+    "total_operating_time_h": 61934,
+    "original_battery": 0,
+    "battery_serial_changed": false,
+    "gauge_update_time_utc": "2026-11-13T18:10:56Z"
+  },
+  "vac_voltage_limit_available": false,
+  "vac_voltage_limit_note": "iOS 15.1 aggregate set has no VacVoltageLimit record. MaximumPackVoltage = 4449 mV is a lifetime peak, not the configured software target.",
   "predicted_voltage_ladder_mv": {
     "1-199": 4450,
     "200-249": 4430,
@@ -21,5 +45,10 @@
     "300-999": 4390,
     ">=1000": 4340
   },
-  "prediction_basis": "Same 4.45 V nameplate as reference-01, whose measured VacVoltageLimit at 1420 cycles is 4340 mV. Predicted only, NOT measured on this device."
+  "prediction_basis": "Same 4.45 V nameplate as reference-01 (measured 4340 mV at 1420 cycles) and this device's MaximumPackVoltage = 4449 mV ~ 4450 mV top rung. The ladder itself is NOT measured on this device.",
+  "caveats": [
+    "OriginalBattery = 0: this device has a replacement battery. The supplied 3110 mAh nameplate may describe the replacement cell, not the cell that accumulated 2919 cycles.",
+    "Two analytics files were supplied for this device: Analytics-Daily (70 records, no gauge data) and Analytics-Never (355 records, one BatteryConfigValueHistogram_Final). Neither contains VacVoltageLimit.",
+    "Raw .ips files are not published (contain crashreporter_key, incident_id, UUIDs and other identifiers)."
+  ]
 }

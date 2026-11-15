@@ -214,7 +214,7 @@ health_gap = ref["maximum_capacity_percent_reported"] - \
 check("reference: Apple health differs from NCC/nameplate by >10pp",
       health_gap > 10, f"gap {health_gap:.2f} pp")
 
-print("\n=== reference-02 (nameplate only) ===")
+print("\n=== reference-02 (nameplate + gauge snapshot) ===")
 r2 = json.load(open(os.path.join(ROOT, "devices/reference-02/reference.json"),
                     encoding="utf-8"))
 n2 = r2["nameplate"]
@@ -236,9 +236,22 @@ check("ref-02: capacity/energy ratios agree with reference-01",
 ladder = r2["predicted_voltage_ladder_mv"]
 check("ref-02: predicted >=1000 band matches reference-01 measured",
       ladder[">=1000"] == ref["vac_voltage_limit_mv"])
-check("ref-02: no gauge fields claimed",
-      not any(k in r2 for k in ("cycle_count", "vac_voltage_limit_mv",
-                                "nominal_charge_capacity_mah")))
+g2 = r2["gauge"]
+check("ref-02: gauge cycle count is high", g2["cycle_count"] > 1000,
+      str(g2["cycle_count"]))
+check("ref-02: peak pack voltage ~= 4.45V nameplate",
+      abs(g2["maximum_pack_voltage_mv"] -
+          n2["charge_limit_voltage_v"] * 1000) <= 5,
+      f"{g2['maximum_pack_voltage_mv']} mV vs "
+      f"{int(n2['charge_limit_voltage_v']*1000)} mV")
+check("ref-02: VacVoltageLimit explicitly absent",
+      r2["vac_voltage_limit_available"] is False)
+check("ref-02: replacement battery flagged",
+      g2["original_battery"] == 0)
+check("ref-02: NCC/nameplate gap reverses sign (boundary condition)",
+      g2["maximum_capacity_percent_reported"] -
+      g2["nominal_charge_capacity_mah"] / n2["rated_capacity_mah"] * 100 < 0,
+      f"{g2['maximum_capacity_percent_reported'] - g2['nominal_charge_capacity_mah']/n2['rated_capacity_mah']*100:+.2f} pp")
 
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

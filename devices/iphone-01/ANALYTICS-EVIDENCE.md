@@ -128,6 +128,13 @@ not a fixed offset or rounding; Apple uses its own calibrated baseline and
 ageing model. See
 [`devices/reference-01/README.md`](../reference-01/README.md).
 
+**Boundary condition**: on a third device with a **replacement battery**
+([`reference-02`](../reference-02/README.md), `OriginalBattery = 0`, 2919
+cycles), the gap reverses sign (−4.13 pp). There the 3110 mAh nameplate
+describes the replacement cell, not the cell that accumulated the cycles,
+so `NCC / nameplate` is no longer meaningful. Apple's
+`MaximumCapacityPercent = 67` is the reliable cross-device figure.
+
 **Consequence for this repo's conclusions**: the −0.43 pp "cliff", the
 stepwise-decay model and the 16×-noise argument all describe the **export
 tool's NCC-derived ratio**, not `MaximumCapacityPercent`. Apple's own

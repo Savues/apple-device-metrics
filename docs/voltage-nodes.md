@@ -64,11 +64,14 @@ remain third-party reverse-engineering rather than Apple documentation.
 
 A third device ([`reference-02`](../devices/reference-02/README.md), iOS
 15.1, 3110 mAh) shares the same 3.83 V / **4.45 V** nameplate platform as
-`reference-01`. Its `Analytics-Daily` file contains no battery gauge
-records, so its ladder (4450 → … → 4340 mV) is **predicted, not measured**.
-It does, however, confirm the platform's energy figures are internally
-consistent: capacity ratio 3110/2815 = 1.1048× equals the battery-energy
-ratio 11.91/10.78 = 1.1048×.
+`reference-01`. A second analytics file for it (`Analytics-Never-*`) supplies
+a gauge snapshot at **2919 cycles** with `MaximumPackVoltage = 4449 mV` —
+matching the 4450 mV top rung — but no `VacVoltageLimit` record, so its
+ladder (4450 → … → 4340 mV) remains **predicted, not measured**. iOS 15.1
+uses an older aggregate set (`BatteryConfigValueHistogram_Final`) that does
+not include the voltage-limit aggregate. Its nameplate energy figures are
+internally consistent with `reference-01`: capacity ratio 3110/2815 =
+1.1048× equals the battery-energy ratio 11.91/10.78 = 1.1048×.
 
 ## Variant accounts (important)
 

@@ -1,9 +1,14 @@
-# Reference device 2 — nameplate only
+# Reference device 2 — nameplate + gauge snapshot
 
-A third device was supplied with its manufacturer nameplate. Its analytics
-file is an `Analytics-Daily-*` report that contains **no battery gauge
-records**, so this device contributes nameplate data only. It is kept
-separate and is not merged into `iphone-01` or any statistics.
+A third device was supplied with its manufacturer nameplate and two
+analytics files. One (`Analytics-Daily-*`) has no gauge records; a second
+(`Analytics-Never-*`) contains a full `BatteryConfigValueHistogram_Final`
+snapshot. This device is kept separate and is **not** merged into
+`iphone-01` or any statistics.
+
+> ⚠️ `OriginalBattery = 0` — a replacement battery. The 3110 mAh nameplate
+> may describe the replacement cell rather than the cell that accumulated
+> 2919 cycles, so `NCC / nameplate` is **not** a valid health measure here.
 
 ## Manufacturer nameplate
 
@@ -20,22 +25,78 @@ Energy check: `3.83 V × 3110 mAh = 11.911 Wh` ≈ 11.91 Wh ✓.
 Cell energy / capacity = `12.02/3.110 = 3.865 V`, i.e. **+0.035 V**
 above nominal.
 
-## What the analytics file contains
+## The two analytics files
 
-70 NDJSON records of `bug_type 211`: `JetsamAggregationV3` (17),
-`WlpFixApsCountPerScanType1` (17), `HomeKitDailyErrorAggregationV5` (13),
-Health/menstrual-cycle aggregates, `CableTypeChangedV2` and
-`PowerlogTaskingReport`. **Zero** occurrences of `CycleCount`,
-`NominalChargeCapacity`, `MaximumCapacityPercent`, `AppleRawMaxCapacity`,
-`VacVoltageLimit` or `PackVoltage`.
+| File | Records | Gauge data |
+|------|---------|------------|
+| `Analytics-Daily-*` (27.6 KB) | 70 | **none** — JetsamV3, WlpFixAps, HomeKit, Health, CableTypeChangedV2 |
+| `Analytics-Never-*` (93.7 KB) | 355 | **one** `BatteryConfigValueHistogram_Final` record |
 
-`scripts/extract_analytics.py` will refuse such a file with
-`missing required records` — that is expected and correct. Do not treat
-this as a parse failure.
+The second file supplies the gauge snapshot. Note the record name is
+`BatteryConfigValueHistogram_Final` (no `_V2`), i.e. an older iOS 15.1
+schema. `scripts/extract_analytics.py` expects
+`BatteryConfigValueHistogramFinal_V2` plus `VacVoltageLimit` and will
+**reject both files** — expected, since neither has `VacVoltageLimit`. The
+values below were extracted manually and whitelisted.
 
-## Value despite having no gauge data
+### Gauge snapshot (2026-11-15, iOS 15.1)
 
-### 1. Third confirmation of the +0.04 V cell-vs-pack offset
+| Field | Value |
+|-------|-------|
+| `CycleCount` | **2919** |
+| `MaximumCapacityPercent` | **67** |
+| `NominalChargeCapacity` | 2212 mAh |
+| `AppleRawMaxCapacity` | 2272 mAh |
+| `MaximumPackVoltage` | **4449 mV** |
+| `MinimumPackVoltage` | 2541 mV |
+| `QmaxCell0` | 2488 mAh |
+| `MaximumFCC` / `MinimumFCC` | 3265 / 617 mAh |
+| `NCCMax` / `NCCMin` | 3211 / 2037 mAh |
+| `WeightedRa` | 338 |
+| `CycleCountLastQmax` | 87 |
+| `TotalOperatingTime` | 61934 h |
+| `OriginalBattery` | **0** (replacement) |
+| `BatterySerialChanged` | False |
+| gauge `UpdateTime` | 2026-11-13 18:10:56 UTC |
+
+**No `VacVoltageLimit`** exists in this iOS 15.1 aggregate set. The only
+voltage evidence is `MaximumPackVoltage = 4449 mV`, which is a lifetime peak
+and not a configured target.
+
+## What this device contributes
+
+### 1. A 4.45 V platform at very high cycle count
+
+`MaximumPackVoltage = 4449 mV` ≈ 4450 mV matches the 4.45 V nameplate top
+rung, just as `reference-01` (4450 mV) and `iphone-01` (4496 mV ≈ 4500 mV)
+do. Three devices, three nameplates, three matching peak pack voltages.
+
+At 2919 cycles this device is deep in the ≥1000 band, so the step table
+predicts a current target near 4340 mV — but **this cannot be verified**
+without a `VacVoltageLimit` record. Older iOS versions may use a different
+aggregate set entirely.
+
+### 2. A boundary condition for the two-health-metric distinction
+
+| Device | Cycles | `NCC / nameplate` | Apple `MaximumCapacityPercent` | Gap |
+|--------|--------|-------------------|--------------------------------|-----|
+| `iphone-01` | 208 | 99.11% | 101 | +1.89 pp |
+| `reference-01` | 1420 | 57.66% | 73 | +15.34 pp |
+| **`reference-02`** | **2919** | **71.13%** | **67** | **−4.13 pp** |
+
+The gap **reverses sign** here. With `OriginalBattery = 0`, the 3110 mAh
+nameplate presumably describes the replacement cell while `CycleCount =
+2919` and the gauge state belong to the whole device's history. So this row
+does **not** contradict §6; it shows that `NCC / nameplate` is only
+meaningful for an original, matched battery. Apple's
+`MaximumCapacityPercent` (67) remains the reliable cross-device health
+figure.
+
+Note also `NCC / AppleRawMaxCapacity = 2212/2272 = 97.36%` while Apple says
+67 — another demonstration that Raw is a drifting gauge estimate, not a
+health denominator.
+
+### 3. Third confirmation of the +0.04 V cell-vs-pack offset
 
 | Device | Nominal V | Cell energy / mAh | Offset |
 |--------|-----------|-------------------|--------|
@@ -47,7 +108,7 @@ Three independent nameplates show the cell-energy figure implies a
 reference voltage ≈0.04 V above the pack nominal voltage. This is a
 consistent specification convention, not a data error.
 
-### 2. Same voltage platform, different capacity
+### 4. Same voltage platform, different capacity
 
 `reference-01` and `reference-02` share **3.83 V / 4.45 V** but differ in
 capacity (2815 vs 3110 mAh):
@@ -62,18 +123,17 @@ The ratios agree to 4 decimal places, confirming these are the same cell
 chemistry at different sizes and that the nameplate energy figures are
 internally consistent across the platform.
 
-### 3. Predicted (not measured) voltage ladder
+### 5. Predicted (not measured) voltage ladder
 
 With a 4.45 V nameplate, the same −0.02 V / −0.05 V step table predicts:
 4450 / 4430 / 4410 / 4390 / 4340 mV across the 1–199 / 200–249 / 250–299 /
 300–999 / ≥1000 bands. `reference-01` measured 4340 mV at 1420 cycles on
 this exact platform, so the prediction is well grounded — but **it has not
-been measured on this device**. A full `Analytics-*` file (not
-`Analytics-Daily-*`) with `BatteryConfigValueHistogramFinal_V2` and
-`VacVoltageLimit` would be needed.
+been measured on this device**: neither supplied file contains a
+`VacVoltageLimit` record, even in the larger `Analytics-Never-*` file.
 
 ## Status
 
-Nameplate reference only. No findings were computed from this device.
-[`reference.json`](reference.json) holds the whitelisted values; the raw
-`.ips` is not published.
+Nameplate + one gauge snapshot, reference only. No findings were computed
+from this device. [`reference.json`](reference.json) holds the whitelisted
+values; the raw `.ips` files are not published.
