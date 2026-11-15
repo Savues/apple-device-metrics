@@ -281,5 +281,32 @@ check("A-B: 1.46 pp per 20 mV node",
 check("A-B: span matches iphone-01 top to >=1000 band",
       ca["voltage_limit_mv"] == 4500 and cb["voltage_limit_mv"] == 4390)
 
+print("\n=== iphone-01-only forecast ===")
+fc = json.load(open(os.path.join(ROOT, "docs/iphone17-forecast.json"),
+                    encoding="utf-8"))
+check("forecast: base is 208 cycles / 99.106%",
+      fc["base"]["cycle"] == 208 and abs(fc["base"]["health_pct"] - 99.106) < 0.001)
+check("forecast: other devices and 80% spec excluded",
+      any("reference-01" in x for x in fc["not_used"]) and
+      any("reference-02" in x for x in fc["not_used"]) and
+      any("80%" in x for x in fc["not_used"]))
+check("forecast: derived from this device's own rate/slope/step",
+      fc["measured_on_this_device"]["cycles_per_day"] == 1.5386 and
+      fc["measured_on_this_device"]["plateau_pp_per_day"] == 0.00476 and
+      fc["measured_on_this_device"]["step_pp_per_20mv_node"] == 0.43)
+check("forecast: 250 node is 2026-12-12 / 4460 mV",
+      fc["nodes"][0]["date"] == "2026-12-12" and
+      fc["nodes"][0]["vac_voltage_limit_mv"] == 4460)
+check("forecast: 1000 cycles ≈ 95.366% with 1.29pp lock-in",
+      abs(fc["at_1000_cycles"]["ncc_health_pct"] - 95.366) < 0.01 and
+      abs(fc["at_1000_cycles"]["of_which_reversible_lockin_pp"] - 1.29) < 0.01)
+frows = load("docs/iphone17-forecast.csv")
+check("forecast: CSV is monotonic non-increasing in health",
+      all(float(a["ncc_health_pct"]) >= float(b["ncc_health_pct"])
+          for a, b in zip(frows, frows[1:])))
+check("forecast: first CSV row matches base",
+      float(frows[0]["ncc_health_pct"]) == 99.106 and
+      int(frows[0]["cycle"]) == 208)
+
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

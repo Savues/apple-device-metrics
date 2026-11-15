@@ -1,0 +1,61 @@
+{
+  "scope": "iphone-01 ONLY. Other reference devices are explicitly excluded from fitting.",
+  "base": {
+    "date": "2026-11-15",
+    "cycle": 208,
+    "ncc_mah": 3659,
+    "health_pct": 99.106,
+    "apple_max_capacity_percent": 101
+  },
+  "measured_on_this_device": {
+    "cycles_per_day": 1.5386,
+    "plateau_pp_per_day": 0.00476,
+    "step_pp_per_20mv_node": 0.43,
+    "apple_display_constant": "101 on all 7 analytics files (11-09..11-15)"
+  },
+  "assumptions": [
+    "Plateau slope stays constant (no acceleration assumed)",
+    "Each future 20mV node causes the same -0.43pp as the observed 200 node",
+    ">=1000 band = 4390 mV, extrapolated from iPhone 13 series (low confidence)",
+    "Cycle rate 1.5386/day continues",
+    "Apple displayed MaximumCapacityPercent is NOT modelled: this device has never shown a change, so no curve can be fitted from its own data"
+  ],
+  "not_used": [
+    "reference-01 (1420 cycles / 73%)",
+    "reference-02 (2919 cycles / 67%)",
+    "Apple 1000-cycle / 80% specification as an ageing anchor",
+    "cross-device concave ageing curve"
+  ],
+  "nodes": [
+    {
+      "cycle": 250,
+      "date": "2026-12-12",
+      "days_from_base": 27,
+      "vac_voltage_limit_mv": 4460,
+      "cumulative_derating_mv": 40,
+      "ncc_health_pct": 98.546
+    },
+    {
+      "cycle": 300,
+      "date": "2027-01-13",
+      "days_from_base": 60,
+      "vac_voltage_limit_mv": 4440,
+      "cumulative_derating_mv": 60,
+      "ncc_health_pct": 97.962
+    },
+    {
+      "cycle": 1000,
+      "date": "2028-04-12",
+      "days_from_base": 515,
+      "vac_voltage_limit_mv": 4390,
+      "cumulative_derating_mv": 110,
+      "ncc_health_pct": 95.366
+    }
+  ],
+  "at_1000_cycles": {
+    "ncc_health_pct": 95.366,
+    "of_which_reversible_lockin_pp": 1.29,
+    "chemical_only_pct": 96.656
+  },
+  "uncertainty": "Medium to 500 cycles (one node observed, plateau measured), LOW beyond 1000 cycles (extrapolated voltage band, no ageing acceleration modelled)."
+}

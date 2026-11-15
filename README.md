@@ -129,8 +129,11 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `devices/iphone-01/device.json` | nameplate parameters |
 | `devices/iphone-01/voltage-reading.md` | single 4.04V @ 70% reading + OCV check |
 | `docs/findings.md` | full analysis |
-| `docs/lifetime-projection.md` | lifetime trend after the voltage step-down |
+| `docs/lifetime-projection.md` | general lifetime reasoning (cross-device context; **not** the iphone-01 forecast) |
+| `docs/iphone17-forecast.md` | **iphone-01-only future battery curve** (owner-requested) |
+| `docs/iphone17-forecast.csv` / `.json` / `.svg` | forecast data and chart |
 | `docs/voltage-capacity-experiment.json` | A/B measurement: voltage limit vs reported capacity |
+| `scripts/forecast.py` | regenerates the iphone-01-only forecast |
 | `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
 | `docs/methodology.md` | field definitions, units, known limitations |
 | `docs/corrections.md` | errors found and corrected during analysis |

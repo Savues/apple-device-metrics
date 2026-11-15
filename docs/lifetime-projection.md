@@ -5,6 +5,12 @@ This document replaces the linear extrapolation that was withdrawn in
 easy to conflate: **displayed health**, **usable capacity per charge**, and
 **chemical ageing rate**.
 
+> ⚠️ **For the main device's future curve, use
+> [`iphone17-forecast.md`](iphone17-forecast.md) instead.** Per the owner,
+> the two reference devices had irregular usage and must not be used to fit
+> `iphone-01`'s trajectory. The cross-device anchors in §1A below are kept
+> as general context only, **not** as a prediction for this device.
+>
 > ⚠️ **Correction (2026-11-15)**: an earlier version of this document used
 > Apple's "80% at 1000 cycles" specification as a straight ageing anchor.
 > That was wrong — see §0 and [`corrections.md`](corrections.md) §8. The
