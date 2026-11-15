@@ -133,7 +133,8 @@ only — no serial, UDID, model identifier or analytics filename.
 and is normalised to ISO-8601 UTC. It records **when the gauge state was
 actually written**, which can predate the file's generation date — e.g. the
 11-11 and 11-12 files both carry `2026-11-10T14:03:43Z` (22:03 local),
-meaning the 11-12 file merely re-reported a stale snapshot.
+meaning the 11-12 file merely re-reported a stale snapshot, while the 11-10
+file carries `2026-11-09T13:58:20Z` (11-09 21:58 local) and is independent.
 
 Source-log integrity: 325/325 sessions parsed, 0 parse errors.
 

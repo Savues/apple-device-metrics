@@ -38,18 +38,19 @@ Consequences:
   The convergence on the 3692 nameplate was coincidental.
 - Therefore the −0.43 pp drop is a real **−16 mAh** reduction in reported
   nominal capacity (3675→3659), not an artefact of a moving denominator or
-  rounding noise. Five consecutive analytics snapshots (11-11…11-15,
-  cycles 203/203/205/207/208) all report NCC 3658–3659, so the drop is
-  bracketed to **cycles 194 → 203** — 9 cycles over 7 days (1.29 cycles/day),
-  a window containing the 200 node. `VacVoltageLimit` was already 4480 mV at
-  cycle 203, and the shared `UpdateTime` of the 11-11/11-12 files shows the
-  state was last written **2026-11-10 22:03 local** — so the step is no later
-  than that evening. Those two files are the same gauge snapshot re-reported
-  (identical payload except aggregate `Count`), not independent observations.
-- **Noise scale**: over the five archived files NCC is 3658 → 3658 → 3658 →
-  3659 → 3659 mAh, i.e. 1 mAh = 0.027 pp of jitter (including a rebound),
-  while `AppleRawMaxCapacity` swings 3678 → 3678 → 3690 → 3683 → 3692
-  (14 mAh = 0.379 pp, **14× noisier**). The −0.43 pp cliff is ~16× the daily
+  rounding noise. Six consecutive analytics snapshots (11-10…11-15,
+  cycles 202/203/203/205/207/208) all report NCC 3658–3659, so the drop is
+  bracketed to **cycles 194 → 202** — 8 cycles over 5 days (1.60 cycles/day),
+  a window containing the 200 node (≈ 2026-11-08 at this rate).
+  `VacVoltageLimit` was already 4480 mV at cycle 202. The 11-10 snapshot is
+  independent and its `UpdateTime` = **2026-11-09 21:58 local** bounds the
+  step to before that evening. The 11-11/11-12 files share the later
+  `UpdateTime` (11-10 22:03) with identical payloads, so 11-12 is a stale
+  re-report of the same gauge state, not an independent observation.
+- **Noise scale**: over the six archived files NCC is 3658 ×3 → 3659 ×3 mAh,
+  i.e. 1 mAh = 0.027 pp of jitter (including a rebound), while
+  `AppleRawMaxCapacity` swings 3708 → 3678 → 3678 → 3690 → 3683 → 3692
+  (30 mAh = 0.813 pp, **30× noisier**). The −0.43 pp cliff is ~16× the daily
   NCC noise — a genuine step, not sampling jitter. NCC is *not* strictly
   monotonic day-to-day, even though the sparse 6-row export is.
 - The >100% readings early on are normal pre-calibration overshoot.
