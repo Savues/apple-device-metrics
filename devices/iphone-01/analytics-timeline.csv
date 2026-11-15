@@ -1,3 +1,4 @@
 date,cycle_count,vac_voltage_limit_mv,expected_voltage_mv,node_band,voltage_matches_band,nominal_charge_capacity_mah,apple_raw_max_capacity_mah,nominal_health_pct,daily_min_soc_pct,daily_max_soc_pct,cycle_count_last_qmax,qmax_cell0_mah,ios_version
+2026-11-13,205,4480,4480,200-249,True,3658,3690,99.079,19,74,138,3824,26.4.2
 2026-11-14,207,4480,4480,200-249,True,3659,3683,99.106,31,59,138,3824,26.4.2
 2026-11-15,208,4480,4480,200-249,True,3659,3692,99.106,39,63,138,3824,26.4.2

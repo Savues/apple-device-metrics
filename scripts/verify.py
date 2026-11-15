@@ -47,7 +47,10 @@ check("health = nominal/3692 within 0.01pp", worst < 0.01, f"max error {worst:.4
 cyc = [int(r["cycle_count"]) for r in health]
 check("cycle counts strictly increasing", all(a < b for a, b in zip(cyc, cyc[1:])))
 nom = [int(r["nominal_capacity_mah"]) for r in health]
-check("nominal capacity monotonically decreasing", all(a >= b for a, b in zip(nom, nom[1:])))
+# Only the sparse 6-row export is monotonic. Daily analytics snapshots show
+# small rebounds (3658 -> 3659 mAh), so do NOT apply this check to the archive.
+check("export-table nominal capacity monotonically decreasing",
+      all(a >= b for a, b in zip(nom, nom[1:])))
 
 print("\n=== charging sessions ===")
 check("session count matches summary", len(sess) == summary["sessions"],

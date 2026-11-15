@@ -36,11 +36,17 @@ Consequences:
   `NominalChargeCapacity` stays 3659 and health stays 99.106% — see
   [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
   The convergence on the 3692 nameplate was coincidental.
-- Therefore the 2026-11-15 drop of −0.43 pp is a real **−16 mAh** reduction in
-  reported nominal capacity (3675→3659), not an artefact of a moving
-  denominator or rounding noise. Both 11-14 and 11-15 already report 3659,
-  so the drop happened within cycles 194→207 — consistent with the 200 node,
-  though not pinned to an exact day.
+- Therefore the −0.43 pp drop is a real **−16 mAh** reduction in reported
+  nominal capacity (3675→3659), not an artefact of a moving denominator or
+  rounding noise. Three consecutive analytics snapshots (11-13/14/15, cycles
+  205/207/208) all report NCC 3658–3659, so the drop is now bracketed to
+  **cycles 194 → 205** — a window containing the 200 node, at ~1.38
+  cycles/day ≈ 8 calendar days. `VacVoltageLimit` was already 4480 mV at
+  cycle 205.
+- **Noise scale**: daily NCC is 3658 → 3659 → 3659 mAh, i.e. 1 mAh =
+  0.027 pp of jitter (including a +1 mAh rebound). The −0.43 pp cliff is
+  ~16× the daily noise — a genuine step, not sampling jitter. Note NCC is
+  *not* strictly monotonic day-to-day, even though the sparse 6-row export is.
 - The >100% readings early on are normal pre-calibration overshoot.
 
 Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal

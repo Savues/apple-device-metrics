@@ -57,6 +57,11 @@ More devices can be added as sibling directories under `devices/`.
    `NominalChargeCapacity` and health unchanged. Its convergence on the 3692
    nameplate at 11-15 was coincidental.
 
+8. **The −0.43 pp cliff is 16× the daily noise.** Three consecutive analytics
+   snapshots give NCC 3658 / 3659 / 3659 mAh (0.027 pp jitter, including a
+   rebound), so the step is real. The cliff is now bracketed to cycles
+   194→205, with 4480 mV already active at cycle 205.
+
 See [`docs/findings.md`](docs/findings.md) for the full analysis, including
 corrections to earlier misreadings.
 

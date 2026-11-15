@@ -137,12 +137,32 @@ python3 scripts/verify.py
 
 | Date (file) | Aggregation window (UTC) | Cycles | `VacVoltageLimit` | Band | `AppleRawMaxCapacity` | NCC | Health | DailyMinSoc |
 |-------------|--------------------------|--------|-------------------|------|------------------------|-----|--------|-------------|
+| 2026-11-13 | 11-12 00:00 → 11-13 00:00 | 205 | 4480 mV (4.48V) | 200–249 ✓ | 3690 | 3658 | 99.079% | 19 |
 | 2026-11-14 | 11-13 00:00 → 11-14 00:00 | 207 | 4480 mV (4.48V) | 200–249 ✓ | 3683 | 3659 | 99.106% | 31 |
 | 2026-11-15 | 11-14 00:00 → 11-15 00:00 | 208 | 4480 mV (4.48V) | 200–249 ✓ | 3692 | 3659 | 99.106% | 39 |
 
 Full machine-readable version:
 [`analytics-timeline.csv`](analytics-timeline.csv). Each import adds a row;
 `verify.py` asserts every row's voltage matches its node band.
+
+### 5.0 The 11-13 snapshot narrows the cliff window
+
+The 2026-11-13 file reports `CycleCount = 205`, `VacVoltageLimit = 4480 mV`
+and `NCC = 3658` (99.079%). Combined with the 11-05 export (cycle 194,
+NCC 3675, 99.54%):
+
+- The −17 mAh / −0.46 pp drop happened **within cycles 194 → 205**, a window
+  that contains the 200 node. At 1.38 cycles/day that is ~8 days.
+- The 4480 mV target was already active at cycle 205, i.e. the voltage step
+  occurred no later than cycle 205.
+- A snapshot from 11-06 … 11-12 would pin the exact day; a snapshot below
+  cycle 200 should show 4500 mV.
+
+**Noise scale.** Consecutive daily NCC values are 3658 → 3659 → 3659 mAh,
+i.e. only **1 mAh = 0.027 pp** of jitter (including a +1 mAh *rebound*).
+The −0.43 pp cliff is **~16×** the daily noise, so it is a real step, not
+sampling jitter. This also confirms `NominalChargeCapacity` is not strictly
+monotonic day-to-day.
 
 ### 5.1 Two findings from the 11-14 snapshot
 
@@ -165,10 +185,9 @@ two days; only the raw estimate moved.
 `AppleRawMaxCapacity` happened to equal 3692 (the nameplate). The 11-14 file
 shows it was 3683 the day before. It is not a fixed design-capacity field.
 
-**(c) The −0.43 pp cliff is bracketed, not dated.** Both days report NCC
-3659 / 99.106%, while the 11-05 export reported 3675 / 99.54%. So the drop
-occurred somewhere in cycles 194 → 207, consistent with — but not pinning —
-the 200 node. A snapshot from 11-06 … 11-13 would locate the exact day.
+**(c) The −0.43 pp cliff is bracketed, not dated.** See §5.0 above: with the
+11-13 snapshot the window narrows to cycles 194 → 205, and the 4480 mV target
+was already active at cycle 205. A file from 11-06 … 11-12 would pin the day.
 
 ### 5.2 Aggregation window (why the cross-check is not exactly 1.00)
 
