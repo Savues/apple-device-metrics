@@ -1,0 +1,62 @@
+{
+  "experiment_id": "voltage-capacity-ab-2026-11-15",
+  "source": "Two screenshots of a battery diagnostic tool, supplied by the owner as reference",
+  "device_under_test": {
+    "model": "iPhone 16 Pro Max",
+    "battery": "original",
+    "cycle_count": 0,
+    "design_capacity_mah": 4630,
+    "cell_voltage_v": 3.938,
+    "current": 0,
+    "temperature_c": 23.3,
+    "state": "0080"
+  },
+  "controlled_variables_unchanged": [
+    "cycle_count (0)",
+    "Qmax (4939 mAh / 106.6%)",
+    "design capacity (4630 mAh)",
+    "cell voltage (3.938 V), current (0), temperature (23.3 C)",
+    "status word (0080)"
+  ],
+  "independent_variable": "configured charge voltage limit",
+  "conditions": [
+    {
+      "label": "A",
+      "voltage_limit_mv": 4500,
+      "actual_capacity_mah": 4799,
+      "actual_capacity_pct": 103.6,
+      "full_charge_capacity_mah": 4761,
+      "full_charge_capacity_pct": 102.8,
+      "qmax_mah": 4939,
+      "reported_efficiency_pct": 103.6
+    },
+    {
+      "label": "B",
+      "voltage_limit_mv": 4390,
+      "actual_capacity_mah": 4428,
+      "actual_capacity_pct": 95.6,
+      "full_charge_capacity_mah": 4391,
+      "full_charge_capacity_pct": 94.8,
+      "qmax_mah": 4939,
+      "reported_efficiency_pct": 95.6
+    }
+  ],
+  "measured_slope": {
+    "delta_voltage_mv": -110,
+    "delta_actual_capacity_mah": -371,
+    "mah_per_mv": 3.373,
+    "mah_per_20mv_node": 67,
+    "pct_points_per_20mv_node": 1.46,
+    "pct_capacity_per_70mv": 5.1,
+    "total_pct_points_for_110mv": 8.01
+  },
+  "interpretation": "Qmax (chemical capacity) is identical in A and B while the reported actual/full-charge capacity falls by 371 mAh. The displayed capacity loss is therefore a reversible charge-limit effect, not chemical ageing. A separate UI item reading 4.08V is present in both screenshots and is not the variable.",
+  "relevance_to_iphone_01": "The iPhone 17 nameplate top band is 4500 mV and the extrapolated >=1000 band is 4390 mV, i.e. the exact same 110 mV span. This makes the measured slope a directly relevant empirical calibration for the voltage-node capacity cost, in place of generic estimates.",
+  "limitations": [
+    "Different device/capacity (4630 mAh vs 3692 mAh); slope is applied as a percentage, assuming similar OCV shape on the same 4.50 V platform.",
+    "The 4390 mV reading was set on a diagnostic tool, not observed as an iOS-configured limit on iphone-01.",
+    "Single A/B pair, single battery; no error bars.",
+    "The 4.08 V UI item is of unconfirmed meaning and is excluded from analysis."
+  ],
+  "fields_not_published": ["battery serial number", "factory code", "chip info", "manufacturer", "manufacture date", "screenshots themselves"]
+}

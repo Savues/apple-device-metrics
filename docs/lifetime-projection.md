@@ -5,8 +5,57 @@ This document replaces the linear extrapolation that was withdrawn in
 easy to conflate: **displayed health**, **usable capacity per charge**, and
 **chemical ageing rate**.
 
+> ⚠️ **Correction (2026-11-15)**: an earlier version of this document used
+> Apple's "80% at 1000 cycles" specification as a straight ageing anchor.
+> That was wrong — see §0 and [`corrections.md`](corrections.md) §8. The
+> displayed health figure already contains a **reversible voltage-lock**
+> component, so it is not a pure chemical-ageing curve.
+
 All figures are projections, not measurements. Ranges are given where the
 underlying relationship is uncertain.
+
+---
+
+## 0. Why the official 1000-cycle / 80% must not be applied directly
+
+Two screenshots of a diagnostic tool show **the same original iPhone 16 Pro
+Max battery, at cycle 0**, measured twice with only the configured charge
+voltage limit changed. Full data:
+[`voltage-capacity-experiment.json`](voltage-capacity-experiment.json).
+
+| | A | B | Δ |
+|---|---|---|---|
+| Voltage limit | 4500 mV | **4390 mV** | −110 mV |
+| Actual capacity | 4799 mAh (103.6%) | 4428 mAh (95.6%) | **−371 mAh / −8.0 pp** |
+| Full-charge capacity | 4761 mAh | 4391 mAh | −370 mAh |
+| **Qmax (chemical capacity)** | **4939 mAh** | **4939 mAh** | **0** |
+| Cycles / voltage / current / temp | 0 / 3.938 V / 0 / 23.3 °C | identical | — |
+
+**Qmax does not move.** Changing the voltage limit alone removed 8.0 pp from
+the reported capacity without any chemical change — it is a **reversible
+charge-limit effect**, not ageing. (A separate UI item reading 4.08 V is
+present in both screenshots and is not the variable.)
+
+Critically, 4500 mV → 4390 mV is exactly the span from `iphone-01`'s top
+band to the extrapolated ≥1000 band. So this is a directly relevant
+empirical calibration, not a generic guess.
+
+**Consequence for the 80% figure.** If a 1000-cycle battery has accumulated
+−110 mV of derating, then of the ~20 pp drop from 100% to 80%:
+
+| Component | Magnitude | Share |
+|-----------|-----------|-------|
+| Reversible voltage lock | ≈ **8.0 pp** | ~40% |
+| Genuine chemical ageing | ≈ **12.0 pp** | ~60% |
+
+So **"80% at 1000 cycles" is a displayed-number commitment, not a
+measurement of cell wear**. Treating it as an ageing anchor overstates real
+degradation by roughly two thirds, and treating 80% as an end-of-life
+threshold is wrong: a meaningful part of that loss can be restored by
+raising the limit (BU-808 explicitly notes the capacity returns).
+
+This is also why the three-device "concave curve" below must be read with
+care — its later anchors include accumulated lock-in, not just chemistry.
 
 ---
 
@@ -14,61 +63,75 @@ underlying relationship is uncertain.
 
 ### A. Displayed health (`MaximumCapacityPercent`)
 
-Apple's public specification is **80% at 1000 cycles** for this device
-class. This repo's `iphone-01` reads **101 at 208 cycles**. Two reference
-devices give later anchors (different platforms, different usage —
-indicative only, not a fitted curve):
+Measured anchors (different platforms, different usage — indicative only,
+**not** a fitted ageing curve):
 
 | Cycles | Apple health | Device |
 |--------|--------------|--------|
 | 208 | 101 | `iphone-01` (measured) |
-| 1000 | 80 | Apple design target (not measured on this device) |
 | 1420 | 73 | `reference-01` (measured) |
 | 2919 | 67 | `reference-02` (measured) |
 
-Implied slope between anchors:
+Apple's **80% at 1000 cycles** is shown separately as a *design target for
+the displayed figure*, not as an interpolation point — see §0.
+
+Raw slopes between anchors (include both ageing and lock-in):
 
 | Interval | Slope |
 |----------|-------|
-| 208 → 1000 | −2.65 pp / 100 cycles |
-| 1000 → 1420 | −1.67 pp / 100 cycles |
+| 208 → 1420 | −2.31 pp / 100 cycles |
 | 1420 → 2919 | **−0.40 pp / 100 cycles** |
 
-**The curve is strongly concave: fast early loss, then a long flat tail.**
-This is the single most important point for lifetime. A linear fit through
-the first 208 cycles dramatically overstates long-term degradation — that is
-exactly why the 0.0165 %/day extrapolation was withdrawn.
+**The displayed curve is strongly concave: fast early loss, then a long flat
+tail.** But part of that early loss is the voltage-lock steps (§0), not
+chemistry. A linear fit through the first 208 cycles still overstates
+long-term degradation — that is why the 0.0165 %/day extrapolation was
+withdrawn — but the "concavity" must not be interpreted as a pure ageing
+law either.
 
 At ~1.51 cycles/day from 208 cycles on 2026-11-15:
 
 | Node | Expected date | Note |
 |------|---------------|------|
-| 250 cycles | ~2026-12-12 | 2nd voltage step (4460 mV), health ~98.6% on the NCC ratio |
-| 300 cycles | ~2027-01-14 | 3rd step (4440 mV) |
+| 250 cycles | ~2026-12-12 | 2nd voltage step (4460 mV), ≈ −1.5 pp lock-in |
+| 300 cycles | ~2027-01-14 | 3rd step (4440 mV), cumulative ≈ −4.4 pp |
 | 500 cycles | ~2027-05-27 | — |
-| **1000 cycles** | **~2028-04-22** | ~80% design target; ≥1000 step (extrapolated 4390 mV) |
+| **1000 cycles** | **~2028-04-22** | ≥1000 step (extrapolated 4390 mV), cumulative ≈ −8.0 pp lock-in |
+
+Lock-in figures use the measured 1.46 pp per 20 mV node (§0).
 
 ### B. Usable capacity per full charge
 
 Each −0.02 V step lowers the charge ceiling, so a "100%" charge holds
-slightly less energy. Two published/derived slopes disagree by ~3×, so this
-is a **range**, not a point estimate:
+slightly less energy. The A/B experiment in §0 now **measures** this slope
+on the same 4.50 V platform, replacing the earlier generic range:
 
-| Basis | −110 mV total (at ≥1000) ⇒ capacity cost |
-|-------|------------------------------------------|
-| OCV slope 0.020 V per SOC point (used earlier in this repo) | ≈ −5.5% |
-| [Battery University BU-808](https://batteryuniversity.com/article/bu-808-how-to-prolong-lithium-based-batteries): *every 70 mV ≈ 10% capacity* | ≈ −15.7% |
+| Basis | −110 mV total ⇒ capacity cost |
+|-------|-------------------------------|
+| OCV slope 0.020 V/SOC point (earlier rough estimate) | ≈ −5.5 pp |
+| [BU-808](https://batteryuniversity.com/article/bu-808-how-to-prolong-lithium-based-batteries) 70 mV ≈ 10% (conventional 4.20 V Li-ion) | ≈ −15.7 pp |
+| **Measured A/B (§0), 4.50 V platform** | **−8.0 pp** |
+| → measured slope | **1.46 pp per 20 mV node** (3.37 mAh/mV on that cell) |
 
-BU-808's guideline is for conventional 4.20 V cobalt-based Li-ion; this
-device is a 4.50 V high-voltage / silicon-carbon platform whose upper OCV
-slope is steeper. So the true value is plausibly at the **lower** end, but
-we cannot resolve it without a measured OCV–SOC curve for this cell.
-Honest statement: **by 1000 cycles, each full charge holds roughly 5–16%
-less than a hypothetical never-derated cell.**
+BU-808's guideline is for conventional 4.20 V cobalt-based cells, so its
+−15.7 pp is not applicable; the measured value lands between the two
+earlier estimates, closer to the rough one. Applied to `iphone-01`:
 
-Crucially, this is **reversible**: BU-808 notes "applying the peak charge
-voltage on a subsequent charge will restore the full capacity". It is a
-charge-limit choice, not chemical damage.
+| Node | Cumulative derating | Lock-in cost |
+|------|---------------------|--------------|
+| 200 | −20 mV | −1.46 pp |
+| 250 | −40 mV | −2.91 pp |
+| 300 | −60 mV | −4.37 pp |
+| 1000 | −110 mV | **−8.01 pp** |
+
+Caveat: the A/B used a 4630 mAh iPhone 16 Pro Max cell; the slope is
+transferred as a **percentage**, assuming a similar OCV shape on the same
+4.50 V platform. Single measurement, no error bars.
+
+Crucially, this is **reversible**: Qmax was identical in A and B, and BU-808
+notes that restoring the peak charge voltage restores the capacity. It is a
+charge-limit choice, not chemical damage — so it should not be counted as
+"lost battery life".
 
 ### C. Chemical ageing rate — the reason for the step-down
 
@@ -88,9 +151,9 @@ life extension of lithium-ion batteries", *Journal of Energy Storage*,
 These multipliers apply to conventional Li-ion and are **indicative of
 direction, not a quantitative prediction** for this cell. But the sign is
 unambiguous: the step-down **trades a small amount of per-charge runtime
-for a substantially slower ageing rate**. That is how Apple reaches the
-1000-cycle / 80% design target — the derating is part of the mechanism, not
-a penalty on top of it.
+for a substantially slower ageing rate**. The derating is part of how Apple
+keeps the displayed figure within its 1000-cycle commitment — it is not a
+penalty on top of ageing.
 
 ---
 
@@ -99,14 +162,15 @@ a penalty on top of it.
 **Short term (next 2 months).** Two more small steps at 250 and 300 cycles,
 each ~−0.4 pp on the NCC-derived ratio, with flat plateaus between. Apple's
 displayed `MaximumCapacityPercent` may not move at all — it stayed at 101
-through the 200-cycle step. Per-charge runtime drops by ~1–3% cumulatively.
-Nothing the user will notice.
+through the 200-cycle step. Cumulative reversible lock-in reaches ≈ −4.4 pp
+by 300 cycles; per-charge runtime drops only a few percent. Nothing the
+user will notice.
 
-**Medium term (500–1000 cycles, ~2027–2028).** Ageing slows markedly. The
-concave shape from the reference devices suggests the health figure loses
-only ~0.4 pp per 100 cycles late in life. Realistically this device reaches
-the 1000-cycle / ~80% region around **2028-04**, and 80% is a service
-recommendation, not a failure point.
+**Medium term (500–1000 cycles, ~2027–2028).** The displayed figure reaches
+the ~80% region around **2028-04**, but per §0 roughly **8 pp of that is
+reversible lock-in**: the underlying cell has aged only ~12 pp. So 80% is
+neither a pure wear measure nor a failure point — it is largely a
+configured ceiling that could be lifted.
 
 **Long term (>1000 cycles).** Reference devices at 1420 and 2919 cycles
 still report 73% and 67%. A battery is usable well beyond 1000 cycles. With
@@ -118,9 +182,11 @@ gives dramatically more cycles).
 
 **Bottom line: the observed behaviour is protective, not deteriorating.**
 The step-down costs a few percent of runtime per charge and buys a flatter
-ageing curve. At 208 cycles / 99.11% (NCC ratio) / 101 (Apple health), the
-battery is in excellent condition and is not the limiting factor for the
-device's useful life.
+ageing curve; most of the *displayed* health loss is reversible lock-in, not
+wear. At 208 cycles / 99.11% (NCC ratio) / 101 (Apple health), the battery
+is in excellent condition and is not the limiting factor for the device's
+useful life. The official 1000-cycle / 80% number should be read as a
+displayed-value commitment, not a prediction of when the cell is worn out.
 
 ---
 
@@ -148,8 +214,9 @@ a hot environment, and high-current fast charging.
 | Step-down is active at exactly cycle 200 (−0.02 V) | **High** — direct analytics measurement |
 | Next nodes at 250 / 300 | Medium — third-party table, platform now confirmed (iPhone 17) |
 | ≥1000 step to 4390 mV | **Low** — extrapolated from the iPhone 13 series; no 17-series ≥1000 value published |
-| Usable-capacity cost per step | **Low** — 5–16% range at 1000 cycles, no cell-specific OCV curve |
-| Ageing curve is concave | Medium — three devices, but different platforms and habits; 1000/80 is a design target, not a measurement |
+| Usable-capacity cost per step | **Medium** — measured A/B slope 1.46 pp / 20 mV node (§0), transferred as a percentage from a 4630 mAh cell; no error bars |
+| 80% at 1000 cycles contains ~8 pp reversible lock-in | Medium — combines measured slope with the extrapolated 4390 mV ≥1000 band |
+| Displayed curve is concave | Medium — two measured anchors (1420, 2919), but different platforms; partially lock-in, not pure ageing |
 | Derating slows chemical ageing | **High (direction)** — well-established electrochemistry; magnitude not quantified for this cell |
 | Dates for future nodes | Medium — assumes 1.51 cycles/day continues |
 
@@ -166,4 +233,5 @@ moves at all.
   — both report that lowering UCV extends cycle life at the cost of usable
   energy. Search by title; no direct PII is asserted here.
 - [`docs/voltage-nodes.md`](voltage-nodes.md) — node table and its third-party status.
-- [`docs/corrections.md`](corrections.md) §4 — withdrawn linear extrapolation.
+- [`docs/voltage-capacity-experiment.json`](voltage-capacity-experiment.json) — A/B measurement of voltage limit vs reported capacity (§0).
+- [`docs/corrections.md`](corrections.md) §4 (withdrawn linear extrapolation) and §8 (withdrawn use of the 80% specification as an ageing anchor).

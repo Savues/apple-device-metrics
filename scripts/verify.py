@@ -261,5 +261,25 @@ check("ref-02: NCC/nameplate gap reverses sign (unexplained)",
       g2["nominal_charge_capacity_mah"] / n2["rated_capacity_mah"] * 100 < 0,
       f"{g2['maximum_capacity_percent_reported'] - g2['nominal_charge_capacity_mah']/n2['rated_capacity_mah']*100:+.2f} pp")
 
+print("\n=== voltage/capacity A-B experiment ===")
+ab = json.load(open(os.path.join(ROOT, "docs/voltage-capacity-experiment.json"),
+                    encoding="utf-8"))
+ca, cb = ab["conditions"]
+check("A-B: same battery (Qmax unchanged)",
+      ca["qmax_mah"] == cb["qmax_mah"])
+check("A-B: voltage span is 110 mV",
+      ca["voltage_limit_mv"] - cb["voltage_limit_mv"] == 110)
+check("A-B: capacity drop matches measured slope",
+      abs((ca["actual_capacity_mah"] - cb["actual_capacity_mah"]) -
+          ab["measured_slope"]["delta_actual_capacity_mah"] * -1) < 1e-9)
+slope = (ca["actual_capacity_mah"] - cb["actual_capacity_mah"]) / \
+        (ca["voltage_limit_mv"] - cb["voltage_limit_mv"])
+check("A-B: 1.46 pp per 20 mV node",
+      abs(slope * 20 / ab["device_under_test"]["design_capacity_mah"] * 100
+          - 1.46) < 0.01,
+      f"{slope*20/ab['device_under_test']['design_capacity_mah']*100:.3f} pp")
+check("A-B: span matches iphone-01 top to >=1000 band",
+      ca["voltage_limit_mv"] == 4500 and cb["voltage_limit_mv"] == 4390)
+
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

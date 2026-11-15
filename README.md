@@ -60,10 +60,13 @@ More devices can be added as sibling directories under `devices/`.
    [`docs/voltage-nodes.md`](docs/voltage-nodes.md) and
    [`devices/reference-01/`](devices/reference-01/).
 
-5. **Ageing is concave, not linear.** Health loss slows from ~−2.65 pp per
-   100 cycles early to ~−0.40 pp per 100 cycles late. The voltage step-down
-   is *protective*: it costs a few percent of per-charge runtime but slows
-   chemical ageing. Full projection with confidence levels:
+5. **Ageing is concave, not linear — and the displayed number is not pure
+   wear.** Displayed health loss slows from ~−2.31 pp per 100 cycles early
+   to ~−0.40 pp late. An A/B measurement on the same 4.50 V platform shows
+   that dropping the voltage limit 4500→4390 mV removes **8.0 pp of
+   reported capacity while Qmax stays unchanged** — i.e. ~40% of Apple's
+   "80% at 1000 cycles" drop is reversible lock-in, not chemical ageing.
+   The step-down is *protective*. Full projection:
    [`docs/lifetime-projection.md`](docs/lifetime-projection.md).
 
 6. **Charging behaviour**: 325 sessions / 76 days, 98.83 equivalent full
@@ -127,6 +130,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `devices/iphone-01/voltage-reading.md` | single 4.04V @ 70% reading + OCV check |
 | `docs/findings.md` | full analysis |
 | `docs/lifetime-projection.md` | lifetime trend after the voltage step-down |
+| `docs/voltage-capacity-experiment.json` | A/B measurement: voltage limit vs reported capacity |
 | `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
 | `docs/methodology.md` | field definitions, units, known limitations |
 | `docs/corrections.md` | errors found and corrected during analysis |

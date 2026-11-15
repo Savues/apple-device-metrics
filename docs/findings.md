@@ -141,9 +141,11 @@ as ongoing loss and substantially overstates mid-term degradation.
 Both are superseded for lifetime purposes by the empirical concave ageing
 curve from three devices in
 [`lifetime-projection.md`](lifetime-projection.md): displayed health loss
-falls from ~−2.65 pp/100 cycles early to ~−0.40 pp/100 cycles late. Apple's
-design target is ~80% at 1000 cycles. The ≥1000 voltage value (4390 mV) is
-extrapolated, not published for the iPhone 17 series.
+falls from ~−2.31 pp/100 cycles early to ~−0.40 pp/100 cycles late (both
+include reversible voltage lock-in, not just chemistry). Apple's 80% at
+1000 cycles is a displayed-value commitment, not a wear measurement — see
+[`lifetime-projection.md`](lifetime-projection.md) §0. The ≥1000 voltage
+value (4390 mV) is extrapolated.
 
 ### Predicted upcoming nodes
 

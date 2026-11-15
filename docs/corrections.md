@@ -92,6 +92,34 @@ Consequences:
   devices. The core §6 conclusion (Apple's health figure is not
   `NCC / nameplate`) is unaffected and in fact strengthened.
 
+## 8. Using Apple's "80% at 1000 cycles" as an ageing anchor (withdrawn)
+
+An earlier `lifetime-projection.md` interpolated the measured 101% at 208
+cycles against Apple's **80% at 1000 cycles** specification to derive a
+chemical-ageing slope (−2.65 pp/100 cycles), and treated 80% as the point
+where the cell is worn out.
+
+That was wrong. A supplied A/B measurement
+([`voltage-capacity-experiment.json`](voltage-capacity-experiment.json))
+shows the **same original battery at cycle 0** with only the voltage limit
+changed from 4500 to 4390 mV: reported capacity falls 4799 → 4428 mAh
+(−8.0 pp) while **Qmax stays at 4939 mAh**. So a large part of the
+displayed capacity/health figure is a **reversible charge-limit effect**,
+not chemical wear.
+
+Consequences:
+
+- 1000/80 is a commitment about the **displayed value**, not a measurement
+  of cell wear. Of its ~20 pp drop, ≈8 pp (40%) is estimated to be
+  reversible lock-in and only ≈12 pp genuine ageing.
+- The 1000-cycle point is removed as an interpolation anchor; slopes are
+  now computed only between measured devices (208, 1420, 2919).
+- The concave displayed curve is retained but explicitly labelled as
+  including lock-in, not a pure ageing law.
+- The 5–16% generic range for the capacity cost of derating is replaced by
+  the measured **1.46 pp per 20 mV node** (8.0 pp for −110 mV) from the A/B
+  pair, with a transfer caveat (different cell capacity).
+
 ---
 
 All final numbers in `README.md`, `docs/findings.md` and
