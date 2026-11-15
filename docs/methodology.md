@@ -28,6 +28,13 @@ Because these are 08:00 aggregates, day boundaries do not align with the
 charging diary's calendar days — this is part of why the cycle cross-check
 in `findings.md` lands at 0.93–1.10 rather than exactly 1.00.
 
+Precisely (confirmed from two consecutive files): a file whose header reads
+`YYYY-MM-DD 08:00:00 +0800` carries metadata `startTimestamp` of the
+**previous day** at `00:00:00Z` (= 08:00 +0800) with
+`rolloverReason: scheduled`. It therefore covers the 24 h window
+D−1 08:00 → D 08:00 local. Health-table rows are labelled by generation date
+D, while the charging diary uses calendar days.
+
 ### Charging diary
 
 `devices/iphone-01/charging-sessions.csv` — 325 sessions, 2026-09-01 to

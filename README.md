@@ -52,6 +52,11 @@ More devices can be added as sibling directories under `devices/`.
    (5.5%) recorded zero net charge, one recorded SOC *dropping* while
    plugged in — 19 anomalous rows (5.8%) in total.
 
+7. **`Raw Capacity` is a drifting estimate, proven by consecutive snapshots**:
+   11-14 → 11-15 shows `AppleRawMaxCapacity` 3683→3692 (+9 mAh) with
+   `NominalChargeCapacity` and health unchanged. Its convergence on the 3692
+   nameplate at 11-15 was coincidental.
+
 See [`docs/findings.md`](docs/findings.md) for the full analysis, including
 corrections to earlier misreadings.
 

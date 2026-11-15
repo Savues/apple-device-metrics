@@ -31,9 +31,16 @@ Consequences:
 - The denominator is **fixed**. `raw_capacity_mah` drifts 3742→3692 over 57
   days and happens to converge on 3692 at the last sample; it is a separate
   gauge estimate and does **not** enter the health figure.
+  **Confirmed directly by consecutive analytics snapshots**: 11-14 → 11-15
+  shows `AppleRawMaxCapacity` 3683 → 3692 (+9 mAh) while
+  `NominalChargeCapacity` stays 3659 and health stays 99.106% — see
+  [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
+  The convergence on the 3692 nameplate was coincidental.
 - Therefore the 2026-11-15 drop of −0.43 pp is a real **−16 mAh** reduction in
   reported nominal capacity (3675→3659), not an artefact of a moving
-  denominator or rounding noise.
+  denominator or rounding noise. Both 11-14 and 11-15 already report 3659,
+  so the drop happened within cycles 194→207 — consistent with the 200 node,
+  though not pinned to an exact day.
 - The >100% readings early on are normal pre-calibration overshoot.
 
 Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal
@@ -159,9 +166,11 @@ and per-minute rates are mutually consistent throughout.
 | 09-19 → 10-26 | 50.34 | 54 | 0.93 |
 
 Ratio ~0.93–1.10, i.e. the two independent datasets agree within ~10%.
-Not exact because the analytics snapshot is generated at 08:00 (so a day's
-boundary does not align with the log's calendar day) and because a "cycle"
-is counted by cumulative discharge, not simply by charge percentage.
+Not exact because the analytics snapshot is generated at 08:00 and covers
+the **previous** 24 h (file dated D covers D−1 08:00 → D 08:00 local, per
+`startTimestamp` / `rolloverReason`), so its day boundary does not align
+with the log's calendar day; and because a "cycle" is counted by cumulative
+discharge, not simply by charge percentage.
 
 ---
 

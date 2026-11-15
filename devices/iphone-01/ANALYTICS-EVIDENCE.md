@@ -135,10 +135,47 @@ python3 scripts/verify.py
 
 ### Current timeline
 
-| Date | Cycles | `VacVoltageLimit` | Expected band | NCC | Health |
-|------|--------|-------------------|---------------|-----|--------|
-| 2026-11-15 | 208 | 4480 mV (4.48V) | 200–249 ✓ | 3659 | 99.106% |
+| Date (file) | Aggregation window (UTC) | Cycles | `VacVoltageLimit` | Band | `AppleRawMaxCapacity` | NCC | Health | DailyMinSoc |
+|-------------|--------------------------|--------|-------------------|------|------------------------|-----|--------|-------------|
+| 2026-11-14 | 11-13 00:00 → 11-14 00:00 | 207 | 4480 mV (4.48V) | 200–249 ✓ | 3683 | 3659 | 99.106% | 31 |
+| 2026-11-15 | 11-14 00:00 → 11-15 00:00 | 208 | 4480 mV (4.48V) | 200–249 ✓ | 3692 | 3659 | 99.106% | 39 |
 
 Full machine-readable version:
 [`analytics-timeline.csv`](analytics-timeline.csv). Each import adds a row;
 `verify.py` asserts every row's voltage matches its node band.
+
+### 5.1 Two findings from the 11-14 snapshot
+
+**(a) `AppleRawMaxCapacity` moves while `NominalChargeCapacity` does not.**
+Between consecutive daily snapshots (207 → 208 cycles):
+
+| Field | 11-14 | 11-15 | Δ |
+|-------|-------|-------|---|
+| `AppleRawMaxCapacity` | 3683 | 3692 | **+9 mAh** |
+| `NominalChargeCapacity` | 3659 | 3659 | 0 |
+| `Nominal Health` | 99.106% | 99.106% | 0 |
+| `VacVoltageLimit` | 4480 | 4480 | 0 |
+
+This is direct evidence that `Raw Capacity` is a drifting gauge estimate
+that does **not** enter the health percentage — previously inferred only from
+the 6-row export. All FCC/Qmax/NCC aggregates are also identical across the
+two days; only the raw estimate moved.
+
+**(b) The nameplate convergence was coincidental.** At the 11-15 sample,
+`AppleRawMaxCapacity` happened to equal 3692 (the nameplate). The 11-14 file
+shows it was 3683 the day before. It is not a fixed design-capacity field.
+
+**(c) The −0.43 pp cliff is bracketed, not dated.** Both days report NCC
+3659 / 99.106%, while the 11-05 export reported 3675 / 99.54%. So the drop
+occurred somewhere in cycles 194 → 207, consistent with — but not pinning —
+the 200 node. A snapshot from 11-06 … 11-13 would locate the exact day.
+
+### 5.2 Aggregation window (why the cross-check is not exactly 1.00)
+
+Each file's header timestamp is `YYYY-MM-DD 08:00:00 +0800`, while its
+metadata `startTimestamp` is the **previous day** at `00:00:00Z` (=
+08:00 +0800). `rolloverReason: scheduled`. So a file dated D covers the
+24 h window D−1 08:00 → D 08:00 local. Health-table rows are keyed by the
+file's generation date, whereas the charging diary uses calendar days —
+this offset, plus cumulative-discharge-based cycle counting, explains the
+0.93–1.10 ratios in `docs/findings.md`.
