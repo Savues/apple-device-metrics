@@ -1,0 +1,25 @@
+{
+  "device_id": "reference-02",
+  "purpose": "Nameplate-only reference. No battery gauge data available in the supplied analytics file.",
+  "source_date": "2026-11-15",
+  "os_version": "15.1",
+  "nameplate": {
+    "source": "manufacturer specifications supplied with the device",
+    "cell_energy_wh": 12.02,
+    "battery_energy_wh": 11.91,
+    "nominal_voltage_v": 3.83,
+    "rated_capacity_mah": 3110,
+    "charge_limit_voltage_v": 4.45
+  },
+  "energy_consistency": "battery_energy_wh = 3.83V x 3110mAh = 11.911 Wh ~ 11.91 Wh. cell_energy_wh / rated capacity = 3.865 V, 0.035 V above nominal.",
+  "analytics_file_type": "Analytics-Daily-*.ips.ca.synced (bug_type 211, 70 records, 27.6 KB)",
+  "analytics_limitation": "Contains only JetsamAggregationV3, WlpFixApsCountPerScanType1, HomeKit, Health and CableTypeChangedV2 records. No BatteryConfigValueHistogramFinal_V2 and no VacVoltageLimit, so CycleCount, NominalChargeCapacity, MaximumCapacityPercent and VacVoltageLimit cannot be obtained. The raw .ips is not published (contains crashreporter_key, incident_id and other identifiers).",
+  "predicted_voltage_ladder_mv": {
+    "1-199": 4450,
+    "200-249": 4430,
+    "250-299": 4410,
+    "300-999": 4390,
+    ">=1000": 4340
+  },
+  "prediction_basis": "Same 4.45 V nameplate as reference-01, whose measured VacVoltageLimit at 1420 cycles is 4340 mV. Predicted only, NOT measured on this device."
+}

@@ -62,6 +62,14 @@ platform-relative and must be applied per device. This materially
 strengthens the −0.02 V / −0.05 V step sizes, though the node boundaries
 remain third-party reverse-engineering rather than Apple documentation.
 
+A third device ([`reference-02`](../devices/reference-02/README.md), iOS
+15.1, 3110 mAh) shares the same 3.83 V / **4.45 V** nameplate platform as
+`reference-01`. Its `Analytics-Daily` file contains no battery gauge
+records, so its ladder (4450 → … → 4340 mV) is **predicted, not measured**.
+It does, however, confirm the platform's energy figures are internally
+consistent: capacity ratio 3110/2815 = 1.1048× equals the battery-energy
+ratio 11.91/10.78 = 1.1048×.
+
 ## Variant accounts (important)
 
 The community is **not** consistent:

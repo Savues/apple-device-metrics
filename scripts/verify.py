@@ -214,5 +214,31 @@ health_gap = ref["maximum_capacity_percent_reported"] - \
 check("reference: Apple health differs from NCC/nameplate by >10pp",
       health_gap > 10, f"gap {health_gap:.2f} pp")
 
+print("\n=== reference-02 (nameplate only) ===")
+r2 = json.load(open(os.path.join(ROOT, "devices/reference-02/reference.json"),
+                    encoding="utf-8"))
+n2 = r2["nameplate"]
+check("ref-02: battery energy = nominal V x rated mAh",
+      abs(n2["nominal_voltage_v"] * n2["rated_capacity_mah"] / 1000 -
+          n2["battery_energy_wh"]) < 0.005,
+      f"{n2['nominal_voltage_v']}V x {n2['rated_capacity_mah']}mAh "
+      f"= {n2['nominal_voltage_v']*n2['rated_capacity_mah']/1000:.3f}Wh")
+check("ref-02: cell energy exceeds pack energy",
+      n2["cell_energy_wh"] > n2["battery_energy_wh"])
+check("ref-02: same voltage platform as reference-01",
+      n2["nominal_voltage_v"] == np["nominal_voltage_v"] and
+      n2["charge_limit_voltage_v"] == np["charge_limit_voltage_v"])
+check("ref-02: capacity/energy ratios agree with reference-01",
+      abs(n2["rated_capacity_mah"] / np["rated_capacity_mah"] -
+          n2["battery_energy_wh"] / np["battery_energy_wh"]) < 0.001,
+      f"{n2['rated_capacity_mah']/np['rated_capacity_mah']:.4f}x vs "
+      f"{n2['battery_energy_wh']/np['battery_energy_wh']:.4f}x")
+ladder = r2["predicted_voltage_ladder_mv"]
+check("ref-02: predicted >=1000 band matches reference-01 measured",
+      ladder[">=1000"] == ref["vac_voltage_limit_mv"])
+check("ref-02: no gauge fields claimed",
+      not any(k in r2 for k in ("cycle_count", "vac_voltage_limit_mv",
+                                "nominal_charge_capacity_mah")))
+
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)
