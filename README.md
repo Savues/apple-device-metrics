@@ -130,7 +130,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `devices/iphone-01/voltage-reading.md` | single 4.04V @ 70% reading + OCV check |
 | `docs/findings.md` | full analysis |
 | `docs/lifetime-projection.md` | general lifetime reasoning (cross-device context; **not** the iphone-01 forecast) |
-| `docs/iphone17-forecast.md` | **iphone-01-only future battery curve** (owner-requested) |
+| `docs/iphone17-forecast.md` | **iphone-01-only future battery curve** — at current usage (1.30 cycles/day = 4801 mAh/day), with real mAh |
 | `docs/iphone17-forecast.csv` / `.json` / `.svg` | forecast data and chart |
 | `docs/voltage-capacity-experiment.json` | A/B measurement: voltage limit vs reported capacity |
 | `scripts/forecast.py` | regenerates the iphone-01-only forecast |

@@ -134,11 +134,12 @@ Remaining checks:
    4500 mV reading cannot be recovered. Indirect evidence: lifetime
    `MaximumPackVoltage = 4496 mV`, 16 mV above the current 4480 mV target,
    which must have been recorded under the earlier ~4.50 V ceiling.
-2. **Cycle 250 (~2026-12-12)**: expect `VacVoltageLimit = 4460` — the next
-   node, fully observable with the rolling window.
+2. **Cycle 250 (~2026-12-17 at current usage)**: expect `VacVoltageLimit =
+   4460` — the next node, fully observable with the rolling window.
 3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138.
-4. Watch for another ~−0.4 pp health step at 250 (~2026-12-12) and 300
-   (~2027-01-14), with flat plateaus between.
+4. Watch for another ~−0.43 pp / −15.9 mAh health step at 250 and 300
+   (~2027-01-24), with flat plateaus between. See
+   [`iphone17-forecast.md`](iphone17-forecast.md) for the rate basis.
 
 ## References
 

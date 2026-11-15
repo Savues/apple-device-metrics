@@ -78,8 +78,11 @@ Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal
 Two ~0.4 pp cliffs separated by near-flat plateaus. Continuous chemical
 ageing does not behave this way. Plateau mean: **0.0041 %/day**.
 
-Full span: 57 days, +86 cycles (1.51 cycles/day), 100.05% → 99.11%
-(−0.94 pp, 0.0165 %/day, 0.0109 %/cycle).
+Full span: 57 days, +86 cycles (1.51 cycles/day over that historical
+window), 100.05% → 99.11% (−0.94 pp, 0.0165 %/day, 0.0109 %/cycle).
+Note this is a historical average, **not** the current usage rate used for
+forecasts (1.30 cycles/day — see
+[`iphone17-forecast.md`](iphone17-forecast.md)).
 
 ### The 200-cycle node — CONFIRMED
 
@@ -149,13 +152,20 @@ value (4390 mV) is extrapolated.
 
 ### Predicted upcoming nodes
 
-At 1.51 cycles/day from 208 cycles on 2026-11-15:
+At the **current measured usage of 1.30 cycles/day = 4801 mAh/day** (76-day
+charging diary, confirmed by independent gauge deltas) from 208 cycles on
+2026-11-15. Full forecast with mAh and rate sensitivity:
+[`iphone17-forecast.md`](iphone17-forecast.md).
 
 | Node | Expected date | Expected effect |
 |------|---------------|-----------------|
-| 250 | ~2026-12-12 | another ~−0.4 pp step |
-| 300 | ~2027-01-14 | another ~−0.4 pp step |
-| 1000 | ~2028-04-22 | large step, battery replacement territory |
+| 250 | ~2026-12-17 | another ~−0.43 pp / −15.9 mAh step |
+| 300 | ~2027-01-24 | another ~−0.43 pp / −15.9 mAh step |
+| 1000 | ~2028-07-16 | ≥1000 step (extrapolated 4390 mV) |
+
+The earlier 1.51–1.54 cycles/day estimate came from a regression on sparse
+export rows and was inflated by a heavy 30-day stretch; see the sensitivity
+table in the forecast document.
 
 ---
 
@@ -250,8 +260,8 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
 3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138 can
    be recovered. `CycleCountLastQmax = 138` remains a plausible but untestable
    explanation for the first cliff.
-4. **Next observable node — cycle 250 (~2026-12-12)**: expect
-   `VacVoltageLimit = 4460 mV` and another ~−0.4 pp health step. This is
+4. **Next observable node — cycle 250 (~2026-12-17 at current usage)**: expect
+   `VacVoltageLimit = 4460 mV` and another ~−0.43 pp / −15.9 mAh step. This is
    fully within reach of the rolling 7-day window.
 5. Meaning of the `hrs_soc` column (always 0) is still unknown — no matching
    field found in the analytics file.
@@ -269,4 +279,4 @@ At 208 cycles / 99.11%, the cell is in excellent condition and is not the
 bottleneck. The November drop is best explained by a cycle-node policy
 adjustment rather than sudden chemical failure. Mid-term linear lifetime
 extrapolation is invalid here; the next verifiable event is the 250-cycle
-node around 2026-12-12.
+node around 2026-12-17 (at the measured current usage of 1.30 cycles/day).

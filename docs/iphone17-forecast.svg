@@ -1,22 +1,30 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="1000" height="520">
 <rect width="100%" height="100%" fill="#fff"/>
-<style>text{font:12px -apple-system,Helvetica,Arial,sans-serif;fill:#333}.grid{stroke:#e8e8e8;stroke-width:1}.axis{stroke:#999;stroke-width:1}.node{stroke:#bbb;stroke-dasharray:4 4}</style>
+<style>text{font:12px -apple-system,Helvetica,Arial,sans-serif;fill:#333}.grid{stroke:#e8e8e8}.axis{stroke:#999}.node{stroke:#bbb;stroke-dasharray:4 4}</style>
 <line class="grid" x1="70" y1="460.0" x2="970" y2="460.0"/>
 <text x="62" y="464.0" text-anchor="end">88%</text>
+<text x="974" y="464.0" fill="#999">3249</text>
 <line class="grid" x1="70" y1="398.6" x2="970" y2="398.6"/>
 <text x="62" y="402.6" text-anchor="end">90%</text>
+<text x="974" y="402.6" fill="#999">3323</text>
 <line class="grid" x1="70" y1="337.1" x2="970" y2="337.1"/>
 <text x="62" y="341.1" text-anchor="end">92%</text>
+<text x="974" y="341.1" fill="#999">3397</text>
 <line class="grid" x1="70" y1="275.7" x2="970" y2="275.7"/>
 <text x="62" y="279.7" text-anchor="end">94%</text>
+<text x="974" y="279.7" fill="#999">3470</text>
 <line class="grid" x1="70" y1="214.3" x2="970" y2="214.3"/>
 <text x="62" y="218.3" text-anchor="end">96%</text>
+<text x="974" y="218.3" fill="#999">3544</text>
 <line class="grid" x1="70" y1="152.9" x2="970" y2="152.9"/>
 <text x="62" y="156.9" text-anchor="end">98%</text>
+<text x="974" y="156.9" fill="#999">3618</text>
 <line class="grid" x1="70" y1="91.4" x2="970" y2="91.4"/>
 <text x="62" y="95.4" text-anchor="end">100%</text>
+<text x="974" y="95.4" fill="#999">3692</text>
 <line class="grid" x1="70" y1="30.0" x2="970" y2="30.0"/>
 <text x="62" y="34.0" text-anchor="end">102%</text>
+<text x="974" y="34.0" fill="#999">3766</text>
 <text x="64.4" y="480" text-anchor="middle">200</text>
 <text x="203.7" y="480" text-anchor="middle">400</text>
 <text x="343.1" y="480" text-anchor="middle">600</text>
@@ -24,20 +32,20 @@
 <text x="621.7" y="480" text-anchor="middle">1000</text>
 <text x="761.0" y="480" text-anchor="middle">1200</text>
 <text x="900.3" y="480" text-anchor="middle">1400</text>
-<text x="520" y="508" text-anchor="middle">Cycle count</text>
+<text x="520" y="508" text-anchor="middle">Cycle count (right axis: mAh)</text>
 <line class="node" x1="99.3" y1="30" x2="99.3" y2="460"/>
 <text x="103.3" y="42">250 (4460mV)</text>
 <line class="node" x1="134.1" y1="30" x2="134.1" y2="460"/>
 <text x="138.1" y="42">300 (4440mV)</text>
 <line class="node" x1="621.7" y1="30" x2="621.7" y2="460"/>
 <text x="625.7" y="42">1000 (4390mV)</text>
-<path d="M70.0,118.9 L99.3,122.9 L102.7,123.3 L134.1,127.6 L135.5,127.8 L168.2,132.3 L200.3,136.6 L233.0,141.1 L265.7,145.6 L298.5,150.1 L331.2,154.5 L364.0,159.0 L396.0,163.4 L428.7,167.8 L461.5,172.3 L494.2,176.8 L527.0,181.2 L559.7,185.7 L591.7,190.1 L621.7,194.1 L624.5,194.5 L657.2,199.0 L690.0,203.4 L722.7,207.9 L755.4,212.4 L787.5,216.7 L820.2,221.2 L853.0,225.7 L885.7,230.2 L918.5,234.6 L951.2,239.1" fill="none" stroke="#2a9d55" stroke-width="2.5" stroke-dasharray="5 4"/>
-<path d="M70.0,118.9 L99.3,136.1 L102.7,136.5 L134.1,154.0 L135.5,154.2 L168.2,158.7 L200.3,163.1 L233.0,167.5 L265.7,172.0 L298.5,176.5 L331.2,180.9 L364.0,185.4 L396.0,189.8 L428.7,194.2 L461.5,198.7 L494.2,203.2 L527.0,207.6 L559.7,212.1 L591.7,216.5 L621.7,233.8 L624.5,234.1 L657.2,238.6 L690.0,243.1 L722.7,247.5 L755.4,252.0 L787.5,256.4 L820.2,260.8 L853.0,265.3 L885.7,269.8 L918.5,274.2 L951.2,278.7" fill="none" stroke="#1f6feb" stroke-width="2.5"/>
+<path d="M70.0,118.9 L97.9,123.4 L99.3,123.6 L125.0,127.8 L134.1,129.2 L152.9,132.3 L180.1,136.6 L207.9,141.2 L235.1,145.5 L263.0,150.0 L290.8,154.5 L318.0,158.9 L345.9,163.4 L373.0,167.8 L400.9,172.3 L428.0,176.7 L455.9,181.2 L483.8,185.7 L510.9,190.1 L538.8,194.6 L566.0,199.0 L593.8,203.4 L621.0,207.8 L621.7,208.0 L648.9,212.4 L676.7,216.8 L703.9,221.2 L731.8,225.7 L758.9,230.1 L786.8,234.6 L814.0,239.0 L841.8,243.5 L869.7,248.0 L896.9,252.4 L924.7,256.9 L951.9,261.2" fill="none" stroke="#2a9d55" stroke-width="2.5" stroke-dasharray="5 4"/>
+<path d="M70.0,118.9 L97.9,123.4 L99.3,136.8 L125.0,141.0 L134.1,155.7 L152.9,158.7 L180.1,163.1 L207.9,167.6 L235.1,172.0 L263.0,176.4 L290.8,181.0 L318.0,185.3 L345.9,189.8 L373.0,194.2 L400.9,198.7 L428.0,203.1 L455.9,207.6 L483.8,212.1 L510.9,216.5 L538.8,221.0 L566.0,225.4 L593.8,229.9 L621.0,234.3 L621.7,247.6 L648.9,252.0 L676.7,256.5 L703.9,260.8 L731.8,265.3 L758.9,269.7 L786.8,274.2 L814.0,278.6 L841.8,283.1 L869.7,287.6 L896.9,292.0 L924.7,296.5 L951.9,300.9" fill="none" stroke="#1f6feb" stroke-width="2.5"/>
 <circle cx="70.0" cy="118.9" r="5" fill="#1f6feb"/>
-<text x="80.0" y="110.9">now: 208 cyc / 99.11%</text>
+<text x="80.0" y="110.9">now 208 cyc / 99.106% / 3659 mAh</text>
 <line x1="90" y1="50" x2="118" y2="50" stroke="#1f6feb" stroke-width="2.5"/>
-<text x="124" y="54">NCC / nameplate (displayed-type figure, includes lock-in)</text>
+<text x="124" y="54">NCC (includes reversible lock-in)</text>
 <line x1="90" y1="70" x2="118" y2="70" stroke="#2a9d55" stroke-width="2.5" stroke-dasharray="5 4"/>
-<text x="124" y="74">Chemical ageing only (lock-in removed)</text>
-<text x="90" y="98" font-size="11" fill="#777">iphone-01 only; other devices excluded. Dashed vertical = voltage node.</text>
+<text x="124" y="74">Chemical ageing only (mAh on right axis)</text>
+<text x="90" y="98" font-size="11" fill="#777">At current usage 1.30 cycles/day = 4801 mAh/day. iphone-01 only.</text>
 </svg>

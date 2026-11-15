@@ -290,23 +290,34 @@ check("forecast: other devices and 80% spec excluded",
       any("reference-01" in x for x in fc["not_used"]) and
       any("reference-02" in x for x in fc["not_used"]) and
       any("80%" in x for x in fc["not_used"]))
-check("forecast: derived from this device's own rate/slope/step",
-      fc["measured_on_this_device"]["cycles_per_day"] == 1.5386 and
-      fc["measured_on_this_device"]["plateau_pp_per_day"] == 0.00476 and
-      fc["measured_on_this_device"]["step_pp_per_20mv_node"] == 0.43)
-check("forecast: 250 node is 2026-12-12 / 4460 mV",
-      fc["nodes"][0]["date"] == "2026-12-12" and
-      fc["nodes"][0]["vac_voltage_limit_mv"] == 4460)
-check("forecast: 1000 cycles ≈ 95.366% with 1.29pp lock-in",
-      abs(fc["at_1000_cycles"]["ncc_health_pct"] - 95.366) < 0.01 and
-      abs(fc["at_1000_cycles"]["of_which_reversible_lockin_pp"] - 1.29) < 0.01)
+check("forecast: current usage 1.30 cycles/day = 4800 mAh/day",
+      fc["current_usage"]["cycles_per_day"] == 1.30 and
+      fc["current_usage"]["mah_per_day_throughput"] == 4800)
+check("forecast: old inflated rate explicitly withdrawn",
+      "withdrawn" in str(fc["current_usage"]["previous_rate_withdrawn"]).lower() or
+      "biased high" in str(fc["current_usage"]["previous_rate_withdrawn"]).lower())
+check("forecast: plateau/step in mAh",
+      fc["current_usage"]["plateau_wear_mah_per_day"] == 0.176 and
+      fc["current_usage"]["lockin_mah_per_20mv_node"] == 15.9)
+check("forecast: 250 node is 2026-12-17 / 4460 mV / 3637 mAh",
+      fc["nodes"][0]["date"] == "2026-12-17" and
+      fc["nodes"][0]["vac_voltage_limit_mv"] == 4460 and
+      abs(fc["nodes"][0]["ncc_mah"] - 3637.4) < 0.2)
+check("forecast: 1000 cycles ≈ 94.916% / 3504 mAh / 47.6 mAh lock-in",
+      abs(fc["at_1000_cycles"]["ncc_health_pct"] - 94.916) < 0.01 and
+      abs(fc["at_1000_cycles"]["ncc_mah"] - 3504.3) < 0.2 and
+      abs(fc["at_1000_cycles"]["reversible_lockin_mah"] - 47.6) < 0.2)
+check("forecast: sensitivity covers 6 usage windows",
+      len(fc["sensitivity_to_usage_rate"]) == 6)
 frows = load("docs/iphone17-forecast.csv")
+check("forecast: CSV has real mAh columns",
+      "ncc_mah" in frows[0] and "chemical_only_mah" in frows[0])
 check("forecast: CSV is monotonic non-increasing in health",
       all(float(a["ncc_health_pct"]) >= float(b["ncc_health_pct"])
           for a, b in zip(frows, frows[1:])))
 check("forecast: first CSV row matches base",
       float(frows[0]["ncc_health_pct"]) == 99.106 and
-      int(frows[0]["cycle"]) == 208)
+      int(frows[0]["cycle"]) == 208 and float(frows[0]["ncc_mah"]) == 3659.0)
 
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

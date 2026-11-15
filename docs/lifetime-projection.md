@@ -97,16 +97,16 @@ long-term degradation — that is why the 0.0165 %/day extrapolation was
 withdrawn — but the "concavity" must not be interpreted as a pure ageing
 law either.
 
-At ~1.51 cycles/day from 208 cycles on 2026-11-15:
+At **1.30 cycles/day** from 208 cycles on 2026-11-15 (this document is
+general context, not the iphone-01 forecast — see
+[`iphone17-forecast.md`](iphone17-forecast.md) for that):
 
 | Node | Expected date | Note |
 |------|---------------|------|
-| 250 cycles | ~2026-12-12 | 2nd voltage step (4460 mV), ≈ −1.5 pp lock-in |
-| 300 cycles | ~2027-01-14 | 3rd step (4440 mV), cumulative ≈ −4.4 pp |
-| 500 cycles | ~2027-05-27 | — |
-| **1000 cycles** | **~2028-04-22** | ≥1000 step (extrapolated 4390 mV), cumulative ≈ −8.0 pp lock-in |
-
-Lock-in figures use the measured 1.46 pp per 20 mV node (§0).
+| 250 cycles | ~2026-12-17 | 2nd voltage step (4460 mV) |
+| 300 cycles | ~2027-01-24 | 3rd step (4440 mV) |
+| 500 cycles | ~2027-08 | — |
+| **1000 cycles** | **~2028-07-16** | ≥1000 step (extrapolated 4390 mV) |
 
 ### B. Usable capacity per full charge
 
@@ -174,11 +174,13 @@ through the 200-cycle step. Cumulative reversible lock-in reaches ≈ −4.4 pp
 by 300 cycles; per-charge runtime drops only a few percent. Nothing the
 user will notice.
 
-**Medium term (500–1000 cycles, ~2027–2028).** The displayed figure reaches
-the ~80% region around **2028-04**, but per §0 roughly **8 pp of that is
-reversible lock-in**: the underlying cell has aged only ~12 pp. So 80% is
-neither a pure wear measure nor a failure point — it is largely a
-configured ceiling that could be lifted.
+**Medium term (500–1000 cycles, ~2027–2028).** Note this section draws on
+cross-device context only. The iphone-01-only forecast
+([`iphone17-forecast.md`](iphone17-forecast.md)) puts NCC health at ~94.9%
+(3504 mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
+Where a displayed 80% does occur, per §0 a large part of it is reversible
+lock-in rather than wear, so it is neither a pure wear measure nor an
+end-of-life threshold.
 
 **Long term (>1000 cycles).** Reference devices at 1420 and 2919 cycles
 still report 73% and 67%. A battery is usable well beyond 1000 cycles. With
@@ -226,9 +228,9 @@ a hot environment, and high-current fast charging.
 | 80% at 1000 cycles contains ~8 pp reversible lock-in | Medium — combines measured slope with the extrapolated 4390 mV ≥1000 band |
 | Displayed curve is concave | Medium — two measured anchors (1420, 2919), but different platforms; partially lock-in, not pure ageing |
 | Derating slows chemical ageing | **High (direction)** — well-established electrochemistry; magnitude not quantified for this cell |
-| Dates for future nodes | Medium — assumes 1.51 cycles/day continues |
+| Dates for future nodes | Medium — assumes 1.30 cycles/day (current measured usage) continues |
 
-Revisit after the 250-cycle node (~2026-12-12): a new analytics snapshot
+Revisit after the 250-cycle node (~2026-12-17): a new analytics snapshot
 will show whether `VacVoltageLimit = 4460 mV` and whether displayed health
 moves at all.
 
