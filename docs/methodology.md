@@ -104,7 +104,8 @@ Applied by `scripts/parse_charging_log.py`:
 shape remain analysable, while no absolute date or clock time can be
 recovered. Health snapshot dates are retained (6 coarse points, no
 behavioural detail). `device.json` contains nameplate electrical parameters
-only — no serial, UDID, model identifier or analytics filename.
+plus the model family (`iPhone 17`, published with the owner's consent) —
+no serial, UDID, exact variant identifier or analytics filename.
 
 ## Derived fields
 

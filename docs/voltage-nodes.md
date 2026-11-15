@@ -89,12 +89,19 @@ numbers should be treated as an empirical hypothesis, not a specification.
 
 ## Relation to this dataset
 
-`iphone-01` has a **4.50 V nameplate charge limit**, matching the iPhone 17
-series 1–199 row. The 2026-11-09 analytics file reports
-`VacVoltageLimit = 4480 mV` at **`CycleCount = 200` exactly** — the step is
-active at the node itself, not after it. Six further snapshots (202–208
-cycles) confirm 4480 mV throughout. This is direct device-level confirmation
-of both the node and the −0.02 V magnitude.
+`iphone-01` is an **iPhone 17** (model family confirmed by the owner), so the
+**iPhone 17 series** table above is the applicable one, not merely a table
+that happens to share the same 4.50 V limit. Its 1–199 row (4.50 V) matches
+the nameplate, and the 200–249 row (4.48 V) is what the 2026-11-09 analytics
+file reports at **`CycleCount = 200` exactly** — the step is active at the
+node itself, not after it. Six further snapshots (202–208 cycles) confirm
+4480 mV throughout. This is direct device-level confirmation of both the
+applicable table and the −0.02 V magnitude.
+
+The 250 / 300 / ≥1000 rows (4.46 / 4.44 / ~4.39 V) remain **predictions for
+this model** — the third-party post gives no ≥1000 value for the iPhone 17
+series; our 4390 mV figure is extrapolated from the iPhone 13 series'
+−0.05 V final step.
 
 - The nameplate value (4.50 V) is the cell's **hardware ceiling**; the iOS
   software target is set at or below it. A nameplate reading of 4.50 V

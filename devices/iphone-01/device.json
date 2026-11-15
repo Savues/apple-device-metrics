@@ -1,6 +1,8 @@
 {
   "device_id": "iphone-01",
-  "label": "Primary iPhone (anonymised)",
+  "label": "Primary iPhone",
+  "model": "iPhone 17",
+  "model_note": "Model family supplied by the owner; specific variant (Pro / Pro Max / etc.) is not identified and is not inferred from the nameplate capacity.",
   "nominal_voltage_v": 3.887,
   "rated_capacity_mah": 3692,
   "charge_limit_voltage_v": 4.5,
@@ -13,5 +15,5 @@
   "ios_version_observed": "26.4.2",
   "health_source": "iOS analytics snapshot generated at 08:00 local time on each sample date",
   "charge_limit_voltage_caveat": "4.50V is the cell nameplate hardware ceiling. The iOS software charging target is set separately at or below it and can be stepped down by cycle count; the two are not the same quantity.",
-  "fields_not_published": ["serial number", "UDID", "device model identifier", "analytics file names", "absolute charge timestamps", "clock times"]
+  "fields_not_published": ["serial number", "UDID", "exact model variant identifier", "analytics file names", "absolute charge timestamps", "clock times"]
 }

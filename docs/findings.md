@@ -88,12 +88,15 @@ charge-voltage target at 200 / 250 / 300 / 1000 cycles by 0.02 V each
 (0.05 V at ≥1000), which reduces the chargeable capacity and is reflected in
 the reported health figure.
 
-**Confirmed on this device**: the 2026-11-09 analytics file reports
-`last_value_VacVoltageLimit = 4480 mV` at **`CycleCount = 200`** — the step
-is already active at the node itself, not after it. The 4.50 V nameplate is
-the hardware ceiling, so the software target is exactly 0.02 V below it,
-matching the 200–249 row. Six further snapshots (202–208 cycles) all show
-4480 mV. The earliest independent gauge write is 2026-11-08 17:08 local.
+**Confirmed on this device**: `iphone-01` is an **iPhone 17** (model family
+confirmed by the owner), so the iPhone 17 series table is the applicable
+one rather than a coincidental voltage match. The 2026-11-09 analytics
+file reports `last_value_VacVoltageLimit = 4480 mV` at
+**`CycleCount = 200`** — the step is already active at the node itself, not
+after it. The 4.50 V nameplate is the hardware ceiling, so the software
+target is exactly 0.02 V below it, matching the 200–249 row. Six further
+snapshots (202–208 cycles) all show 4480 mV. The earliest independent gauge
+write is 2026-11-08 17:08 local.
 See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md)
 and [`voltage-nodes.md`](voltage-nodes.md).
 

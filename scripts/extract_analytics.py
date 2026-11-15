@@ -69,8 +69,11 @@ TIMELINE_COLS = ["date", "cycle_count", "vac_voltage_limit_mv",
                  "cycle_count_last_qmax", "qmax_cell0_mah",
                  "gauge_update_time_utc", "ios_version"]
 
-# iPhone 17 series, third-party table (see docs/voltage-nodes.md).
-# (upper_bound_exclusive, limit_mV, label)
+# iPhone 17 series (iphone-01 model family, owner-confirmed), third-party
+# table (see docs/voltage-nodes.md). (upper_bound_exclusive, limit_mV, label)
+# Rows 1-199 .. 300-999 are from the published table; the >=1000 value is
+# EXTRAPOLATED from the iPhone 13 series' -0.05V final step, because the
+# source post gives no >=1000 value for the 17 series.
 BANDS = [(200, 4500, "1-199"), (250, 4480, "200-249"),
          (300, 4460, "250-299"), (1000, 4440, "300-999"),
          (10 ** 9, 4390, ">=1000")]

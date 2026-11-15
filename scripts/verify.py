@@ -42,6 +42,10 @@ check("nameplate battery energy matches V x mAh",
 check("cell energy exceeds pack energy",
       dev.get("cell_energy_wh", 0) > dev.get("battery_energy_wh", 0),
       f"{dev.get('cell_energy_wh')} vs {dev.get('battery_energy_wh')} Wh")
+check("model family is iPhone 17 (owner-confirmed)",
+      dev.get("model") == "iPhone 17")
+check("nameplate ceiling equals iPhone 17 series 1-199 band",
+      int(round(dev["charge_limit_voltage_v"] * 1000)) == 4500)
 
 print("\n=== health snapshots ===")
 check("6 snapshots", len(health) == 6, str(len(health)))
