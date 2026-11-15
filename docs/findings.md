@@ -134,9 +134,16 @@ Unconfirmed: needs an analytics snapshot from before 200 cycles (to see
 | Naive linear | 0.0165 %/day over 525 days | **90.5%** |
 | Step model | plateau 0.0041 %/day + two −0.43 pp nodes at 250/300 | **~96.1%** |
 
-The linear fit counts the two one-off policy steps as ongoing loss and
-substantially overstates mid-term degradation. The real cliff is at ≥1000
-cycles.
+Both figures describe the **NCC-derived export ratio**, not Apple's
+`MaximumCapacityPercent`. The linear fit counts the two one-off policy steps
+as ongoing loss and substantially overstates mid-term degradation.
+
+Both are superseded for lifetime purposes by the empirical concave ageing
+curve from three devices in
+[`lifetime-projection.md`](lifetime-projection.md): displayed health loss
+falls from ~−2.65 pp/100 cycles early to ~−0.40 pp/100 cycles late. Apple's
+design target is ~80% at 1000 cycles. The ≥1000 voltage value (4390 mV) is
+extrapolated, not published for the iPhone 17 series.
 
 ### Predicted upcoming nodes
 

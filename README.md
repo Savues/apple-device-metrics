@@ -60,9 +60,11 @@ More devices can be added as sibling directories under `devices/`.
    [`docs/voltage-nodes.md`](docs/voltage-nodes.md) and
    [`devices/reference-01/`](devices/reference-01/).
 
-5. **Linear extrapolation to 80% is wrong for this device.** Middle-term
-   behaviour is better described by a step model: ~96% at cycle 1000 before
-   the ≥1000 step, versus 90.5% from a naive 0.0165%/day fit.
+5. **Ageing is concave, not linear.** Health loss slows from ~−2.65 pp per
+   100 cycles early to ~−0.40 pp per 100 cycles late. The voltage step-down
+   is *protective*: it costs a few percent of per-charge runtime but slows
+   chemical ageing. Full projection with confidence levels:
+   [`docs/lifetime-projection.md`](docs/lifetime-projection.md).
 
 6. **Charging behaviour**: 325 sessions / 76 days, 98.83 equivalent full
    cycles, mean 1.65%/min (1.76%/min excluding anomalies). 18 sessions
@@ -124,6 +126,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `devices/iphone-01/device.json` | nameplate parameters |
 | `devices/iphone-01/voltage-reading.md` | single 4.04V @ 70% reading + OCV check |
 | `docs/findings.md` | full analysis |
+| `docs/lifetime-projection.md` | lifetime trend after the voltage step-down |
 | `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
 | `docs/methodology.md` | field definitions, units, known limitations |
 | `docs/corrections.md` | errors found and corrected during analysis |
