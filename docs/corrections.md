@@ -42,8 +42,8 @@ The stepwise shape was first attributed to random coulomb-counter
 recalibration. After cross-checking the cycle numbers, the largest step
 (194 → 208) **straddles cycle 200**, matching a reported iOS charge-voltage
 step-down at 200/250/300/1000 cycles. The current interpretation is a
-deterministic, cycle-triggered policy. Still a hypothesis pending the 100%
-voltage test — see `voltage-nodes.md`.
+deterministic, cycle-triggered policy. **Confirmed on 2026-11-15** by the
+analytics field `VacVoltageLimit = 4480 mV` at cycle 208.
 
 ## 4. Lifetime extrapolation
 

@@ -60,8 +60,9 @@ numbers should be treated as an empirical hypothesis, not a specification.
 ## Relation to this dataset
 
 `iphone-01` has a **4.50 V nameplate charge limit**, matching the iPhone 17
-series 1–199 row. At 208 cycles it should be in the **4.48 V** row if the
-table applies.
+series 1–199 row. At 208 cycles it should be in the **4.48 V** row — and the
+2026-11-15 analytics file confirms `VacVoltageLimit = 4480 mV` exactly.
+This is the first direct device-level confirmation in this repo.
 
 - The nameplate value (4.50 V) is the cell's **hardware ceiling**; the iOS
   software target is set at or below it. A nameplate reading of 4.50 V
@@ -75,14 +76,26 @@ table applies.
 
 ## How to verify
 
-1. Charge to 100%, disconnect, rest 10–20 min, read terminal voltage.
-   - **4.48 V** → the 200-cycle step is active → mechanism confirmed.
-   - **4.50 V** → not active on this device → the November step needs
-     another explanation (gauge recalibration / different node table).
-2. Check whether `charge_limit_voltage_v` from the analytics is a static
-   nameplate field or the live target. If it reads 4.46 V after cycle 250,
-   the mechanism is directly observable without test 1.
-3. Watch for another ~−0.4 pp step at 250 cycles (~2026-12-12) and 300
+**Confirmed on `iphone-01` (2026-11-15).** The daily analytics file contains a
+`VacVoltageLimit` aggregate reporting `last_value_VacVoltageLimit = 4480`
+(mV) at `CycleCount = 208`. With a 4.50 V nameplate ceiling, this is exactly
+the −0.02 V step predicted by the 200–249 row. No 100% charge test is needed.
+See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
+
+Extract the same field from any other daily analytics file:
+
+```sh
+python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips
+```
+
+Remaining checks:
+
+1. **Pre-200 snapshot**: expect `VacVoltageLimit = 4500` — direct before/after
+   pair for the step.
+2. **Post-250 snapshot**: expect `VacVoltageLimit = 4460`.
+3. **Qmax hypothesis**: a snapshot near cycle 138 to test whether the first
+   health cliff was a gauge recalibration.
+4. Watch for another ~−0.4 pp step at 250 cycles (~2026-12-12) and 300
    (~2027-01-14), with flat plateaus between.
 
 ## References

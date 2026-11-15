@@ -57,23 +57,37 @@ ageing does not behave this way. Plateau mean: **0.0041 %/day**.
 Full span: 57 days, +86 cycles (1.51 cycles/day), 100.05% → 99.11%
 (−0.94 pp, 0.0165 %/day, 0.0109 %/cycle).
 
-### The 200-cycle node
+### The 200-cycle node — CONFIRMED
 
 The largest step (194 → 208 cycles) **straddles cycle 200**. A widely
 circulated third-party account says iOS lowers its software charge-voltage
 target at 200 / 250 / 300 / 1000 cycles by 0.02 V each (0.05 V at ≥1000),
 which reduces the chargeable capacity and is reflected in the reported
-health figure. Details and provenance: [`voltage-nodes.md`](voltage-nodes.md).
+health figure.
+
+**This is now directly confirmed from the 2026-11-15 analytics file**:
+`last_value_VacVoltageLimit = 4480 mV` at `CycleCount = 208`, versus the
+4.50 V nameplate hardware ceiling. The software target is 0.02 V below the
+nameplate, exactly as the 200–249 row of the table predicts.
+See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
+Details and provenance: [`voltage-nodes.md`](voltage-nodes.md).
 
 Order-of-magnitude check with a typical 4.5V-platform OCV curve: high-end
 slope ≈ 0.020 V per SOC point, so 0.02 V ⇒ ~1 pp of full-charge capacity.
 Observed 0.43 pp. Same order of magnitude; the reported value is smoothed /
-re-baselined, so this is consistency, **not proof**.
+re-baselined, so this is consistency, **not proof** — but the analytics
+voltage field is direct evidence.
+
+### The first cliff — Qmax recalibration candidate
 
 The earlier cliff (126 → 152 cycles) does **not** contain any of 200/250/300.
-Possible explanations: an earlier node in some accounts (150), an iOS
-26.4.2 first-calibration event, or analytics sampling at different SOC
-(18% vs 20%). Six points cannot separate these.
+The analytics file reports `CycleCountLastQmax = 138`, i.e. the last Qmax
+(gauge chemical-capacity) recalibration happened **inside** that interval.
+This is a plausible alternative cause for the −0.41 pp step, meaning the two
+cliffs may have different mechanisms.
+
+Unconfirmed: needs an analytics snapshot from before 200 cycles (to see
+`VacVoltageLimit = 4500`) and one near cycle 138 (to see the Qmax update).
 
 ### Two competing models
 
@@ -166,16 +180,19 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
 
 ## 5. Open questions
 
-1. **Decisive test**: charge to 100%, rest 10–20 min, read terminal voltage.
-   4.48 V ⇒ the 200-cycle step-down is active (confirming the mechanism);
-   4.50 V ⇒ it is not active on this device and the November step needs a
-   different explanation.
-2. Is the reported `charge_limit_voltage_v = 4.5` a static nameplate value or
-   the currently effective target? If it changes to 4.46 V after cycle 250,
-   it is itself direct evidence and the 100% test becomes unnecessary.
-3. Sample at a fixed SOC (e.g. ~20%) to separate node steps from sampling
-   noise. `min_soc_pct` in the analytics varies 18–39% across snapshots.
-4. Meaning of the `hrs_soc` column (always 0) is unknown.
+1. ~~**Decisive test**: charge to 100%, rest 10–20 min, read terminal voltage.~~
+   **Resolved**: the 2026-11-15 analytics file reports
+   `VacVoltageLimit = 4480 mV` at cycle 208 — the 200-cycle step is active.
+   See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md).
+2. **Pre-200 snapshot**: an analytics file with `CycleCount < 200` should show
+   `VacVoltageLimit = 4500 mV`, giving a direct before/after pair.
+3. **Qmax hypothesis**: a snapshot near cycle 138 to test whether the first
+   cliff was a gauge recalibration rather than a voltage node.
+4. **Post-250 snapshot**: expect `VacVoltageLimit = 4460 mV`.
+5. Meaning of the `hrs_soc` column (always 0) is still unknown — no matching
+   field found in the analytics file.
+6. `MaximumCapacityPercent = 101` in analytics vs exported `Nominal Health`
+   99.11% — different definitions; the export tool computes its own ratio.
 
 ---
 

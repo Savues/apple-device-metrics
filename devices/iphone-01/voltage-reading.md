@@ -33,17 +33,14 @@ internal resistance is indicated — the cell itself looks healthy.
   target: the difference is absorbed by SOC re-baselining well below 100%.
 - A single point cannot establish an OCV curve for this cell.
 
-## Decisive follow-up
+## Follow-up status (resolved)
 
-Charge to 100%, disconnect, rest 10–20 minutes, then read terminal voltage:
+**The 100% test is no longer needed.** The 2026-11-15 analytics file reports
+`VacVoltageLimit = 4480 mV` at cycle 208, directly confirming the 200-cycle
+step-down. See [`ANALYTICS-EVIDENCE.md`](ANALYTICS-EVIDENCE.md).
 
-| Reading | Interpretation |
-|---------|----------------|
-| **4.48 V** | 200-cycle step-down is active → cycle-node mechanism confirmed |
-| **4.50 V** | step-down not active on this device → the 2026-11-15 −0.43 pp step needs another explanation |
+This mid-SOC reading remains useful only as a sanity check that the cell has
+no voltage collapse or elevated internal resistance.
 
-Also worth checking whether `charge_limit_voltage_v` in the analytics is a
-static nameplate field or the live software target: if it becomes 4.46 V
-after cycle 250, that is direct evidence without the 100% test.
-
-See [`docs/voltage-nodes.md`](../docs/voltage-nodes.md).
+The open question is now the **before** value: a pre-200 analytics snapshot
+should show `VacVoltageLimit = 4500 mV`.

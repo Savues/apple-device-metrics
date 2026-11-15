@@ -44,6 +44,31 @@ The raw diary is **deliberately excluded** from this repository. It carries a
 device identifier in its header line and second-resolution wall-clock
 timestamps that would reveal sleep, wake and travel patterns.
 
+### Daily analytics file (`.ips.ca.synced`)
+
+`devices/iphone-01/analytics-current.json` — a whitelisted extraction from
+the 2026-11-15 daily file (NDJSON, `bug_type 211`, 863 records) by
+`scripts/extract_analytics.py`. The raw file is **not published**: it
+contains `deviceId`, UUIDs, `incident_id`, carrier/country, SKU and other
+identifiers. Only numeric battery fields from
+`BatteryConfigValueHistogramFinal_V2` and `VacVoltageLimit` are emitted, and
+the script refuses to write output if any identifier-like key appears.
+
+This file confirms the exact source of each health-table column:
+
+| Export column | Analytics field |
+|---------------|-----------------|
+| `Cycl.` | `CycleCount` |
+| `Raw Capacity` | `AppleRawMaxCapacity` |
+| `Nominal Capacity` | `NominalChargeCapacity` |
+| `Min Soc` | `DailyMinSoc` |
+| `Nominal Health` | derived `NCC / 3692` |
+| `iOS` | header `os_version` |
+| `Hrs Soc` | no matching field found |
+
+Note `MaximumCapacityPercent` in the analytics is **101**, not 99.11 — the
+export tool's `Nominal Health` is its own ratio, not that system field.
+
 ### Single voltage reading
 
 `devices/iphone-01/voltage-reading.md` — one manual reading of terminal
@@ -89,7 +114,9 @@ only — no serial, UDID, model identifier or analytics filename.
 2. session count and aggregate totals match `docs/charging-summary.json`;
 3. `soc_end − soc_start = charged_pct` for all rows (0 mismatches);
 4. declared rate consistent with duration/charge within 0.06 %/min;
-5. CSV contains no absolute date, clock time, or device-identifier strings.
+5. CSV contains no absolute date, clock time, or device-identifier strings;
+6. the published analytics extraction matches the health CSV for the same
+   date and contains no identifier-like keys.
 
 Source-log integrity: 325/325 sessions parsed, 0 parse errors.
 

@@ -102,5 +102,26 @@ check("mean rate excl anomalies",
       abs(sum(clean) / len(clean) - summary["avg_rate_excl_anomaly"]) < 0.001,
       f"{sum(clean)/len(clean):.3f} %/min")
 
+print("\n=== analytics extraction ===")
+ana_path = "devices/iphone-01/analytics-current.json"
+ana = json.load(open(os.path.join(ROOT, ana_path), encoding="utf-8"))
+blob = open(os.path.join(ROOT, ana_path), encoding="utf-8").read()
+check("analytics has no identifier-like keys",
+      not any(k in blob for k in ("deviceId", "incident_id", "configUuid",
+                                  "carrier", "productSku", "Serial", "ChemID")))
+check("analytics voltage limit is 4480 mV",
+      ana.get("vac_voltage_limit_mv") == 4480,
+      f"{ana.get('vac_voltage_limit_mv')} mV")
+check("analytics cycle count matches last health sample",
+      ana.get("cycle_count") == cyc[-1])
+check("analytics NCC matches last health sample",
+      ana.get("nominal_charge_capacity_mah") == nom[-1])
+check("analytics DailyMinSoc matches health CSV",
+      ana.get("daily_min_soc_pct") == int(health[-1]["min_soc_pct"]),
+      f"{ana.get('daily_min_soc_pct')} vs {health[-1]['min_soc_pct']}")
+check("analytics-derived health matches reported",
+      abs(ana.get("nominal_health_pct", 0) -
+          float(health[-1]["nominal_health_pct"])) < 0.01)
+
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

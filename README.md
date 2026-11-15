@@ -36,11 +36,18 @@ More devices can be added as sibling directories under `devices/`.
    ≥1000). The nameplate 4.50V is the hardware ceiling; the software target is
    set below it. See [`docs/voltage-nodes.md`](docs/voltage-nodes.md).
 
-4. **Linear extrapolation to 80% is wrong for this device.** Middle-term
+4. **The 200-cycle step is confirmed by analytics**, not just inferred:
+   `last_value_VacVoltageLimit = 4480 mV` at cycle 208, versus the 4.50 V
+   nameplate ceiling — exactly the predicted −0.02 V step. The first cliff
+   (126→152) instead contains `CycleCountLastQmax = 138`, pointing to a
+   gauge recalibration. See
+   [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
+
+5. **Linear extrapolation to 80% is wrong for this device.** Middle-term
    behaviour is better described by a step model: ~96% at cycle 1000 before
    the ≥1000 step, versus 90.5% from a naive 0.0165%/day fit.
 
-5. **Charging behaviour**: 325 sessions / 76 days, 98.83 equivalent full
+6. **Charging behaviour**: 325 sessions / 76 days, 98.83 equivalent full
    cycles, mean 1.65%/min (1.76%/min excluding anomalies). 18 sessions
    (5.5%) recorded zero net charge, one recorded SOC *dropping* while
    plugged in — 19 anomalous rows (5.8%) in total.
@@ -88,9 +95,13 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
 | `docs/methodology.md` | field definitions, units, known limitations |
 | `docs/corrections.md` | errors found and corrected during analysis |
+| `devices/iphone-01/ANALYTICS-EVIDENCE.md` | raw analytics fields + confirmed voltage step |
+| `devices/iphone-01/analytics-current.json` | whitelisted fields from the 2026-11-15 analytics file |
 | `docs/charging-summary.json` | computed aggregates |
 | `scripts/verify.py` | consistency checks |
-| `scripts/parse_charging_log.py` | parser / de-identifier |
+| `scripts/parse_charging_log.py` | charging diary parser / de-identifier |
+| `scripts/extract_analytics.py` | analytics `.ips` parser / de-identifier |
+| `scripts/ingest_analytics.py` | append plain-text health-table exports |
 
 ---
 
@@ -99,8 +110,29 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 The cycle-node voltage table is **third-party reverse-engineering**, not Apple
 documentation. Apple's public material only states "80% capacity at 1000
 cycles" and documents performance management / optimised charging. Everything
-in this repo is labelled accordingly. The decisive test — reading the
-terminal voltage at 100% after resting (4.48V vs 4.50V) — is still pending.
+in this repo is labelled accordingly.
+
+**Update (2026-11-15)**: the 200-cycle step is now directly confirmed on this
+device by `VacVoltageLimit = 4480 mV` at cycle 208 in the iOS analytics file —
+see [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
+The mid-SOC voltage test is no longer needed. Remaining open questions: the
+exact voltage before cycle 200, and whether the first cliff is a Qmax
+recalibration. A pre-200 analytics snapshot would settle both.
+
+## Feeding in new analytics files
+
+Send any `.ips` / `.ips.ca.synced` daily analytics file. It is NDJSON with a
+header line plus named aggregate records. Parse it locally:
+
+```sh
+python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips \
+    -o devices/iphone-01/analytics-YYYY-MM-DD.json
+```
+
+Only a whitelist of numeric battery fields is emitted; the raw file (which
+contains deviceId, UUIDs, carrier/country and incident IDs) must never be
+committed. Snapshots from before cycle 200 are especially valuable. For the
+plain-text health-table export, use `scripts/ingest_analytics.py`.
 
 ## License
 
