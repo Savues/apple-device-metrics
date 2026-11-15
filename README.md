@@ -96,7 +96,8 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `docs/methodology.md` | field definitions, units, known limitations |
 | `docs/corrections.md` | errors found and corrected during analysis |
 | `devices/iphone-01/ANALYTICS-EVIDENCE.md` | raw analytics fields + confirmed voltage step |
-| `devices/iphone-01/analytics-current.json` | whitelisted fields from the 2026-11-15 analytics file |
+| `devices/iphone-01/analytics/YYYY-MM-DD.json` | whitelisted extraction, one file per date |
+| `devices/iphone-01/analytics-timeline.csv` | consolidated date / cycle / voltage / health timeline |
 | `docs/charging-summary.json` | computed aggregates |
 | `scripts/verify.py` | consistency checks |
 | `scripts/parse_charging_log.py` | charging diary parser / de-identifier |
@@ -121,13 +122,19 @@ recalibration. A pre-200 analytics snapshot would settle both.
 
 ## Feeding in new analytics files
 
-Send any `.ips` / `.ips.ca.synced` daily analytics file. It is NDJSON with a
-header line plus named aggregate records. Parse it locally:
+Send any `.ips` / `.ips.ca.synced` daily analytics files, **one per date**.
+NDJSON with a header line plus named aggregate records. Import any number at
+once:
 
 ```sh
-python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips \
-    -o devices/iphone-01/analytics-YYYY-MM-DD.json
+python3 scripts/extract_analytics.py --archive /path/Analytics-A.ips /path/Analytics-B.ips
 ```
+
+Each file is written to `devices/iphone-01/analytics/<header-date>.json`,
+`analytics-timeline.csv` is rebuilt, and every snapshot is checked against
+the cycle-node voltage table (4500 / 4480 / 4460 / 4440 / 4390 mV). A
+mismatch prints `??` rather than silently passing. Re-importing the same date
+updates it in place. `python3 scripts/verify.py` re-checks the whole archive.
 
 Only a whitelist of numeric battery fields is emitted; the raw file (which
 contains deviceId, UUIDs, carrier/country and incident IDs) must never be

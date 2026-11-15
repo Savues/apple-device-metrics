@@ -102,26 +102,60 @@ check("mean rate excl anomalies",
       abs(sum(clean) / len(clean) - summary["avg_rate_excl_anomaly"]) < 0.001,
       f"{sum(clean)/len(clean):.3f} %/min")
 
-print("\n=== analytics extraction ===")
-ana_path = "devices/iphone-01/analytics-current.json"
-ana = json.load(open(os.path.join(ROOT, ana_path), encoding="utf-8"))
-blob = open(os.path.join(ROOT, ana_path), encoding="utf-8").read()
-check("analytics has no identifier-like keys",
-      not any(k in blob for k in ("deviceId", "incident_id", "configUuid",
-                                  "carrier", "productSku", "Serial", "ChemID")))
-check("analytics voltage limit is 4480 mV",
-      ana.get("vac_voltage_limit_mv") == 4480,
-      f"{ana.get('vac_voltage_limit_mv')} mV")
-check("analytics cycle count matches last health sample",
-      ana.get("cycle_count") == cyc[-1])
-check("analytics NCC matches last health sample",
-      ana.get("nominal_charge_capacity_mah") == nom[-1])
-check("analytics DailyMinSoc matches health CSV",
-      ana.get("daily_min_soc_pct") == int(health[-1]["min_soc_pct"]),
-      f"{ana.get('daily_min_soc_pct')} vs {health[-1]['min_soc_pct']}")
-check("analytics-derived health matches reported",
-      abs(ana.get("nominal_health_pct", 0) -
-          float(health[-1]["nominal_health_pct"])) < 0.01)
+print("\n=== analytics archive ===")
+ana_dir = os.path.join(ROOT, "devices", "iphone-01", "analytics")
+ana_files = sorted(f for f in os.listdir(ana_dir) if f.endswith(".json")) \
+    if os.path.isdir(ana_dir) else []
+check("at least one analytics snapshot", len(ana_files) > 0, f"{len(ana_files)} file(s)")
+
+# Third-party node table: (<upper bound exclusive>, limit mV)
+bands = [(200, 4500), (250, 4480), (300, 4460), (1000, 4440), (10 ** 9, 4390)]
+snaps = []
+for fn in ana_files:
+    p = os.path.join(ana_dir, fn)
+    blob = open(p, encoding="utf-8").read()
+    r = json.loads(blob)
+    snaps.append(r)
+    check(f"{fn}: no identifier-like keys",
+          not any(k in blob for k in ("deviceId", "incident_id", "configUuid",
+                                      "carrier", "productSku", "Serial", "ChemID")))
+    check(f"{fn}: filename matches header date",
+          fn == r.get("date", "") + ".json")
+    check(f"{fn}: health matches NCC/3692",
+          abs(r.get("nominal_health_pct", 0) -
+              r.get("nominal_charge_capacity_mah", 0) / RATED * 100) < 0.01)
+    exp = next(mv for upper, mv in bands if r.get("cycle_count", 0) < upper)
+    check(f"{fn}: VacVoltageLimit matches node band",
+          r.get("vac_voltage_limit_mv") == exp,
+          f"cycle={r.get('cycle_count')} {r.get('vac_voltage_limit_mv')}mV "
+          f"expected {exp}mV")
+
+check("snapshot dates sorted & unique",
+      [r["date"] for r in snaps] == sorted({r["date"] for r in snaps}))
+
+# Timeline CSV must be exactly the projection of the archive.
+tl = load("devices/iphone-01/analytics-timeline.csv")
+check("timeline row count matches archive", len(tl) == len(snaps),
+      f"{len(tl)} vs {len(snaps)}")
+check("timeline dates match archive",
+      [x["date"] for x in tl] == [r["date"] for r in snaps])
+check("timeline values match archive", all(
+    int(t["cycle_count"]) == s["cycle_count"] and
+    int(t["vac_voltage_limit_mv"]) == s["vac_voltage_limit_mv"] and
+    int(t["nominal_charge_capacity_mah"]) == s["nominal_charge_capacity_mah"]
+    for t, s in zip(tl, snaps)))
+check("all timeline rows match their node band",
+      all(t["voltage_matches_band"] == "True" for t in tl))
+
+# The newest analytics snapshot must agree with the newest health CSV row.
+if snaps:
+    newest = snaps[-1]
+    check("newest analytics cycle == last health sample",
+          newest["cycle_count"] == cyc[-1])
+    check("newest analytics NCC == last health sample",
+          newest["nominal_charge_capacity_mah"] == nom[-1])
+    check("newest analytics DailyMinSoc == last health sample",
+          newest["daily_min_soc_pct"] == int(health[-1]["min_soc_pct"]))
 
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

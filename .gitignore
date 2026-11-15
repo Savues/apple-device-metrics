@@ -1,7 +1,11 @@
-# Private raw diaries must never be committed
+# Private raw sources must never be committed: they contain deviceId,
+# UUIDs, incident_id, carrier/country and wall-clock behavioural timestamps.
 *raw*.txt
 *diary*.txt
 *_private*
+*.ips
+*.ips.*
+*.ips.ca.synced
 .DS_Store
 __pycache__/
 *.pyc

@@ -46,7 +46,7 @@ timestamps that would reveal sleep, wake and travel patterns.
 
 ### Daily analytics file (`.ips.ca.synced`)
 
-`devices/iphone-01/analytics-current.json` — a whitelisted extraction from
+`devices/iphone-01/analytics/2026-11-15.json` — a whitelisted extraction from
 the 2026-11-15 daily file (NDJSON, `bug_type 211`, 863 records) by
 `scripts/extract_analytics.py`. The raw file is **not published**: it
 contains `deviceId`, UUIDs, `incident_id`, carrier/country, SKU and other
@@ -115,8 +115,9 @@ only — no serial, UDID, model identifier or analytics filename.
 3. `soc_end − soc_start = charged_pct` for all rows (0 mismatches);
 4. declared rate consistent with duration/charge within 0.06 %/min;
 5. CSV contains no absolute date, clock time, or device-identifier strings;
-6. the published analytics extraction matches the health CSV for the same
-   date and contains no identifier-like keys.
+6. every archived analytics JSON is identifier-free, dated correctly, and
+   its `VacVoltageLimit` matches the cycle-node band;
+7. `analytics-timeline.csv` is an exact projection of the archive.
 
 Source-log integrity: 325/325 sessions parsed, 0 parse errors.
 

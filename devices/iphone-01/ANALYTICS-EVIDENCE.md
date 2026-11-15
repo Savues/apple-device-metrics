@@ -3,7 +3,7 @@
 Source: iOS daily analytics file (`bug_type 211`, NDJSON, generated 08:00
 local). 863 records. Parsed with
 [`scripts/extract_analytics.py`](../scripts/extract_analytics.py) into
-[`analytics-current.json`](analytics-current.json).
+[`analytics/2026-11-15.json`](analytics/2026-11-15.json).
 
 The raw `.ips` file is **not** published: it contains `deviceId`, UUIDs,
 `incident_id`, carrier/country, SKU and other identifiers. Only a whitelist
@@ -111,10 +111,11 @@ pattern.
 
 ## 5. What to send next
 
-Any `.ips.ca.synced` / `.ips` daily analytics file works. The parser reads
-the first header line plus two named records
+Any `.ips.ca.synced` / `.ips` daily analytics file works, **one per date**.
+The parser reads the first header line plus two named records
 (`BatteryConfigValueHistogramFinal_V2`, `VacVoltageLimit`), so partial or
-aggregated files are fine as long as those records are present.
+aggregated files are fine as long as those records are present. The header
+timestamp determines the archive filename — no manual naming needed.
 
 Most valuable for closing the remaining questions:
 
@@ -124,9 +125,20 @@ Most valuable for closing the remaining questions:
    for the first cliff.
 3. Any snapshot after cycle 250 — expect `VacVoltageLimit = 4460`.
 
-Extract locally, never commit the raw file:
+Import any number at once; the timeline CSV is rebuilt from the full archive:
 
 ```sh
-python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips \
-    -o devices/iphone-01/analytics-YYYY-MM-DD.json
+python3 scripts/extract_analytics.py --archive \
+    /path/Analytics-2026-09-19.ips /path/Analytics-2026-10-13.ips
+python3 scripts/verify.py
 ```
+
+### Current timeline
+
+| Date | Cycles | `VacVoltageLimit` | Expected band | NCC | Health |
+|------|--------|-------------------|---------------|-----|--------|
+| 2026-11-15 | 208 | 4480 mV (4.48V) | 200–249 ✓ | 3659 | 99.106% |
+
+Full machine-readable version:
+[`analytics-timeline.csv`](analytics-timeline.csv). Each import adds a row;
+`verify.py` asserts every row's voltage matches its node band.
