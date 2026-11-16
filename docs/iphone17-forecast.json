@@ -1,6 +1,7 @@
 {
   "scope": "iphone-01 ONLY. Other reference devices excluded from fitting.",
   "owner_question": "Is this based on current daily usage, and does it include real mAh? YES to both.",
+  "generated_from": "scripts/params.py (derived from published CSV/JSON; no hand-entered constants)",
   "base": {
     "date": "2026-11-16",
     "cycle": 209,
@@ -11,7 +12,8 @@
   "current_usage": {
     "cycles_per_day": 1.3,
     "mah_per_day_throughput": 4801,
-    "basis": "76-day charging diary (9883% = 364880 mAh total) = 4801 mAh/day; independently confirmed by 7 non-stale analytics gauge writes (CycleCount 200->209 over 7.28 days) = 1.233 cycles/day by regression",
+    "basis": "76-day charging diary (9883% = 364880 mAh total) = 4801 mAh/day; cross-checked by 7 non-stale analytics gauge writes (CycleCount +9 over 7.28 days) = 1.233 cycles/day by regression. Both rely on coulomb counting, so the cross-check is not independent",
+    "gauge_regression_cycles_per_day": 1.233,
     "previous_rate_withdrawn": "1.5386 cycles/day (57-day regression on sparse export rows) was biased high by a heavy 30-day stretch; kept only as a sensitivity case",
     "plateau_wear_mah_per_day": 0.176,
     "lockin_mah_per_20mv_node": 15.9
@@ -22,7 +24,7 @@
     "Plateau slope 0.00476 pp/day = 0.176 mAh/day stays constant",
     "Each future 20mV node costs the same -0.43pp = -15.9 mAh as the observed 200 node",
     ">=1000 band 4390 mV extrapolated from iPhone 13 series (low confidence)",
-    "Apple displayed MaximumCapacityPercent NOT modelled: constant 101 on all 7 files"
+    "Apple displayed MaximumCapacityPercent NOT modelled: latest value 101 across 8 analytics files"
   ],
   "not_used": [
     "reference-01 (1420/73%)",

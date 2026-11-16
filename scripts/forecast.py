@@ -5,53 +5,60 @@ Owner request: forecast from the main device's own data only, at its present
 daily usage, and report real mAh (not just percentages). The two other
 reference devices are excluded (irregular usage).
 
-Usage rate: measured from this device's own charging diary (76 days,
-4801 mAh/day = 1.30 cycles/day) and independently confirmed by the analytics
-CycleCount regression over 7 independent gauge writes (1.233 cycles/day,
-2026-11-08 .. 11-15). The earlier 1.5386 cycles/day from a 57-day regression
-on sparse export rows was biased high by a heavy 30-day stretch and is NOT
-current usage; it is retained only as a sensitivity case.
+Every parameter is derived from the published data by scripts/params.py:
+base = latest analytics snapshot; usage = charging diary throughput;
+cross-check = analytics CycleCount regression over non-stale gauge writes;
+plateau slope and node step = the 6-row health export. Importing a new
+snapshot and re-running this script refreshes the forecast with no edits.
 
 Outputs: docs/iphone17-forecast.{csv,json,svg}
 """
 import csv
 import json
 import os
+import sys
 from datetime import date, timedelta
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RATED = 3692
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from params import NODES, FIRST_BAND_MV, RATED, ROOT, derive  # noqa: E402
+
+P = derive()
 
 # --- measured on iphone-01 only --------------------------------------------
-BASE_DATE = date(2026, 11, 16)
-BASE_CYCLE = 209
-BASE_NCC = 3660
-BASE_HEALTH = BASE_NCC / RATED * 100          # 99.133%
-APPLE_DISPLAY = 101
+BASE_DATE = date.fromisoformat(P["base"]["date"])
+BASE_CYCLE = P["base"]["cycle"]
+BASE_NCC = P["base"]["ncc_mah"]
+BASE_HEALTH = P["base"]["health_pct"]
+APPLE_DISPLAY = P["base"]["apple_display"]
 
-# Current daily usage (primary). Two independent device measurements agree.
-DIARY_TOTAL_PCT = 9883                         # sum(charged_pct), 325 sessions
-DIARY_DAYS = 76                               # 2026-09-01 .. 2026-11-15
-MAH_PER_DAY = DIARY_TOTAL_PCT / 100 * RATED / DIARY_DAYS   # 4801.1 mAh/day
-CYCLES_PER_DAY = round(MAH_PER_DAY / RATED, 2)             # 1.30 /day
-# Independent check: 7 non-stale analytics gauge writes, 2026-11-08..11-15,
-# CycleCount 200 -> 209 over 7.28 days => 1.233 cycles/day by regression.
-PLATEAU_PP_PER_DAY = 0.00476                   # 3 non-step segments
+DIARY_TOTAL_PCT = P["diary"]["total_charged_pct"]
+DIARY_DAYS = P["diary"]["span_days"]
+MAH_PER_DAY = P["diary"]["mah_per_day"]
+CYCLES_PER_DAY = P["diary"]["cycles_per_day"]
+GAUGE = P["rates"]
+PLATEAU_PP_PER_DAY = P["plateau_pp_per_day"]
 PLATEAU_MAH_PER_DAY = PLATEAU_PP_PER_DAY / 100 * RATED
-STEP_PP_PER_NODE = 0.43                        # observed 200-node step
+STEP_PP_PER_NODE = P["step_pp_per_node"]
 STEP_MAH_PER_NODE = STEP_PP_PER_NODE / 100 * RATED
-
-NODES = [(250, 40), (300, 60), (1000, 110)]   # cycles -> cumulative -mV
 
 # Sensitivity: other usage windows measured on this same device.
 RATE_CASES = [
-    ("recent 7 days", 0.99),
-    ("recent 14 days", 1.21),
-    ("independent gauge snapshots (regression)", 1.233),
-    ("full 76-day diary (primary)", 1.30),
-    ("recent 30 days", 1.53),
-    ("57-day export regression (old, biased high)", 1.5386),
+    ("recent 7 days", GAUGE["recent_7"]),
+    ("recent 14 days", GAUGE["recent_14"]),
+    ("independent gauge snapshots (regression)", GAUGE["gauge_regression"]),
+    (f"full {DIARY_DAYS}-day diary (primary)", CYCLES_PER_DAY),
+    ("recent 30 days", GAUGE["recent_30"]),
+    ("57-day export regression (old, biased high)", GAUGE["export_regression"]),
 ]
+DIARY_BASIS = (
+    f"{DIARY_DAYS}-day charging diary ({DIARY_TOTAL_PCT}% = "
+    f"{round(DIARY_TOTAL_PCT / 100 * RATED)} mAh total) = "
+    f"{round(MAH_PER_DAY)} mAh/day; cross-checked by "
+    f"{P['non_stale_snapshot_count']} non-stale analytics gauge writes "
+    f"(CycleCount +{GAUGE['gauge_cycle_delta']} over "
+    f"{GAUGE['gauge_span_days']} days) = {GAUGE['gauge_regression']} "
+    f"cycles/day by regression. Both rely on coulomb counting, so the "
+    f"cross-check is not independent")
 
 
 def derating_mv(cycle):
@@ -62,17 +69,22 @@ def derating_mv(cycle):
     return mv
 
 
+# Only nodes still ahead of the base cost a future step; a node already
+# passed is contained in the measured base NCC.
+FUTURE_NODES = [(n, mv) for n, mv in NODES if n > BASE_CYCLE]
+
+
 def at(cycle, rate=CYCLES_PER_DAY):
     days = (cycle - BASE_CYCLE) / rate
     plateau = PLATEAU_PP_PER_DAY * days
-    steps = sum(1 for n, _ in NODES if cycle >= n) * STEP_PP_PER_NODE
+    steps = sum(1 for n, _ in FUTURE_NODES if cycle >= n) * STEP_PP_PER_NODE
     health = BASE_HEALTH - plateau - steps
     chemical = BASE_HEALTH - plateau
     return {
         "date": (BASE_DATE + timedelta(days=days)).isoformat(),
         "days_from_base": round(days, 1),
         "cycle": cycle,
-        "vac_voltage_limit_mv": 4500 - derating_mv(cycle),
+        "vac_voltage_limit_mv": FIRST_BAND_MV - derating_mv(cycle),
         "ncc_health_pct": round(health, 3),
         "ncc_mah": round(health / 100 * RATED, 1),
         "plateau_loss_pp": round(plateau, 3),
@@ -91,7 +103,7 @@ def main():
     while c <= 1500:
         checkpoints.add(int(round(c)))
         c += CYCLES_PER_DAY * 30.44
-    for n, _ in NODES:
+    for n, _ in FUTURE_NODES:
         checkpoints.add(n)
     rows = [at(cyc) for cyc in sorted(checkpoints)]
 
@@ -105,7 +117,7 @@ def main():
                    ("cycle", "date", "days_from_base", "vac_voltage_limit_mv",
                     "ncc_health_pct", "ncc_mah", "node_lockin_mah",
                     "chemical_only_pct", "chemical_only_mah")}
-                  for n, _ in NODES]
+                  for n, _ in FUTURE_NODES]
 
     sensitivity = []
     for label, r in RATE_CASES:
@@ -126,6 +138,7 @@ def main():
     params = {
         "scope": "iphone-01 ONLY. Other reference devices excluded from fitting.",
         "owner_question": "Is this based on current daily usage, and does it include real mAh? YES to both.",
+        "generated_from": "scripts/params.py (derived from published CSV/JSON; no hand-entered constants)",
         "base": {
             "date": BASE_DATE.isoformat(), "cycle": BASE_CYCLE,
             "ncc_mah": BASE_NCC, "health_pct": round(BASE_HEALTH, 3),
@@ -134,18 +147,19 @@ def main():
         "current_usage": {
             "cycles_per_day": CYCLES_PER_DAY,
             "mah_per_day_throughput": round(MAH_PER_DAY),
-            "basis": "76-day charging diary (9883% = 364880 mAh total) = 4801 mAh/day; independently confirmed by 7 non-stale analytics gauge writes (CycleCount 200->209 over 7.28 days) = 1.233 cycles/day by regression",
+            "basis": DIARY_BASIS,
+            "gauge_regression_cycles_per_day": GAUGE["gauge_regression"],
             "previous_rate_withdrawn": "1.5386 cycles/day (57-day regression on sparse export rows) was biased high by a heavy 30-day stretch; kept only as a sensitivity case",
             "plateau_wear_mah_per_day": round(PLATEAU_MAH_PER_DAY, 3),
             "lockin_mah_per_20mv_node": round(STEP_MAH_PER_NODE, 1),
         },
         "mah_conversion": "ncc_mah = ncc_health_pct / 100 * 3692 (fixed nameplate rated capacity). Same for chemical_only_mah and node_lockin_mah.",
         "assumptions": [
-            "Current 1.30 cycles/day continues (sensitivity table shows other windows)",
-            "Plateau slope 0.00476 pp/day = 0.176 mAh/day stays constant",
-            "Each future 20mV node costs the same -0.43pp = -15.9 mAh as the observed 200 node",
+            f"Current {CYCLES_PER_DAY:.2f} cycles/day continues (sensitivity table shows other windows)",
+            f"Plateau slope {PLATEAU_PP_PER_DAY} pp/day = {PLATEAU_MAH_PER_DAY:.3f} mAh/day stays constant",
+            f"Each future 20mV node costs the same -{STEP_PP_PER_NODE}pp = -{STEP_MAH_PER_NODE:.1f} mAh as the observed 200 node",
             ">=1000 band 4390 mV extrapolated from iPhone 13 series (low confidence)",
-            "Apple displayed MaximumCapacityPercent NOT modelled: constant 101 on all 7 files",
+            f"Apple displayed MaximumCapacityPercent NOT modelled: latest value {APPLE_DISPLAY} across {P['snapshot_count']} analytics files",
         ],
         "not_used": ["reference-01 (1420/73%)", "reference-02 (2919/67%)",
                      "Apple 1000-cycle/80% as ageing anchor",

@@ -121,8 +121,13 @@ variant is not.
 ## Reproduce
 
 ```sh
-# Re-derive every summary number from the CSVs
+# Import new analytics files, regenerate the forecast and run every check
+scripts/update.sh /path/Analytics-A.ips /path/Analytics-B.ips
+
+# Or only re-run the checks (also confirms the committed forecast equals a
+# fresh regeneration, and scores pre-registered predictions)
 python3 scripts/verify.py
+python3 scripts/check_links.py
 
 # Re-parse a private raw diary into the de-identified CSV
 # (raw diary is deliberately NOT in this repository)
@@ -142,6 +147,10 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `docs/iphone17-forecast.csv` / `.json` / `.svg` | forecast data and chart |
 | `docs/voltage-capacity-experiment.json` | A/B measurement: voltage limit vs reported capacity |
 | `scripts/forecast.py` | regenerates the iphone-01-only forecast |
+| `scripts/params.py` | derives every forecast parameter (base, usage rates, plateau, node step) from the published data; no hand-entered constants |
+| `scripts/update.sh` | one-command import → timeline → forecast → verify |
+| `scripts/check_links.py` | fails on broken relative Markdown links |
+| `docs/predictions.json` | **pre-registered** 250-node predictions, scored automatically by `verify.py` |
 | `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
 | `docs/methodology.md` | field definitions, units, known limitations |
 | `docs/shallow-charging-accuracy.md` | **Charge Limit 80% on, but unplugged before 80%**: why the calibration full charge never runs, and which readings it affects |
@@ -188,11 +197,17 @@ once:
 python3 scripts/extract_analytics.py --archive /path/Analytics-A.ips /path/Analytics-B.ips
 ```
 
+For the full refresh use `scripts/update.sh` with the same arguments: it
+also regenerates the forecast from the new latest snapshot and runs
+`verify.py`. Prose in `docs/*.md` that quotes the base still needs a review.
+
 Each file is written to `devices/iphone-01/analytics/<header-date>.json`,
 `analytics-timeline.csv` is rebuilt, and every snapshot is checked against
 the cycle-node voltage table (4500 / 4480 / 4460 / 4440 / 4390 mV). A
 mismatch prints `??` rather than silently passing. Re-importing the same date
-updates it in place. `python3 scripts/verify.py` re-checks the whole archive.
+updates it in place. `python3 scripts/verify.py` re-checks the whole archive;
+GitHub Actions runs it, the link check and a raw-file / identifier scan on
+every push.
 
 Only a whitelist of numeric battery fields is emitted; the raw file (which
 contains deviceId, UUIDs, carrier/country and incident IDs) must never be

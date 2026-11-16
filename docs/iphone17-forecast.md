@@ -5,6 +5,11 @@ data only. The two reference devices are **excluded** from this forecast
 (irregular usage; their ageing anchors must not be fitted to this device).
 Apple's "80% at 1000 cycles" is likewise not used as an anchor.
 
+Every parameter below is derived by [`scripts/params.py`](../scripts/params.py)
+from the published data: the base is the latest analytics snapshot, nodes
+already passed are not charged again. Pre-registered checks for the next node
+are in [`predictions.json`](predictions.json).
+
 Reproduce: `python3 scripts/forecast.py` →
 [`iphone17-forecast.csv`](iphone17-forecast.csv),
 [`iphone17-forecast.json`](iphone17-forecast.json),
@@ -138,4 +143,7 @@ extrapolation, not a prediction.
 Revisit at the 250-cycle node (~2026-12-17 at current usage): one new
 analytics file will confirm `VacVoltageLimit = 4460 mV`, show whether the
 step is again −0.43 pp / −15.9 mAh, and whether Apple's displayed 101
-finally moves.
+finally moves. These are registered in advance in
+[`predictions.json`](predictions.json) (voltage exact; step 16 ± 6 mAh;
+date 2026-12-12 … 12-28) and `verify.py` prints HIT / MISS once a
+≥250-cycle snapshot is imported.

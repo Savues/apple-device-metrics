@@ -9,9 +9,13 @@ import json
 import os
 import re
 import sys
+from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RATED = 3692
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from params import RATED, derive  # noqa: E402
+
+P = derive()
 failures = []
 
 
@@ -211,16 +215,21 @@ if snaps:
     check("analytics archive extends past the export",
           snaps[-1]["date"] > export_last["date"] and
           snaps[-1]["cycle_count"] > int(export_last["cycle_count"]))
-    check("8 analytics snapshots (11-09 .. 11-16)",
-          len(snaps) == 8, str(len(snaps)))
-    check("latest snapshot is 11-16 / 209 cycles / 3660 mAh (forecast base)",
-          snaps[-1]["date"] == "2026-11-16" and
-          snaps[-1]["cycle_count"] == 209 and
-          snaps[-1]["nominal_charge_capacity_mah"] == 3660)
-    check("NCC daily jitter stays within +/-2 mAh (incl. rebounds)",
-          all(abs(b["nominal_charge_capacity_mah"] -
-                  a["nominal_charge_capacity_mah"]) <= 2
+    check("analytics archive has at least 8 snapshots",
+          len(snaps) >= 8, str(len(snaps)))
+    check("cycle count never decreases across snapshots",
+          all(b["cycle_count"] >= a["cycle_count"]
               for a, b in zip(snaps, snaps[1:])))
+    # Only day-to-day pairs inside one voltage band measure jitter; a gap or
+    # a node crossing is allowed to move NCC by a whole step.
+    daily = [(a, b) for a, b in zip(snaps, snaps[1:])
+             if (date.fromisoformat(b["date"]) -
+                 date.fromisoformat(a["date"])).days <= 2 and
+             a["vac_voltage_limit_mv"] == b["vac_voltage_limit_mv"]]
+    check("NCC daily jitter stays within +/-2 mAh (same band, <=2 days apart)",
+          all(abs(b["nominal_charge_capacity_mah"] -
+                  a["nominal_charge_capacity_mah"]) <= 2 for a, b in daily),
+          f"{len(daily)} pairs")
 
 print("\n=== reference device (cross-check only) ===")
 ref = json.load(open(os.path.join(ROOT, "devices/reference-01/reference.json"),
@@ -324,27 +333,61 @@ check("forecast: other devices and 80% spec excluded",
       any("reference-01" in x for x in fc["not_used"]) and
       any("reference-02" in x for x in fc["not_used"]) and
       any("80%" in x for x in fc["not_used"]))
-check("forecast: current usage 1.30 cycles/day = 4801 mAh/day",
-      fc["current_usage"]["cycles_per_day"] == 1.30 and
-      fc["current_usage"]["mah_per_day_throughput"] == 4801)
+check("forecast: usage rate equals diary throughput",
+      fc["current_usage"]["cycles_per_day"] == P["diary"]["cycles_per_day"] and
+      fc["current_usage"]["mah_per_day_throughput"] ==
+      round(P["diary"]["mah_per_day"]),
+      f"{fc['current_usage']['cycles_per_day']}/day")
+check("forecast: diary total matches charging-summary.json",
+      P["diary"]["total_charged_pct"] ==
+      json.load(open(os.path.join(ROOT, "docs/charging-summary.json")))
+      ["total_charged_pct"])
+check("forecast: gauge cross-check within 10% of diary rate",
+      abs(P["rates"]["gauge_regression"] / P["diary"]["cycles_per_day"] - 1)
+      < 0.10,
+      f"{P['rates']['gauge_regression']} vs {P['diary']['cycles_per_day']}")
 check("forecast: old inflated rate explicitly withdrawn",
       "withdrawn" in str(fc["current_usage"]["previous_rate_withdrawn"]).lower() or
       "biased high" in str(fc["current_usage"]["previous_rate_withdrawn"]).lower())
-check("forecast: plateau/step in mAh",
-      fc["current_usage"]["plateau_wear_mah_per_day"] == 0.176 and
-      fc["current_usage"]["lockin_mah_per_20mv_node"] == 15.9)
-check("forecast: base updated to 2026-11-16 cycle 209 NCC=3660",
-      fc["base"]["date"] == "2026-11-16" and
-      fc["base"]["cycle"] == 209 and
-      abs(fc["base"]["ncc_mah"] - 3660) < 0.1)
-check("forecast: 250 node is 2026-12-17 / 4460 mV / 3638.6 mAh",
-      fc["nodes"][0]["date"] == "2026-12-17" and
-      fc["nodes"][0]["vac_voltage_limit_mv"] == 4460 and
-      abs(fc["nodes"][0]["ncc_mah"] - 3638.6) < 0.2)
-check("forecast: 1000 cycles ≈ 94.947% / 3505.4 mAh / 47.6 mAh lock-in",
-      abs(fc["at_1000_cycles"]["ncc_health_pct"] - 94.947) < 0.01 and
-      abs(fc["at_1000_cycles"]["ncc_mah"] - 3505.4) < 0.2 and
-      abs(fc["at_1000_cycles"]["reversible_lockin_mah"] - 47.6) < 0.2)
+check("forecast: plateau/step derived from health export",
+      fc["current_usage"]["plateau_wear_mah_per_day"] ==
+      round(P["plateau_pp_per_day"] / 100 * RATED, 3) and
+      fc["current_usage"]["lockin_mah_per_20mv_node"] ==
+      round(P["step_pp_per_node"] / 100 * RATED, 1),
+      f"{P['plateau_pp_per_day']} pp/day, {P['step_pp_per_node']} pp/node")
+check("forecast: plateau uses >=3 non-step export segments",
+      P["plateau_segments"] >= 3, str(P["plateau_segments"]))
+latest = snaps[-1]
+check("forecast: base is the latest analytics snapshot",
+      fc["base"]["date"] == latest["date"] and
+      fc["base"]["cycle"] == latest["cycle_count"] and
+      fc["base"]["ncc_mah"] == latest["nominal_charge_capacity_mah"],
+      f"{fc['base']['date']} / {fc['base']['cycle']} / {fc['base']['ncc_mah']}")
+LADDER = {250: 4460, 300: 4440, 1000: 4390}
+future = [n for n in LADDER if n > fc["base"]["cycle"]]
+check("forecast: node table = future nodes on the 4460/4440/4390 ladder",
+      [(n["cycle"], n["vac_voltage_limit_mv"]) for n in fc["nodes"]] ==
+      [(n, LADDER[n]) for n in future])
+check("forecast: 1000-cycle lock-in = one step per future node",
+      abs(fc["at_1000_cycles"]["reversible_lockin_mah"] -
+          len([n for n in future if n <= 1000]) *
+          P["step_pp_per_node"] / 100 * RATED) < 0.2,
+      f"{len(future)} future nodes")
+
+# The committed outputs must equal a fresh run of forecast.py, so a new
+# snapshot cannot be imported without regenerating the forecast.
+import subprocess, tempfile, shutil  # noqa: E402
+with tempfile.TemporaryDirectory() as tmp:
+    for d in ("scripts", "devices", "docs"):
+        shutil.copytree(os.path.join(ROOT, d), os.path.join(tmp, d))
+    subprocess.run([sys.executable, os.path.join(tmp, "scripts/forecast.py")],
+                   check=True, stdout=subprocess.DEVNULL)
+    stale_out = [f for f in ("iphone17-forecast.csv", "iphone17-forecast.json",
+                             "iphone17-forecast.svg")
+                 if open(os.path.join(tmp, "docs", f), "rb").read() !=
+                 open(os.path.join(ROOT, "docs", f), "rb").read()]
+check("forecast: committed outputs equal a fresh forecast.py run",
+      not stale_out, "stale: " + ", ".join(stale_out) if stale_out else "")
 check("forecast: sensitivity covers 6 usage windows",
       len(fc["sensitivity_to_usage_rate"]) == 6)
 frows = load("docs/iphone17-forecast.csv")
@@ -354,8 +397,41 @@ check("forecast: CSV is monotonic non-increasing in health",
       all(float(a["ncc_health_pct"]) >= float(b["ncc_health_pct"])
           for a, b in zip(frows, frows[1:])))
 check("forecast: first CSV row matches base",
-      float(frows[0]["ncc_health_pct"]) == 99.133 and
-      int(frows[0]["cycle"]) == 209 and float(frows[0]["ncc_mah"]) == 3660.0)
+      int(frows[0]["cycle"]) == latest["cycle_count"] and
+      float(frows[0]["ncc_mah"]) == float(latest["nominal_charge_capacity_mah"]))
+
+print("\n=== pre-registered predictions ===")
+pr = json.load(open(os.path.join(ROOT, "docs/predictions.json"),
+                    encoding="utf-8"))["predictions"]
+check("predictions: ids unique",
+      len({p["id"] for p in pr}) == len(pr))
+# Ex-ante: every prediction must be registered at a cycle below its node.
+check("predictions: registered before the 250 node",
+      all(p["registered_at_cycle"] < 250 for p in pr))
+pre = [s for s in snaps if s["cycle_count"] < 250]
+post = [s for s in snaps if s["cycle_count"] >= 250]
+first = post[0] if post else None
+for p in pr:
+    if first is None:
+        outcome = "PENDING (no snapshot at >=250 cycles yet)"
+    elif p.get("observe_only"):
+        outcome = f"OBSERVED {first['maximum_capacity_percent_reported']}"
+    elif p["id"] == "node-250-voltage":
+        v = first["vac_voltage_limit_mv"]
+        outcome = ("HIT" if abs(v - p["expected"]) <= p["tolerance"]
+                   else "MISS") + f" ({v} mV)"
+    elif p["id"] == "node-250-ncc-step":
+        d = pre[-1]["nominal_charge_capacity_mah"] - \
+            first["nominal_charge_capacity_mah"]
+        outcome = ("HIT" if abs(d - p["expected"]) <= p["tolerance"]
+                   else "MISS") + f" ({d} mAh, {pre[-1]['date']} -> {first['date']})"
+    elif p["id"] == "node-250-date":
+        lo, hi = p["expected_range"]
+        outcome = ("HIT" if lo <= first["date"] <= hi else "MISS") + \
+            f" ({first['date']})"
+    else:
+        outcome = "UNSCORED (no scorer for this id)"
+    print(f"  NOTE  {p['id']}: {outcome}")
 
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

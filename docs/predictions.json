@@ -1,0 +1,41 @@
+{
+  "purpose": "Pre-registered predictions for iphone-01, written before the outcome is observable. scripts/verify.py scores them automatically once an analytics snapshot reaches the node. Do not edit a prediction after registration; add a new entry instead. Git history is the timestamp of record.",
+  "predictions": [
+    {
+      "id": "node-250-voltage",
+      "registered": "2026-11-16",
+      "registered_at_cycle": 209,
+      "claim": "VacVoltageLimit steps 4480 -> 4460 mV at the 250-cycle node, as the 200 node fired at exactly cycle 200.",
+      "metric": "vac_voltage_limit_mv of the first snapshot with cycle_count >= 250",
+      "expected": 4460,
+      "tolerance": 0
+    },
+    {
+      "id": "node-250-ncc-step",
+      "registered": "2026-11-16",
+      "registered_at_cycle": 209,
+      "claim": "NominalChargeCapacity drops by about one node step (0.43 pp = 16 mAh, as at the 200 node) across the 250 node.",
+      "metric": "NCC of the last snapshot with cycle_count < 250 minus NCC of the first snapshot with cycle_count >= 250",
+      "expected": 16,
+      "tolerance": 6,
+      "note": "Daily NCC jitter is <=2 mAh; the 126->152 and 194->208 steps were 15 and 16 mAh."
+    },
+    {
+      "id": "node-250-date",
+      "registered": "2026-11-16",
+      "registered_at_cycle": 209,
+      "claim": "The 250-cycle node is reached between the fastest and slowest measured usage windows (recent 30 days 1.53/day, recent 7 days 0.99/day). Point estimate at 1.30/day: 2026-12-17.",
+      "metric": "date of the first snapshot with cycle_count >= 250",
+      "expected_range": ["2026-12-12", "2026-12-28"],
+      "note": "Snapshot dates lag the gauge write by up to one day."
+    },
+    {
+      "id": "node-250-apple-display",
+      "registered": "2026-11-16",
+      "registered_at_cycle": 209,
+      "claim": "No prediction. Recorded so the outcome is noted either way: MaximumCapacityPercent stayed 101 across the 200 node.",
+      "metric": "maximum_capacity_percent_reported of the first snapshot with cycle_count >= 250",
+      "observe_only": true
+    }
+  ]
+}
