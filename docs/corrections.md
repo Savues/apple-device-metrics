@@ -120,6 +120,34 @@ Consequences:
   the measured **1.46 pp per 20 mV node** (8.0 pp for −110 mV) from the A/B
   pair, with a transfer caveat (different cell capacity).
 
+## 9. Forecast base and independent-usage rate refreshed (2026-11-16)
+
+The 11-16 analytics snapshot (cycle **209**, NCC **3660 mAh**, 4480 mV,
+`MaximumCapacityPercent` 101) supersedes the 11-15 base used by the first
+forecast. Changes:
+
+- **Base**: 2026-11-15 / 208 / 3659 mAh / 99.106% →
+  **2026-11-16 / 209 / 3660 mAh / 99.133%**. The +1 mAh is a normal gauge
+  **rebound**, not a recovery; starting from this single latest point lifts
+  every forecast figure by ~1 mAh / 0.027 pp. Confidence for the base is now
+  "Medium" (jitter ±1–2 mAh) rather than "High".
+- **Independent usage rate**: the earlier "1.284/day over 6.23 days (+8
+  cycles)" came from only two endpoints. With 8 files there are **7 non-stale
+  gauge writes** (2026-11-08 09:08 → 11-15 15:48 UTC, +9 cycles / 7.28 days):
+  regression **1.233 cycles/day** (4552 mAh/day), within 5% of the 1.30/day
+  diary primary. The sensitivity table now uses 1.233.
+- **A 7th row briefly added to `health-samples.csv` was withdrawn**: its
+  `raw_capacity=3692` and `min_soc=39` were copied from the previous row, not
+  measured (11-16 analytics has 3708 / 15). The 6-row export stays a pure
+  single-source dataset; analytics data lives only in
+  `analytics/` + `analytics-timeline.csv`. `verify.py` now cross-checks the
+  two sources **on overlapping dates** instead of assuming the newest rows
+  coincide.
+- **Knock-on figures**: 300-cycle node 2027-01-24 → **2027-01-25**;
+  1000 cycles 3504 → **3505 mAh** (3553 mAh chemical-only, 48 mAh lock-in,
+  139 mAh real wear). "7 analytics snapshots" → **8**; NCC jitter range
+  3658–3659 → **3658–3660**; the retention ceiling "~7 days" → "~7–8 days".
+
 ---
 
 All final numbers in `README.md`, `docs/findings.md` and

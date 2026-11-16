@@ -176,15 +176,36 @@ check("timeline values match archive", all(
 check("all timeline rows match their node band",
       all(t["voltage_matches_band"] == "True" for t in tl))
 
-# The newest analytics snapshot must agree with the newest health CSV row.
+# The 6-row health export and the daily analytics archive are two independent
+# sources. Where they overlap in date they must agree; the archive is allowed
+# (and expected) to be newer than the sparse export.
 if snaps:
-    newest = snaps[-1]
-    check("newest analytics cycle == last health sample",
-          newest["cycle_count"] == cyc[-1])
-    check("newest analytics NCC == last health sample",
-          newest["nominal_charge_capacity_mah"] == nom[-1])
-    check("newest analytics DailyMinSoc == last health sample",
-          newest["daily_min_soc_pct"] == int(health[-1]["min_soc_pct"]))
+    export_last = health[-1]
+    overlap = next((s for s in snaps
+                    if s["date"] == export_last["date"]), None)
+    check("export/analytics overlap: cycle count agrees",
+          overlap is not None and
+          overlap["cycle_count"] == int(export_last["cycle_count"]))
+    check("export/analytics overlap: NCC agrees",
+          overlap is not None and
+          overlap["nominal_charge_capacity_mah"] ==
+          int(export_last["nominal_capacity_mah"]))
+    check("export/analytics overlap: DailyMinSoc agrees",
+          overlap is not None and
+          overlap["daily_min_soc_pct"] == int(export_last["min_soc_pct"]))
+    check("analytics archive extends past the export",
+          snaps[-1]["date"] > export_last["date"] and
+          snaps[-1]["cycle_count"] > int(export_last["cycle_count"]))
+    check("8 analytics snapshots (11-09 .. 11-16)",
+          len(snaps) == 8, str(len(snaps)))
+    check("latest snapshot is 11-16 / 209 cycles / 3660 mAh (forecast base)",
+          snaps[-1]["date"] == "2026-11-16" and
+          snaps[-1]["cycle_count"] == 209 and
+          snaps[-1]["nominal_charge_capacity_mah"] == 3660)
+    check("NCC daily jitter stays within +/-2 mAh (incl. rebounds)",
+          all(abs(b["nominal_charge_capacity_mah"] -
+                  a["nominal_charge_capacity_mah"]) <= 2
+              for a, b in zip(snaps, snaps[1:])))
 
 print("\n=== reference device (cross-check only) ===")
 ref = json.load(open(os.path.join(ROOT, "devices/reference-01/reference.json"),
@@ -284,28 +305,30 @@ check("A-B: span matches iphone-01 top to >=1000 band",
 print("\n=== iphone-01-only forecast ===")
 fc = json.load(open(os.path.join(ROOT, "docs/iphone17-forecast.json"),
                     encoding="utf-8"))
-check("forecast: base is 208 cycles / 99.106%",
-      fc["base"]["cycle"] == 208 and abs(fc["base"]["health_pct"] - 99.106) < 0.001)
 check("forecast: other devices and 80% spec excluded",
       any("reference-01" in x for x in fc["not_used"]) and
       any("reference-02" in x for x in fc["not_used"]) and
       any("80%" in x for x in fc["not_used"]))
-check("forecast: current usage 1.30 cycles/day = 4800 mAh/day",
+check("forecast: current usage 1.30 cycles/day = 4801 mAh/day",
       fc["current_usage"]["cycles_per_day"] == 1.30 and
-      fc["current_usage"]["mah_per_day_throughput"] == 4800)
+      fc["current_usage"]["mah_per_day_throughput"] == 4801)
 check("forecast: old inflated rate explicitly withdrawn",
       "withdrawn" in str(fc["current_usage"]["previous_rate_withdrawn"]).lower() or
       "biased high" in str(fc["current_usage"]["previous_rate_withdrawn"]).lower())
 check("forecast: plateau/step in mAh",
       fc["current_usage"]["plateau_wear_mah_per_day"] == 0.176 and
       fc["current_usage"]["lockin_mah_per_20mv_node"] == 15.9)
-check("forecast: 250 node is 2026-12-17 / 4460 mV / 3637 mAh",
+check("forecast: base updated to 2026-11-16 cycle 209 NCC=3660",
+      fc["base"]["date"] == "2026-11-16" and
+      fc["base"]["cycle"] == 209 and
+      abs(fc["base"]["ncc_mah"] - 3660) < 0.1)
+check("forecast: 250 node is 2026-12-17 / 4460 mV / 3638.6 mAh",
       fc["nodes"][0]["date"] == "2026-12-17" and
       fc["nodes"][0]["vac_voltage_limit_mv"] == 4460 and
-      abs(fc["nodes"][0]["ncc_mah"] - 3637.4) < 0.2)
-check("forecast: 1000 cycles ≈ 94.916% / 3504 mAh / 47.6 mAh lock-in",
-      abs(fc["at_1000_cycles"]["ncc_health_pct"] - 94.916) < 0.01 and
-      abs(fc["at_1000_cycles"]["ncc_mah"] - 3504.3) < 0.2 and
+      abs(fc["nodes"][0]["ncc_mah"] - 3638.6) < 0.2)
+check("forecast: 1000 cycles ≈ 94.947% / 3505.4 mAh / 47.6 mAh lock-in",
+      abs(fc["at_1000_cycles"]["ncc_health_pct"] - 94.947) < 0.01 and
+      abs(fc["at_1000_cycles"]["ncc_mah"] - 3505.4) < 0.2 and
       abs(fc["at_1000_cycles"]["reversible_lockin_mah"] - 47.6) < 0.2)
 check("forecast: sensitivity covers 6 usage windows",
       len(fc["sensitivity_to_usage_rate"]) == 6)
@@ -316,8 +339,8 @@ check("forecast: CSV is monotonic non-increasing in health",
       all(float(a["ncc_health_pct"]) >= float(b["ncc_health_pct"])
           for a, b in zip(frows, frows[1:])))
 check("forecast: first CSV row matches base",
-      float(frows[0]["ncc_health_pct"]) == 99.106 and
-      int(frows[0]["cycle"]) == 208 and float(frows[0]["ncc_mah"]) == 3659.0)
+      float(frows[0]["ncc_health_pct"]) == 99.133 and
+      int(frows[0]["cycle"]) == 209 and float(frows[0]["ncc_mah"]) == 3660.0)
 
 print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES: {failures}"))
 sys.exit(1 if failures else 0)

@@ -2,7 +2,7 @@
 
 Source: iOS daily analytics file (`bug_type 211`, NDJSON, generated 08:00
 local). 863 records. Parsed with
-[`scripts/extract_analytics.py`](../scripts/extract_analytics.py) into
+[`scripts/extract_analytics.py`](../../scripts/extract_analytics.py) into
 [`analytics/2026-11-15.json`](analytics/2026-11-15.json).
 
 The raw `.ips` file is **not** published: it contains `deviceId`, UUIDs,
@@ -21,7 +21,7 @@ of numeric battery fields is emitted.
 
 The nameplate hardware ceiling is 4.50 V. The **live** software target is
 **4.48 V**, exactly the −0.02 V step predicted for the 200-cycle node in
-[`voltage-nodes.md`](../docs/voltage-nodes.md). The 11-09 file shows this at
+[`voltage-nodes.md`](../../docs/voltage-nodes.md). The 11-09 file shows this at
 `CycleCount = 200` exactly, not 201 or later.
 
 This resolves the open question in `docs/findings.md`: the pending
@@ -30,7 +30,7 @@ analytics file reports the configured limit directly.
 
 ### 1.1 The pre-200 voltage, without a pre-200 file
 
-iOS retains only ~7 days of analytics, so no snapshot with
+iOS retains only ~7–8 days of analytics, so no snapshot with
 `CycleCount < 200` is obtainable — a direct 4500 mV reading is **not
 available**. There is, however, independent physical evidence of the earlier
 target:
@@ -42,7 +42,7 @@ target:
 | Current software target | 4480 mV | cannot produce a 4496 mV pack voltage |
 
 `MaximumPackVoltage` is a lifetime maximum (paired with
-`MinimumPackVoltage = 2765`), constant across all seven archived snapshots.
+`MinimumPackVoltage = 2765`), constant across all eight archived snapshots.
 A pack cannot reach 4496 mV while the charge target is 4480 mV, so the peak
 was necessarily recorded **before** the step, under the ~4.50 V target.
 
@@ -108,8 +108,8 @@ There are **two** percentages in this dataset. conflating them is wrong.
 |---|---|---|
 | Source | third-party export tool | Apple's own gauge field (`last_value_MaximumCapacityPercent`) |
 | Formula | `NominalChargeCapacity / 3692 × 100` (verified ≤0.005 pp over 6 rows) | Apple internal algorithm, uses its own design-capacity / calibration baseline — **not** a simple division by 3692 |
-| 11-15 value | **99.11%** | **101** (integer) |
-| 11-09 … 11-15 | 99.079 → 99.106 (and 99.54 → 99.11 across the 6-row export) | **101 on all seven days, unchanged** |
+| 11-16 value | **99.13%** | **101** (integer) |
+| 11-09 … 11-16 | 99.079 → 99.133 (and 99.54 → 99.11 across the 6-row export) | **101 on all eight days, unchanged** |
 | Granularity | 0.01 pp, derived from mAh | coarse integer, only moves on recalibration |
 | What it is | a ratio of two published numbers | the value Apple's battery-health feature uses (per multiple iOS analytics references) |
 
@@ -183,8 +183,8 @@ So the two cliffs plausibly have **different** causes:
 | 09-23 → 10-13 | 126→152, contains **138** | −0.41 pp | Qmax / gauge recalibration |
 | 11-05 → 11-09 | 194→200, ends at the **200** node | −0.43 pp | `VacVoltageLimit` 4500→4480 |
 
-This is a hypothesis, not yet proven: the seven analytics files we have all
-sit at 200–208 cycles, i.e. at or after the step. An analytics snapshot from
+This is a hypothesis, not yet proven: the eight analytics files we have all
+sit at 200–209 cycles, i.e. at or after the step. An analytics snapshot from
 **before 200 cycles** (and ideally one from around 138) would show whether
 `VacVoltageLimit` was 4500 mV and
 whether the Qmax update coincides with the first drop.
@@ -251,6 +251,7 @@ python3 scripts/verify.py
 | 2026-11-13 | 11-12 06:04:09 | 205 | 4480 mV (4.48V) | 200–249 ✓ | 3690 | 3658 | 99.079% | 19 |
 | 2026-11-14 | 11-13 15:15:07 | 207 | 4480 mV (4.48V) | 200–249 ✓ | 3683 | 3659 | 99.106% | 31 |
 | 2026-11-15 | 11-14 14:40:15 | 208 | 4480 mV (4.48V) | 200–249 ✓ | 3692 | 3659 | 99.106% | 39 |
+| 2026-11-16 | 11-15 15:48:23 | **209** | 4480 mV (4.48V) | 200–249 ✓ | 3708 | 3660 | 99.133% | 15 |
 
 Full machine-readable version:
 [`analytics-timeline.csv`](analytics-timeline.csv). Each import adds a row;
@@ -273,8 +274,8 @@ Combined with the 11-05 export (cycle 194, NCC 3675, 99.54%):
   `UpdateTime = 2026-11-08T09:08:37Z` = **2026-11-08 17:08 local (+0800)**,
   and `CycleCount`, `TotalOperatingTime`, SOC range and Raw all differ from
   11-10. So the step is bounded to **no later than 2026-11-08 17:08 local**.
-- Seven consecutive snapshots (200/202/203/203/205/207/208) all show NCC
-  3658–3659 and 4480 mV: a stable post-step state, not a transient.
+- Eight consecutive snapshots (200/202/203/203/205/207/208/209) all show NCC
+  3658–3660 and 4480 mV: a stable post-step state, not a transient.
 - Note 11-09 was a light-use day: `DailyMinSoc = 33`, `DailyMaxSoc = 42`
   (only a 9-point SOC band), consistent with the cycle counter sitting at
   exactly 200 all day.
@@ -292,7 +293,7 @@ does not fail on) consecutive files with identical battery state.
 actually written rather than when the file was generated.
 
 - A snapshot from 11-06 … 11-08 would show 4500 mV, but iOS retains only
-  ~7 days of analytics, so none is obtainable. See §1.1 for the indirect
+  ~7–8 days of analytics, so none is obtainable. See §1.1 for the indirect
   evidence that substitutes for it.
 
 **Noise scale.** Over the seven archived files NCC varies by only **1 mAh =

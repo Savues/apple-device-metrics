@@ -7,10 +7,10 @@ reference devices are excluded (irregular usage).
 
 Usage rate: measured from this device's own charging diary (76 days,
 4801 mAh/day = 1.30 cycles/day) and independently confirmed by the analytics
-CycleCount deltas (1.284 cycles/day over 6.23 days of independent gauge
-writes). The earlier 1.5386 cycles/day from a 57-day regression on sparse
-export rows was biased high by a heavy 30-day stretch and is NOT current
-usage; it is retained only as a sensitivity case.
+CycleCount regression over 7 independent gauge writes (1.233 cycles/day,
+2026-11-08 .. 11-15). The earlier 1.5386 cycles/day from a 57-day regression
+on sparse export rows was biased high by a heavy 30-day stretch and is NOT
+current usage; it is retained only as a sensitivity case.
 
 Outputs: docs/iphone17-forecast.{csv,json,svg}
 """
@@ -23,15 +23,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RATED = 3692
 
 # --- measured on iphone-01 only --------------------------------------------
-BASE_DATE = date(2026, 11, 15)
-BASE_CYCLE = 208
-BASE_NCC = 3659
-BASE_HEALTH = BASE_NCC / RATED * 100          # 99.106%
+BASE_DATE = date(2026, 11, 16)
+BASE_CYCLE = 209
+BASE_NCC = 3660
+BASE_HEALTH = BASE_NCC / RATED * 100          # 99.133%
 APPLE_DISPLAY = 101
 
 # Current daily usage (primary). Two independent device measurements agree.
-CYCLES_PER_DAY = 1.30                          # charging diary, 76 days
-MAH_PER_DAY = CYCLES_PER_DAY * RATED           # 4800.6 mAh/day throughput
+DIARY_TOTAL_PCT = 9883                         # sum(charged_pct), 325 sessions
+DIARY_DAYS = 76                               # 2026-09-01 .. 2026-11-15
+MAH_PER_DAY = DIARY_TOTAL_PCT / 100 * RATED / DIARY_DAYS   # 4801.1 mAh/day
+CYCLES_PER_DAY = round(MAH_PER_DAY / RATED, 2)             # 1.30 /day
+# Independent check: 7 non-stale analytics gauge writes, 2026-11-08..11-15,
+# CycleCount 200 -> 209 over 7.28 days => 1.233 cycles/day by regression.
 PLATEAU_PP_PER_DAY = 0.00476                   # 3 non-step segments
 PLATEAU_MAH_PER_DAY = PLATEAU_PP_PER_DAY / 100 * RATED
 STEP_PP_PER_NODE = 0.43                        # observed 200-node step
@@ -43,7 +47,7 @@ NODES = [(250, 40), (300, 60), (1000, 110)]   # cycles -> cumulative -mV
 RATE_CASES = [
     ("recent 7 days", 0.99),
     ("recent 14 days", 1.21),
-    ("independent gauge snapshots", 1.284),
+    ("independent gauge snapshots (regression)", 1.233),
     ("full 76-day diary (primary)", 1.30),
     ("recent 30 days", 1.53),
     ("57-day export regression (old, biased high)", 1.5386),
@@ -108,7 +112,10 @@ def main():
         sensitivity.append({
             "case": label,
             "cycles_per_day": r,
-            "mah_per_day": round(r * RATED),
+            # The primary rate is the measured diary throughput; the other
+            # cases are hypothetical rates, so convert them via the nameplate.
+            "mah_per_day": (round(MAH_PER_DAY) if r == CYCLES_PER_DAY
+                            else round(r * RATED)),
             "date_250": at(250, r)["date"],
             "date_300": at(300, r)["date"],
             "date_1000": at(1000, r)["date"],
@@ -127,7 +134,7 @@ def main():
         "current_usage": {
             "cycles_per_day": CYCLES_PER_DAY,
             "mah_per_day_throughput": round(MAH_PER_DAY),
-            "basis": "76-day charging diary (9883% = 364880 mAh total) = 4801 mAh/day; independently confirmed by analytics CycleCount +8 over 6.23 days = 1.284 cycles/day",
+            "basis": "76-day charging diary (9883% = 364880 mAh total) = 4801 mAh/day; independently confirmed by 7 non-stale analytics gauge writes (CycleCount 200->209 over 7.28 days) = 1.233 cycles/day by regression",
             "previous_rate_withdrawn": "1.5386 cycles/day (57-day regression on sparse export rows) was biased high by a heavy 30-day stretch; kept only as a sensitivity case",
             "plateau_wear_mah_per_day": round(PLATEAU_MAH_PER_DAY, 3),
             "lockin_mah_per_20mv_node": round(STEP_MAH_PER_NODE, 1),
@@ -194,13 +201,13 @@ def write_svg(rows, nodes):
     p.append(path("chemical_only_pct", "#2a9d55", "5 4"))
     p.append(path("ncc_health_pct", "#1f6feb"))
     p.append(f'<circle cx="{X(BASE_CYCLE):.1f}" cy="{Y(BASE_HEALTH):.1f}" r="5" fill="#1f6feb"/>')
-    p.append(f'<text x="{X(BASE_CYCLE)+10:.1f}" y="{Y(BASE_HEALTH)-8:.1f}">now 208 cyc / 99.106% / 3659 mAh</text>')
+    p.append(f'<text x="{X(BASE_CYCLE)+10:.1f}" y="{Y(BASE_HEALTH)-8:.1f}">now {BASE_CYCLE} cyc / {BASE_HEALTH:.3f}% / {BASE_NCC} mAh</text>')
     lx, ly = L + 20, T + 20
     p.append(f'<line x1="{lx}" y1="{ly}" x2="{lx+28}" y2="{ly}" stroke="#1f6feb" stroke-width="2.5"/>')
     p.append(f'<text x="{lx+34}" y="{ly+4}">NCC (includes reversible lock-in)</text>')
     p.append(f'<line x1="{lx}" y1="{ly+20}" x2="{lx+28}" y2="{ly+20}" stroke="#2a9d55" stroke-width="2.5" stroke-dasharray="5 4"/>')
     p.append(f'<text x="{lx+34}" y="{ly+24}">Chemical ageing only (mAh on right axis)</text>')
-    p.append(f'<text x="{lx}" y="{ly+48}" font-size="11" fill="#777">At current usage 1.30 cycles/day = 4801 mAh/day. iphone-01 only.</text>')
+    p.append(f'<text x="{lx}" y="{ly+48}" font-size="11" fill="#777">At current usage {CYCLES_PER_DAY:.2f} cycles/day = {round(MAH_PER_DAY)} mAh/day. iphone-01 only.</text>')
     p.append('</svg>')
     with open(os.path.join(ROOT, "docs/iphone17-forecast.svg"), "w", encoding="utf-8") as f:
         f.write("\n".join(p))

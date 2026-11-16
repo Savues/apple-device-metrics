@@ -94,7 +94,7 @@ numbers should be treated as an empirical hypothesis, not a specification.
 that happens to share the same 4.50 V limit. Its 1–199 row (4.50 V) matches
 the nameplate, and the 200–249 row (4.48 V) is what the 2026-11-09 analytics
 file reports at **`CycleCount = 200` exactly** — the step is active at the
-node itself, not after it. Six further snapshots (202–208 cycles) confirm
+node itself, not after it. Seven further snapshots (202–209 cycles) confirm
 4480 mV throughout. This is direct device-level confirmation of both the
 applicable table and the −0.02 V magnitude.
 
@@ -129,8 +129,8 @@ python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips
 
 Remaining checks:
 
-1. ~~**Pre-200 snapshot**~~ **Unobtainable** — iOS retains only ~7 days of
-   analytics; all seven files available sit at 200–208 cycles. A direct
+1. ~~**Pre-200 snapshot**~~ **Unobtainable** — iOS retains only ~7–8 days of
+   analytics; all eight files available sit at 200–209 cycles. A direct
    4500 mV reading cannot be recovered. Indirect evidence: lifetime
    `MaximumPackVoltage = 4496 mV`, 16 mV above the current 4480 mV target,
    which must have been recorded under the earlier ~4.50 V ceiling.
@@ -138,7 +138,7 @@ Remaining checks:
    4460` — the next node, fully observable with the rolling window.
 3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138.
 4. Watch for another ~−0.43 pp / −15.9 mAh health step at 250 and 300
-   (~2027-01-24), with flat plateaus between. See
+   (~2027-01-25), with flat plateaus between. See
    [`iphone17-forecast.md`](iphone17-forecast.md) for the rate basis.
 
 ## References

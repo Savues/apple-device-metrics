@@ -13,7 +13,7 @@ reported battery health figure actually behaves over time.
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | 7 analytics snapshots + 6-row health export, 325 charge sessions, 1 voltage reading | 2026-09-01 → 2026-11-15 (76 days) |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | 8 analytics snapshots + 6-row health export, 325 charge sessions, 1 voltage reading | 2026-09-01 → 2026-11-16 (76-day charging diary) |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, **reference only** | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); **no `VacVoltageLimit`** | 2026-11-15 |
 
@@ -79,8 +79,8 @@ More devices can be added as sibling directories under `devices/`.
    `NominalChargeCapacity` and health unchanged. Its convergence on the 3692
    nameplate at 11-15 was coincidental.
 
-8. **The −0.43 pp cliff is 16× the daily noise.** Seven consecutive analytics
-   snapshots give NCC 3658–3659 mAh (0.027 pp jitter), while
+8. **The −0.43 pp cliff is 16× the daily noise.** Eight consecutive analytics
+   snapshots give NCC 3658–3660 mAh (0.027 pp jitter, including rebounds), while
    `AppleRawMaxCapacity` swings 30 mAh (30× noisier). The cliff is bracketed
    to cycles 194→200 (1.50 cycles/day). The 11-09 file shows
    **4480 mV at exactly cycle 200** — the step fires at the node, not after
@@ -155,12 +155,12 @@ documentation. Apple's public material only states "80% capacity at 1000
 cycles" and documents performance management / optimised charging. Everything
 in this repo is labelled accordingly.
 
-**Update (2026-11-15)**: the 200-cycle step is directly confirmed on this
+**Update (2026-11-16)**: the 200-cycle step is directly confirmed on this
 device — `VacVoltageLimit = 4480 mV` at **exactly `CycleCount = 200`**
-(2026-11-09 analytics), with six further snapshots at 202–208 cycles all
+(2026-11-09 analytics), with seven further snapshots at 202–209 cycles all
 showing 4480 mV. See
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
-The mid-SOC voltage test is no longer needed. iOS retains only ~7 days of
+The mid-SOC voltage test is no longer needed. iOS retains only ~7–8 days of
 analytics, so a pre-200 snapshot (4500 mV) is **unobtainable**; the lifetime
 peak `MaximumPackVoltage = 4496 mV` — impossible under the current 4480 mV
 target — is a fossil from a full charge before 09-01 (≈101 cycles), when the
