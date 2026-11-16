@@ -7,6 +7,13 @@ All numbers here are **derived from iOS analytics snapshots and charging logs**,
 not from marketing material. The goal is a reproducible record of how the
 reported battery health figure actually behaves over time.
 
+> **Data-collection condition.** On `iphone-01` charging is stopped manually
+> by a timer before ~80% SOC — iOS *Charge Limit* is **not** enabled — so no
+> calibration full charge occurred during the 76-day window. Cycle-driven
+> findings (voltage steps, forecast) are unaffected; gauge-derived capacity
+> and displayed-SOC readings carry an unquantified bias. See
+> [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.md).
+
 ---
 
 ## Devices
@@ -136,6 +143,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | `scripts/forecast.py` | regenerates the iphone-01-only forecast |
 | `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
 | `docs/methodology.md` | field definitions, units, known limitations |
+| `docs/shallow-charging-accuracy.md` | **manual timer cut-off vs iOS Charge Limit**: why no calibration full charge occurs, and which readings it affects |
 | `docs/corrections.md` | errors found and corrected during analysis |
 | `devices/iphone-01/ANALYTICS-EVIDENCE.md` | raw analytics fields + confirmed voltage step |
 | `devices/iphone-01/analytics/YYYY-MM-DD.json` | whitelisted extraction, one file per date |

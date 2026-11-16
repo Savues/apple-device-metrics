@@ -80,6 +80,19 @@ check("span days matches summary",
 bad_soc = [r["session_id"] for r in sess
            if int(r["soc_end"]) - int(r["soc_start"]) != int(r["charged_pct"])]
 check("soc delta == charged for all rows", not bad_soc, f"{len(bad_soc)} mismatches")
+
+# The dataset's defining collection condition: charging is cut by a manual
+# timer before ~80%, with iOS Charge Limit disabled, so NO full charge (and
+# therefore no Apple calibration charge) occurs anywhere in the window.
+# If a future import breaks this, every conclusion in
+# docs/shallow-charging-accuracy.md must be re-examined.
+max_soc_end = max(int(r["soc_end"]) for r in sess)
+check("no session reaches a full charge (soc_end <= 81)",
+      max_soc_end <= 81, f"max soc_end={max_soc_end}")
+check("sessions at or above 80% remain a small tail",
+      sum(1 for r in sess if int(r["soc_end"]) >= 80) <= 5,
+      str(sum(1 for r in sess if int(r["soc_end"]) >= 80)))
+
 bad_rate = [r["session_id"] for r in sess
             if int(r["duration_sec"]) and
             abs(int(r["charged_pct"]) / (int(r["duration_sec"]) / 60)
@@ -190,6 +203,9 @@ if snaps:
           overlap is not None and
           overlap["nominal_charge_capacity_mah"] ==
           int(export_last["nominal_capacity_mah"]))
+    check("no calibration full charge: all DailyMaxSoc < 80%",
+          all(s["daily_max_soc_pct"] < 80 for s in snaps),
+          str(max(s["daily_max_soc_pct"] for s in snaps)))
     check("export/analytics overlap: DailyMinSoc agrees",
           overlap is not None and
           overlap["daily_min_soc_pct"] == int(export_last["min_soc_pct"]))

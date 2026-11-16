@@ -146,4 +146,4 @@ Remaining checks:
 - [Sina mirror of the blogger post — voltage tables and node list](https://www.sina.cn/news/detail/5333950868489740.html)
 - [Sina — cycle-node analysis](https://www.sina.cn/news/detail/5337637240179019.html)
 - [Apple Support — iPhone battery and performance](https://support.apple.com/zh-cn/101575) (official; performance management only)
-- [Apple Support — charge and maintain your iPhone battery](https://support.apple.com/zh-cn/108371) (official; optimised charging, charge limit)
+- [Apple Support — About Charge Limit and Optimized Battery Charging on iPhone](https://support.apple.com/en-us/108055) (official; states the conditional periodic full charge that maintains SOC accuracy — see [`shallow-charging-accuracy.md`](shallow-charging-accuracy.md))

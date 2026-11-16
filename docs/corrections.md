@@ -150,6 +150,46 @@ forecast. Changes:
 
 ---
 
+## 10. "Firmware must have a general full-charge fallback" — withdrawn (2026-11-16)
+
+An analysis of long-term 80% charging asserted: *"Apple's 80% limit is an
+official feature, so firmware must know the device may never reach full and
+will not naively assume 100% every time."* The owner corrected the premise:
+
+- The device does **not** use iOS *Charge Limit*. Charging is cut manually by
+  a timer before 80% — an external interrupt with no configured state.
+- Apple's calibration is **conditional**. [Support 108055](https://support.apple.com/en-us/108055)
+  says: *"If you have Charge Limit set to less than 100 percent, your iPhone
+  will occasionally charge to 100 percent to maintain accurate battery
+  state-of-charge estimates."* No Charge Limit → no scheduled compensation
+  full charge. Its stated purpose is **SOC accuracy**, not capacity/Qmax.
+
+What survives: a gauge must tolerate interrupted charging (anyone can unplug),
+which explains the stable ±1 mAh NCC and constant `MaximumCapacityPercent=101`.
+What is withdrawn: treating that tolerance as a *periodic calibration
+fallback*, and using it to downplay shallow-charging bias risk. The risk
+assessment is therefore **raised**, with a concrete causal mechanism rather
+than a vague correlation — see
+[`shallow-charging-accuracy.md`](shallow-charging-accuracy.md).
+
+Verified on-device: `DailyMaxSoc` across all 8 analytics files is
+`42/72/72/72/74/59/63/71` (max 74%); the 76-day diary has 325 sessions with
+`soc_end ≤ 81` and only 4 at ≥80%. No full charge and no calibration occurred
+in the window.
+
+Unaffected conclusions: CycleCount, the voltage step table, `NCC/3692`, the
+A/B lock-in result, and the forecast curve — none depends on a full charge.
+Newly qualified: `AppleRawMaxCapacity`, `QmaxCell0`,
+`CycleCountLastQmax`, the constant `101`, and the `9883% → 4801 mAh/day`
+derivation (a displayed-SOC gain error would scale it; the ~5% gap to the
+1.233/day analytics regression is a hypothesis, not a finding, since both
+ultimately derive from coulomb counting).
+
+Also fixed: the `108371` Apple Support citation in `voltage-nodes.md` now
+resolves to an Apple TV Remote page; replaced with the verified `108055`.
+
+---
+
 All final numbers in `README.md`, `docs/findings.md` and
 `docs/charging-summary.json` reflect these corrections and are reproducible
 with `python3 scripts/verify.py`.
