@@ -184,7 +184,7 @@ end-of-life threshold.
 
 **Long term (>1000 cycles).** Reference devices at 1420 and 2919 cycles
 still report 73% and 67%. A battery is usable well beyond 1000 cycles. With
-this owner's **~80% charge limit and shallow 20–70% top-ups** (documented in
+this owner's habit of **unplugging before the 80% Charge Limit, with shallow 20–70% top-ups** (documented in
 `findings.md` §3), the effective stress is lower still — the log shows the
 device never once reached a full charge in 76 days, which is itself a
 strong life-extension factor (BU-808 Table 2: shallower depth of discharge

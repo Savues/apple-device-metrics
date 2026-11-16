@@ -152,6 +152,10 @@ forecast. Changes:
 
 ## 10. "Firmware must have a general full-charge fallback" — withdrawn (2026-11-16)
 
+> **Premise superseded by §11.** This section assumed Charge Limit was
+> *off*. It is on (80%). The conclusion that no calibration ran in the
+> window still holds; the reason is different.
+
 An analysis of long-term 80% charging asserted: *"Apple's 80% limit is an
 official feature, so firmware must know the device may never reach full and
 will not naively assume 100% every time."* The owner corrected the premise:
@@ -187,6 +191,42 @@ ultimately derive from coulomb counting).
 
 Also fixed: the `108371` Apple Support citation in `voltage-nodes.md` now
 resolves to an Apple TV Remote page; replaced with the verified `108055`.
+
+---
+
+## 11. "Charge Limit is not enabled" — withdrawn (2026-11-16)
+
+§10 and the first version of `shallow-charging-accuracy.md` stated that iOS
+Charge Limit was **off** and charging was cut only by a manual timer. The
+owner corrected this: **Charge Limit is on at 80% as a safety net**, and the
+owner unplugs before 80% on almost every session.
+
+What changes:
+
+- Apple's calibration (Support 108055) is **armed**, not absent. It is
+  pre-empted because every session ends before the limit is reached, so it
+  is not observed to run. The practical result, no full charge and no
+  calibration in 76 days, is unchanged.
+- The 4 sessions ending at 80–81% are consistent with the limit catching a
+  late unplug.
+- The decisive experiment gets a cheaper option: leave the phone plugged in
+  on some nights and let iOS schedule its own 100% charge.
+
+Also fixed in this pass:
+
+- Remaining "80% charge limit" phrasing in README, findings,
+  ANALYTICS-EVIDENCE and lifetime-projection now says "unplugged before the
+  80% Charge Limit". ANALYTICS-EVIDENCE no longer says a full charge "under
+  the 80% limit" is impossible.
+- `shallow-charging-accuracy.md` §5 listed the 1.30 cycles/day rate as both
+  unaffected and at risk. It is now only in the qualified list. Forecast
+  usage-rate confidence lowered from High to Medium; the diary vs gauge
+  agreement is no longer called independent.
+- `verify.py`: the `DailyMaxSoc` threshold now matches the diary (≤81, was
+  <80), and the arbitrary "≤5 sessions at ≥80%" check is replaced by "no
+  session ≥95%".
+- `device.json` gains a `charging_regime` block that records the setting as
+  owner-reported.
 
 ---
 

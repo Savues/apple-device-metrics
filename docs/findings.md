@@ -116,7 +116,7 @@ snapshot exists and a direct 4500 mV reading is unobtainable. Indirect
 evidence fills the gap: the lifetime `MaximumPackVoltage = 4496 mV` exceeds
 the current 4480 mV target by 16 mV, so it must have been recorded under a
 higher ceiling (~4.50 V). The diary never exceeds 81% SOC (termination piles
-up at 69/79%, i.e. an 80% charge limit), so the peak must come from a full
+up at 69/79%: the owner unplugs before the 80% Charge Limit), so the peak must come from a full
 charge **before 09-01**, at ≈101 cycles or fewer — well inside the 1–199
 band. See
 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §1.1.
@@ -207,8 +207,8 @@ consistent with CC/CV taper.
 
 Termination SOC is strongly clustered: **69% (45 sessions)** and **79% (26
 sessions)** are the two most common end points, with 203/325 sessions ending
-in 65–81%. This is the signature of an **80% charge limit / habit of
-unplugging near 79%**, and it explains why the device never reached a full
+in 65–81%. This is the signature of **unplugging before the 80% Charge
+Limit** (the limit is on as a safety net), and it explains why the device never reached a full
 charge during the 76-day window. Consequence: the lifetime
 `MaximumPackVoltage = 4496 mV` cannot have been produced inside this window —
 it is a fossil from a full charge before 09-01, when the 4.50 V target was
