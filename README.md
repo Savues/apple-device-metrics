@@ -18,13 +18,13 @@ All numbers here are **derived from iOS analytics snapshots and charging logs**,
 not from marketing material. The goal is a reproducible record of how the
 reported battery health figure actually behaves over time.
 
-### At a glance (`iphone-01`, latest snapshot 2026-11-17)
+### At a glance (`iphone-01`, latest snapshot <!--v:base_date-->2026-11-17<!--/-->)
 
 | Cycles | NCC | NCC ÷ 3692 | Apple displayed | Voltage target | Usage |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **212** | **3660 mAh** | **99.13%** | **101%** | **4480 mV** | **1.30 cycles/day** |
+| **<!--v:base_cycle-->212<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> cycles/day** |
 
-Next node: **250 cycles → 4460 mV, ~2026-12-16** (pre-registered in
+Next node: **250 cycles → 4460 mV, ~<!--v:date_next-->2026-12-16<!--/-->** (pre-registered in
 [`docs/predictions.json`](docs/predictions.json)).
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 forecast curve" width="760"></p>
@@ -43,7 +43,7 @@ Next node: **250 cycles → 4460 mV, ~2026-12-16** (pre-registered in
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | 9 analytics snapshots + 6-row health export, 325 charge sessions, 1 voltage reading | 2026-09-01 → 2026-11-17 (76-day charging diary) |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + 6-row health export, 325 charge sessions, 1 voltage reading | 2026-09-01 → <!--v:base_date-->2026-11-17<!--/--> (76-day charging diary) |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, **reference only** | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); **no `VacVoltageLimit`** | 2026-11-15 |
 
@@ -109,9 +109,9 @@ More devices can be added as sibling directories under `devices/`.
    `NominalChargeCapacity` and health unchanged. Its convergence on the 3692
    nameplate at 11-15 was coincidental.
 
-8. **The −0.43 pp cliff is 16× the daily noise.** Nine consecutive analytics
-   snapshots give NCC 3658–3660 mAh (0.027 pp jitter, including rebounds), while
-   `AppleRawMaxCapacity` swings 30 mAh (30× noisier). The cliff is bracketed
+8. **The −0.43 pp cliff is 16× the daily noise.** <!--v:snap_word_cap-->Nine<!--/--> consecutive analytics
+   snapshots give NCC <!--v:ncc_range-->3658–3660<!--/--> mAh (0.027 pp jitter, including rebounds), while
+   `AppleRawMaxCapacity` swings <!--v:raw_range-->30<!--/--> mAh (<!--v:raw_ratio-->30<!--/-->× noisier). The cliff is bracketed
    to cycles 194→200 (1.50 cycles/day). The 11-09 file shows
    **4480 mV at exactly cycle 200** — the step fires at the node, not after
    it — and its gauge `UpdateTime` (2026-11-08 17:08 local) bounds the step
@@ -170,7 +170,8 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | [`docs/voltage-capacity-experiment.json`](docs/voltage-capacity-experiment.json) | A/B measurement: voltage limit vs reported capacity |
 | [`scripts/forecast.py`](scripts/forecast.py) | regenerates the iphone-01-only forecast |
 | [`scripts/params.py`](scripts/params.py) | derives every forecast parameter (base, usage rates, plateau, node step) from the published data; no hand-entered constants |
-| [`scripts/update.sh`](scripts/update.sh) | one-command import → timeline → forecast → verify |
+| [`scripts/update.sh`](scripts/update.sh) | one-command import → timeline → forecast → doc sync → verify |
+| [`scripts/sync_docs.py`](scripts/sync_docs.py) | refills every data-dependent number in the docs, marked `<!--v:KEY-->…<!--/-->` (inline) or `<!--b:KEY-->…<!--/b-->` (generated table); `--check` is part of `verify.py` |
 | [`scripts/check_links.py`](scripts/check_links.py) | fails on broken relative Markdown links |
 | [`docs/predictions.json`](docs/predictions.json) | **pre-registered** 250-node predictions, scored automatically by `verify.py` |
 | [`docs/voltage-nodes.md`](docs/voltage-nodes.md) | cycle-node voltage table and its provenance |
@@ -197,7 +198,7 @@ in this repo is labelled accordingly.
 
 **Update (2026-11-16)**: the 200-cycle step is directly confirmed on this
 device — `VacVoltageLimit = 4480 mV` at **exactly `CycleCount = 200`**
-(2026-11-09 analytics), with eight further snapshots at 202–212 cycles all
+(2026-11-09 analytics), with <!--v:further_word-->eight<!--/--> further snapshots at <!--v:further_range-->202–212<!--/--> cycles all
 showing 4480 mV. See
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
 The mid-SOC voltage test is no longer needed. iOS retains only ~7–8 days of
@@ -221,7 +222,9 @@ python3 scripts/extract_analytics.py --archive /path/Analytics-A.ips /path/Analy
 
 For the full refresh use `scripts/update.sh` with the same arguments: it
 also regenerates the forecast from the new latest snapshot and runs
-`verify.py`. Prose in `docs/*.md` that quotes the base still needs a review.
+`verify.py`. `sync_docs.py` refills the marked numbers in the docs
+(base, rates, node dates, snapshot counts, timeline tables); unmarked text
+such as dated corrections is left alone, and new findings still need writing by hand.
 
 Each file is written to `devices/iphone-01/analytics/<header-date>.json`,
 `analytics-timeline.csv` is rebuilt, and every snapshot is checked against

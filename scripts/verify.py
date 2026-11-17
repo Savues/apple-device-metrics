@@ -400,17 +400,15 @@ check("forecast: first CSV row matches base",
       int(frows[0]["cycle"]) == latest["cycle_count"] and
       float(frows[0]["ncc_mah"]) == float(latest["nominal_charge_capacity_mah"]))
 
-print("\n=== README at-a-glance tables (en + zh) ===")
-b = fc["base"]
-glance = (f"| **{b['cycle']}** | **{b['ncc_mah']} mAh** | "
-          f"**{b['health_pct']:.2f}%** | **{b['apple_max_capacity_percent']}%** | "
-          f"**{latest['vac_voltage_limit_mv']} mV** | "
-          f"**{fc['current_usage']['cycles_per_day']:.2f} ")
+print("\n=== docs: marked numbers match the data (sync_docs.py) ===")
+sync = subprocess.run([sys.executable, os.path.join(ROOT, "scripts/sync_docs.py"), "--check"],
+                      capture_output=True, text=True)
+check("docs: every <!--v:--> / <!--b:--> marker is up to date", sync.returncode == 0,
+      (sync.stdout + sync.stderr).strip())
 for readme in ("README.md", "README.zh.md"):
     text = open(os.path.join(ROOT, readme), encoding="utf-8").read()
-    check(f"{readme}: at-a-glance row matches latest snapshot",
-          glance in text and f"snapshot {b['date']}" in text.replace("快照 ", "snapshot "),
-          "update the table after importing a new snapshot")
+    check(f"{readme}: at-a-glance row is marker-driven",
+          all(f"<!--v:{k}-->" in text for k in ("base_cycle", "base_ncc", "base_health_two", "apple", "vac", "rate")))
 
 print("\n=== pre-registered predictions ===")
 pr = json.load(open(os.path.join(ROOT, "docs/predictions.json"),

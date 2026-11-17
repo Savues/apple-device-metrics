@@ -17,13 +17,13 @@
 
 这里的所有数字都**来自 iOS analytics 快照和充电日志**，不来自宣传材料。目标是留下一份可复现的记录，说明系统报告的电池健康度随时间到底怎样变化。
 
-### 速览（`iphone-01`，最新快照 2026-11-17）
+### 速览（`iphone-01`，最新快照 <!--v:base_date-->2026-11-17<!--/-->）
 
 | 循环 | NCC | NCC ÷ 3692 | 苹果显示值 | 充电电压上限 | 用量 |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **212** | **3660 mAh** | **99.13%** | **101%** | **4480 mV** | **1.30 次循环/天** |
+| **<!--v:base_cycle-->212<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> 次循环/天** |
 
-下一个节点：**250 次循环 → 4460 mV，约 2026-12-16**（已事前登记于
+下一个节点：**250 次循环 → 4460 mV，约 <!--v:date_next-->2026-12-16<!--/-->**（已事前登记于
 [`docs/predictions.json`](docs/predictions.json)）。
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 预测曲线" width="760"></p>
@@ -37,7 +37,7 @@
 
 | ID | 平台 | 数据 | 覆盖范围 |
 |----|------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | 9 份 analytics 快照 + 6 行健康导出，325 次充电会话，1 次电压读数 | 2026-09-01 → 2026-11-17（76 天充电日志） |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->9<!--/--> 份 analytics 快照 + 6 行健康导出，325 次充电会话，1 次电压读数 | 2026-09-01 → <!--v:base_date-->2026-11-17<!--/-->（76 天充电日志） |
 | [`reference-01`](devices/reference-01/README.zh.md) | iOS 17.6.1，1420 次循环，3.83V / 2815mAh / 4.45V | 单份 analytics 快照，**仅作参考** | 2026-11-15 |
 | [`reference-02`](devices/reference-02/README.zh.md) | iOS 15.1，3.83V / 3110mAh / 4.45V | 铭牌 + 一份电量计快照（2919 次循环，67%）；**没有 `VacVoltageLimit`** | 2026-11-15 |
 
@@ -72,7 +72,7 @@
 
 7. **`Raw Capacity` 是会漂移的估计值，连续快照可以证明**：11-14 → 11-15 `AppleRawMaxCapacity` 从 3683 变为 3692（+9 mAh），而 `NominalChargeCapacity` 和健康度都没变。它在 11-15 恰好等于 3692 铭牌值只是巧合。
 
-8. **−0.43 pp 的断崖是日常噪声的 16 倍。** 连续 9 份 analytics 快照的 NCC 在 3658–3660 mAh 之间（抖动 0.027 pp，含回升），而 `AppleRawMaxCapacity` 波动 30 mAh（噪声大 30 倍）。断崖被限定在 194→200 次循环之间（1.50 次循环/天）。11-09 的文件显示**恰好在第 200 次循环时为 4480 mV**，说明阶跃在节点上触发，而不是之后；其电量计 `UpdateTime`（本地时间 2026-11-08 17:08）把阶跃限定在这个时间之前。11-12 是 11-11 的重复上报。
+8. **−0.43 pp 的断崖是日常噪声的 16 倍。** 连续 <!--v:snap_n-->9<!--/--> 份 analytics 快照的 NCC 在 <!--v:ncc_range-->3658–3660<!--/--> mAh 之间（抖动 0.027 pp，含回升），而 `AppleRawMaxCapacity` 波动 <!--v:raw_range-->30<!--/--> mAh（噪声大 <!--v:raw_ratio-->30<!--/--> 倍）。断崖被限定在 194→200 次循环之间（1.50 次循环/天）。11-09 的文件显示**恰好在第 200 次循环时为 4480 mV**，说明阶跃在节点上触发，而不是之后；其电量计 `UpdateTime`（本地时间 2026-11-08 17:08）把阶跃限定在这个时间之前。11-12 是 11-11 的重复上报。
 
 完整分析（包括对早期误读的纠正）见 [`docs/findings.md`](docs/findings.zh.md)。
 
@@ -120,7 +120,8 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | [`docs/voltage-capacity-experiment.json`](docs/voltage-capacity-experiment.json) | A/B 测量：电压上限与报告容量 |
 | [`scripts/forecast.py`](scripts/forecast.py) | 重新生成 iphone-01 预测 |
 | [`scripts/params.py`](scripts/params.py) | 从发布数据推导所有预测参数（起点、用量、平台期、节点阶跃），没有手填常量 |
-| [`scripts/update.sh`](scripts/update.sh) | 一条命令完成导入 → 时间线 → 预测 → 校验 |
+| [`scripts/update.sh`](scripts/update.sh) | 一条命令完成导入 → 时间线 → 预测 → 文档同步 → 校验 |
+| [`scripts/sync_docs.py`](scripts/sync_docs.py) | 重填文档中所有随数据变化的数字，标记为 `<!--v:KEY-->…<!--/-->`（行内）或 `<!--b:KEY-->…<!--/b-->`（生成的表格）；`--check` 已纳入 `verify.py` |
 | [`scripts/check_links.py`](scripts/check_links.py) | 检查相对 Markdown 链接是否断开 |
 | [`docs/predictions.json`](docs/predictions.json) | **事前登记**的 250 节点预测，由 `verify.py` 自动评分 |
 | [`docs/voltage-nodes.md`](docs/voltage-nodes.zh.md) | 循环节点电压表及其来源 |
@@ -142,7 +143,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 
 循环节点电压表是**第三方逆向结果**，不是苹果文档。苹果公开资料只说"1000 次循环后保持 80% 容量"，并介绍了性能管理和优化充电。本仓库中的内容都按此标注。
 
-**更新（2026-11-16）**：200 次循环的阶跃已在本机直接证实：**恰好在 `CycleCount = 200`** 时 `VacVoltageLimit = 4480 mV`（2026-11-09 analytics），此后另外 8 份 202–212 次循环的快照也都是 4480 mV。见
+**更新（2026-11-16）**：200 次循环的阶跃已在本机直接证实：**恰好在 `CycleCount = 200`** 时 `VacVoltageLimit = 4480 mV`（2026-11-09 analytics），此后另外 <!--v:further_n-->8<!--/--> 份 <!--v:further_range-->202–212<!--/--> 次循环的快照也都是 4480 mV。见
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.zh.md)。
 不再需要中段 SOC 电压测试。iOS 只保留约 ~7–8 天的 analytics，所以 200 次循环之前的快照（4500 mV）**已无法获得**；生命周期峰值 `MaximumPackVoltage = 4496 mV` 在当前 4480 mV 上限下不可能出现，是 09-01 之前（≈101 次循环）4.50 V 上限生效时一次满充留下的"化石"。充电日志从未超过 81% SOC（69/79% 集中：在 80% 充电上限之前拔线），所以这个峰值之后不可能被刷新。见
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.zh.md)。
@@ -155,7 +156,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 python3 scripts/extract_analytics.py --archive /path/Analytics-A.ips /path/Analytics-B.ips
 ```
 
-完整刷新请用参数相同的 `scripts/update.sh`：它还会以新的最新快照重新生成预测并运行 `verify.py`。`docs/*.md` 正文中引用起点的文字仍需人工复核。
+完整刷新请用参数相同的 `scripts/update.sh`：它还会以新的最新快照重新生成预测并运行 `verify.py`。`sync_docs.py` 会重填文档中带标记的数字（起点、速率、节点日期、快照数、时间线表）；未标记的文字（如带日期的勘误）不会改动，新发现仍需手写。
 
 每个文件写入 `devices/iphone-01/analytics/<header-date>.json`，重建 `analytics-timeline.csv`，并把每份快照与循环节点电压表（4500 / 4480 / 4460 / 4440 / 4390 mV）比对。不匹配时打印 `??`，不会静默通过。重复导入同一日期会原地更新。`python3 scripts/verify.py` 会重新校验整个归档；每次 push 时 GitHub Actions 会运行它、链接检查以及原始文件 / 标识字段扫描。
 

@@ -5,7 +5,8 @@
 #   scripts/update.sh            # no files: just regenerate + verify
 #
 # Steps: whitelist-extract and archive each .ips -> rebuild timeline CSV ->
-# regenerate forecast (base, rates, plateau all re-derived) -> run checks.
+# regenerate forecast (base, rates, plateau all re-derived) -> refill the
+# marked numbers in the docs (sync_docs.py) -> run checks.
 # Raw .ips files are never copied into the repository.
 set -eu
 cd "$(dirname "$0")/.."
@@ -18,6 +19,7 @@ else
 fi
 python3 scripts/forecast.py > /dev/null
 echo "forecast regenerated: $(python3 -c 'import json;b=json.load(open("docs/iphone17-forecast.json"))["base"];print(b["date"], b["cycle"], "cycles", b["ncc_mah"], "mAh")')"
+python3 scripts/sync_docs.py
 python3 scripts/verify.py > /tmp/adm-verify.$$ 2>&1 || {
     grep -E 'FAIL|FAILURES' /tmp/adm-verify.$$
     rm -f /tmp/adm-verify.$$
@@ -26,4 +28,4 @@ python3 scripts/verify.py > /tmp/adm-verify.$$ 2>&1 || {
 tail -n 1 /tmp/adm-verify.$$
 rm -f /tmp/adm-verify.$$
 git status --short
-echo "Prose in docs/*.md that quotes the base (date / cycle / NCC) still needs a manual review."
+echo "Marked numbers in the docs were refreshed by sync_docs.py; review unmarked prose (e.g. new findings) by hand."
