@@ -20,14 +20,18 @@
     "UDID",
     "exact model variant identifier",
     "analytics file names",
-    "absolute charge timestamps",
-    "clock times"
+    "absolute charge-session timestamps (charging diary)"
   ],
   "charging_regime": {
     "ios_charge_limit_pct": 80,
     "ios_charge_limit_role": "safety net; the owner unplugs before 80% on almost every session",
     "source": "owner-reported 2026-11-16; not present in analytics fields",
     "enabled_since": null,
-    "observed": "76-day diary max soc_end 81%, 4 of 325 sessions at >=80%; DailyMaxSoc max 74% across 8 analytics files"
+    "observed": "76-day diary max soc_end 81%, 4 of 325 sessions at >=80%; DailyMaxSoc max 74% across every archived analytics file"
+  },
+  "behavioural_fields_published": {
+    "note": "Listed explicitly because the diary timestamps above are NOT published while these are.",
+    "gauge_update_time_utc": "analytics snapshots, second resolution; required to tell a stale re-report from a new gauge write",
+    "daily_min_soc_pct / daily_max_soc_pct": "daily SOC envelope per snapshot"
   }
 }

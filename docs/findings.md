@@ -153,7 +153,7 @@ value (4390 mV) is extrapolated.
 
 ### Predicted upcoming nodes
 
-At the **current measured usage of 1.30 cycles/day = 4801 mAh/day** (76-day
+At the **current measured usage of 1.30 cycles/day = <!--v:mah_day-->4801<!--/--> mAh/day** (<!--v:span_days-->76<!--/-->-day
 charging diary, cross-checked by <!--v:gauge_n-->8<!--/--> non-stale gauge writes = <!--v:gauge_rate-->1.324<!--/-->/day) from <!--v:base_cycle-->212<!--/-->
 cycles on <!--v:base_date-->2026-11-17<!--/-->. Full forecast with mAh and rate sensitivity:
 [`iphone17-forecast.md`](iphone17-forecast.md).
@@ -176,14 +176,14 @@ From [`charging-summary.json`](charging-summary.json):
 
 | Metric | Value |
 |--------|-------|
-| Sessions | 325 (306 clean, 19 anomalous) |
+| Sessions | <!--v:sessions-->325<!--/--> (<!--v:clean_sessions-->306<!--/--> clean, <!--v:anom_sessions-->19<!--/--> anomalous) |
 | Total time | 99.40 h |
-| Total charged | 9883 % = **98.83 equivalent full cycles** |
+| Total charged | 9883 % = **<!--v:efc-->98.83<!--/--> equivalent full cycles** |
 | Mean duration | 18.35 min |
 | Mean charge per session | 30.41 % |
-| Mean rate | 1.652 %/min (1.757 excluding anomalies) |
+| Mean rate | <!--v:rate_mean_3-->1.652<!--/--> %/min (<!--v:rate_clean_3-->1.757<!--/--> excluding anomalies) |
 | Sessions/day | 4.28 (min 2, max 15) |
-| No net gain | 18 sessions (5.5%) |
+| No net gain | <!--v:zero_sessions-->18<!--/--> sessions (<!--v:zero_pct-->5.5<!--/-->%) |
 | SOC dropped while plugged in | 1 session |
 | Longest | 2.25 h for +30% (low-power / pass-through charging) |
 | Fastest | 3.75 %/min (short 17→19% burst) |
@@ -201,14 +201,14 @@ By starting SOC:
 | 60–80% | 9 | 3.7% | 0.45 %/min |
 
 Charging is dominated by shallow 20–60% top-ups; sessions ending above 80%
-are rare (4 of 325). Charge rate falls monotonically with starting SOC,
+are rare (4 of <!--v:sessions-->325<!--/-->). Charge rate falls monotonically with starting SOC,
 consistent with CC/CV taper.
 
 Termination SOC is strongly clustered: **69% (45 sessions)** and **79% (26
-sessions)** are the two most common end points, with 203/325 sessions ending
+sessions)** are the two most common end points, with 203/<!--v:sessions-->325<!--/--> sessions ending
 in 65–81%. This is the signature of **unplugging before the 80% Charge
 Limit** (the limit is on as a safety net), and it explains why the device never reached a full
-charge during the 76-day window. Consequence: the lifetime
+charge during the <!--v:span_days-->76<!--/-->-day window. Consequence: the lifetime
 `MaximumPackVoltage = 4496 mV` cannot have been produced inside this window —
 it is a fossil from a full charge before 09-01, when the 4.50 V target was
 still in effect (see

@@ -37,7 +37,7 @@ D, while the charging diary uses calendar days.
 
 ### Charging diary
 
-`devices/iphone-01/charging-sessions.csv` — 325 sessions, 2026-09-01 to
+`devices/iphone-01/charging-sessions.csv` — <!--v:sessions-->325<!--/--> sessions, 2026-09-01 to
 2026-11-15 (76 days). Source is a plain-text diary with three lines per
 session:
 
@@ -92,7 +92,7 @@ Applied by `scripts/parse_charging_log.py`:
 
 | Kept | Dropped |
 |------|---------|
-| `session_id` (sequential 1..325) | device identifier / diary header |
+| `session_id` (sequential 1..<!--v:sessions-->325<!--/-->) | device identifier / diary header |
 | `day_offset` (days since first record) | absolute calendar dates |
 | `duration_sec` | start/end clock times |
 | `soc_start`, `soc_end` | timezone, locale |
@@ -140,7 +140,7 @@ actually written**, which can predate the file's generation date — e.g. the
 meaning the 11-12 file merely re-reported a stale snapshot, while the 11-10
 file carries `2026-11-09T13:58:20Z` (11-09 21:58 local) and is independent.
 
-Source-log integrity: 325/325 sessions parsed, 0 parse errors.
+Source-log integrity: <!--v:sessions-->325<!--/-->/<!--v:sessions-->325<!--/--> sessions parsed, 0 parse errors.
 
 ## Known limitations
 

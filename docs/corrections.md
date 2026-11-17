@@ -3,6 +3,29 @@
 Record of errors found and corrected while building this dataset. Kept so
 that anyone reusing the numbers knows which earlier statements are void.
 
+## Status at a glance
+
+Twelve entries, five of them withdrawals — read this table before the sections,
+so a superseded claim is not mistaken for a current one.
+
+| § | Topic | Status | What the data says now |
+|---|-------|--------|------------------------|
+| 1 | Charging-session counts | superseded | exact parse: see §2 and `charging-summary.json` |
+| 2 | Column names and semantics | **standing** | `NominalChargeCapacity` is the health numerator, `RawCapacity` is a drifting estimate |
+| 3 | "Random gauge recalibration" | **standing** | the drops are cycle-node voltage steps, not random recalibration |
+| 4 | Lifetime extrapolation | withdrawn | linear fit is void; see `lifetime-projection.md` |
+| 5 | Linear OCV estimate | withdrawn | the OCV curve is far from linear near full charge |
+| 6 | "Design capacity was recalculated" | **standing** | only `Raw Capacity` drifts; `NominalChargeCapacity` is not recomputed |
+| 7 | `OriginalBattery = 0` = replacement | unconfirmed | semantics unknown; nothing depends on it |
+| 8 | Apple "80% at 1000 cycles" as an anchor | withdrawn | it is a display-value target that includes reversible lock-in |
+| 9 | Forecast base refresh (11-16) | superseded by §12 | base is now 11-17 / 212 cycles |
+| 10 | Firmware full-charge fallback | withdrawn | premise (§11) was wrong |
+| 11 | "Charge Limit is not enabled" | withdrawn | it is on (80%); the owner unplugs before it |
+| 12 | Gauge rate 1.233 → 1.324/day | **standing** | latest import; predictions unchanged |
+
+
+---
+
 ## 1. Charging-session counts (superseded)
 
 An earlier summary quoted **374 sessions / ~166 h / ~130 equivalent cycles /

@@ -24,7 +24,7 @@ Reproduce: `python3 scripts/forecast.py` →
 | Base date / cycle | <!--v:base_date-->2026-11-17<!--/--> / <!--v:base_cycle-->212<!--/--> | <!--v:base_md-->11-17<!--/--> analytics (latest snapshot) |
 | Base NCC / health | <!--v:base_ncc-->3660<!--/--> mAh / **<!--v:base_health-->99.133<!--/-->%** | <!--v:base_md-->11-17<!--/--> analytics, `NCC/3692` |
 | Apple `MaximumCapacityPercent` | **101** | all <!--v:snap_n-->9<!--/--> analytics files |
-| Cycle rate (current) | **1.30 /day = 4801 mAh/day** | 76-day charging diary (9883% = 364,880 mAh). Cross-check: <!--v:gauge_n-->8<!--/--> non-stale analytics gauge writes (CycleCount <!--v:gauge_cycles-->200→212<!--/--> over <!--v:gauge_span-->8.37<!--/--> days) = <!--v:gauge_rate-->1.324<!--/-->/day by regression; both rely on coulomb counting, so this is not independent |
+| Cycle rate (current) | **<!--v:rate-->1.30<!--/--> /day = <!--v:mah_day-->4801<!--/--> mAh/day** | <!--v:span_days-->76<!--/-->-day charging diary (9883% = 364,880 mAh). Cross-check: <!--v:gauge_n-->8<!--/--> non-stale analytics gauge writes (CycleCount <!--v:gauge_cycles-->200→212<!--/--> over <!--v:gauge_span-->8.37<!--/--> days) = <!--v:gauge_rate-->1.324<!--/-->/day by regression; both rely on coulomb counting, so this is not independent |
 | Plateau slope | **0.00476 pp/day = 0.176 mAh/day** | mean of 3 non-step segments in that export |
 | Step per 20 mV node | **−0.43 pp = −15.9 mAh** | the 200-node step (3675→3659 mAh) |
 | Voltage nodes | 250 / 300 / ≥1000 → 4460 / 4440 / 4390 mV | third-party table (≥1000 extrapolated) |
@@ -139,7 +139,7 @@ at current usage it is **~2028-07**, three months later.
 
 | Aspect | Confidence |
 |--------|------------|
-| Current usage rate (4801 mAh/day) | **Medium** — diary and gauge regression (<!--v:gauge_rate-->1.324<!--/-->/day) agree within <!--v:gauge_agree-->2<!--/-->%, but share the coulomb-count source; an uncalibrated SOC gain error would shift calendar dates, not the curve shape. See [`shallow-charging-accuracy.md`](shallow-charging-accuracy.md) §5 |
+| Current usage rate (<!--v:mah_day-->4801<!--/--> mAh/day) | **Medium** — diary and gauge regression (<!--v:gauge_rate-->1.324<!--/-->/day) agree within <!--v:gauge_agree-->2<!--/-->%, but share the coulomb-count source; an uncalibrated SOC gain error would shift calendar dates, not the curve shape. See [`shallow-charging-accuracy.md`](shallow-charging-accuracy.md) §5 |
 | Plateau slope | **High** — measured on this device |
 | Base NCC (<!--v:base_ncc-->3660<!--/--> mAh, <!--v:base_md-->11-17<!--/--> single point) | Medium — daily jitter ±1–2 mAh; a 3-day mean would be steadier |
 | 250 / 300 node dates | Medium — assumes 1.30/day continues; see §3.1 sensitivity |

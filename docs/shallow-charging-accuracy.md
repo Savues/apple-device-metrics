@@ -12,7 +12,7 @@ Two facts, both from the owner:
    the normal stopping point.
 2. In practice the owner **unplugs before 80%** on essentially every session.
 
-The data agree. The 76-day diary (325 sessions, 2026-09-01 … 2026-11-15)
+The data agree. The <!--v:span_days-->76<!--/-->-day diary (<!--v:sessions-->325<!--/--> sessions, 2026-09-01 … 2026-11-15)
 never exceeds 81% SOC, and only 4 sessions end at ≥80% (80/80/80/81). Those
 four are consistent with the limit catching a late unplug. Termination piles
 up at 69% (45 sessions) and 79% (26 sessions).
@@ -62,7 +62,7 @@ is configured but pre-empted.
 | Evidence | Value | Weight |
 |---|---|---|
 | `DailyMaxSoc` in all <!--v:snap_n-->9<!--/--> analytics files | <!--v:maxsoc_list-->`42, 72, 72, 72, 74, 59, 63, 71, 69`<!--/-->: **max <!--v:maxsoc_max-->74<!--/-->%, never ≥80%** | strongest: written by iOS itself, but covers <!--v:snap_n-->9<!--/--> days only |
-| Charging diary, 325 sessions / 76 days | `soc_end` max **81%**; only **4** sessions ≥80% | covers the whole window |
+| Charging diary, <!--v:sessions-->325<!--/--> sessions / <!--v:span_days-->76<!--/--> days | `soc_end` max **81%**; only **4** sessions ≥80% | covers the whole window |
 | `MaximumPackVoltage` | **4496 mV**, constant, lifetime peak from before 09-01 under the ~4.50 V ceiling | confirms a full charge once existed before the window; a lifetime max cannot by itself prove none happened later |
 | `CycleCountLastQmax` | **138**, identical in all <!--v:snap_n-->9<!--/--> files; `QmaxCell0 = 3824` unchanged | no Qmax learning event during the <!--v:snap_n-->9<!--/--> analytics days |
 
@@ -111,7 +111,7 @@ it.
 - `AppleRawMaxCapacity`, `QmaxCell0`, `CycleCountLastQmax` and the constant
   `MaximumCapacityPercent = 101` as ground truth. All were observed with **no
   completed calibration** in the window.
-- **The usage rate `1.30 cycles/day = 4801 mAh/day`, and therefore the
+- **The usage rate `<!--v:rate-->1.30<!--/--> cycles/day = <!--v:mah_day-->4801<!--/--> mAh/day`, and therefore the
   forecast's calendar dates.** It comes from `sum(charged_pct) = 9883%`.
   `charged_pct` is a difference of *displayed* SOC integers, so a **gain
   error** in SOC estimation scales it proportionally (a pure offset error

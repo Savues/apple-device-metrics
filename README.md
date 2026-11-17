@@ -24,15 +24,19 @@ reported battery health figure actually behaves over time.
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | **<!--v:base_cycle-->212<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> cycles/day** |
 
-Next node: **250 cycles → 4460 mV, ~<!--v:date_next-->2026-12-16<!--/-->** (pre-registered in
-[`docs/predictions.json`](docs/predictions.json)).
+Next node: **250 cycles → 4460 mV**, point estimate **~<!--v:date_next-->2026-12-16<!--/-->**, i.e.
+<!--v:date_next_lo-->2026-12-11<!--/--> … <!--v:date_next_hi-->2026-12-25<!--/--> across the measured usage windows
+(pre-registered in [`docs/predictions.json`](docs/predictions.json)). The 1000-cycle row
+is <!--v:date_kilo-->2028-07-15<!--/--> by the same arithmetic and spreads just as widely,
+<!--v:date_kilo_lo-->2028-04-15<!--/--> … <!--v:date_kilo_hi-->2029-01-20<!--/--> — the single date is a point estimate, not a
+commitment ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 forecast curve" width="760"></p>
 
 > **Data-collection condition.** On `iphone-01` iOS *Charge Limit* is set to
 > **80% as a safety net**, but the owner unplugs **before 80%** on almost
 > every session. Apple's occasional calibration full charge is therefore armed
-> but never observed to run: no full charge occurred in the 76-day window. Cycle-driven
+> but never observed to run: no full charge occurred in the <!--v:span_days-->76<!--/-->-day window. Cycle-driven
 > findings (voltage steps, forecast) are unaffected; gauge-derived capacity
 > and displayed-SOC readings carry an unquantified bias. See
 > [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.md).
@@ -43,14 +47,17 @@ Next node: **250 cycles → 4460 mV, ~<!--v:date_next-->2026-12-16<!--/-->** (pr
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + 6-row health export, 325 charge sessions, 1 voltage reading | 2026-09-01 → <!--v:base_date-->2026-11-17<!--/--> (76-day charging diary) |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + 6-row health export, <!--v:sessions-->325<!--/--> charge sessions, 1 voltage reading | 2026-09-01 → <!--v:base_date-->2026-11-17<!--/--> (76-day charging diary) |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, **reference only** | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); **no `VacVoltageLimit`** | 2026-11-15 |
 
-`reference-01` and `reference-02` are additional devices used purely to
-cross-check the voltage-node ladder, the two-health-metric distinction and
-nameplate energy consistency. They are kept in separate directories and
-contribute to **none** of the findings' statistics.
+`reference-01` and `reference-02` are additional devices used to cross-check
+the voltage-node ladder, the two-health-metric distinction and nameplate
+energy consistency. They are kept in separate directories and **do not enter
+iphone-01's statistics or its forecast**. Where they do appear — the
+cross-device concave-curve anchors in
+[`docs/lifetime-projection.md`](docs/lifetime-projection.md) — they are
+labelled as reference points, never as evidence about `iphone-01`.
 
 More devices can be added as sibling directories under `devices/`.
 
@@ -67,7 +74,7 @@ More devices can be added as sibling directories under `devices/`.
 > [`ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md) §6.
 
 1. **`nominal_health_pct = nominal_capacity_mah / 3692`**, using the *fixed*
-   nameplate rated capacity. Verified against all 6 snapshots with error
+   nameplate rated capacity. Verified against all 6 rows of the health export with error
    ≤ 0.005 percentage points. The `raw_capacity_mah` column (3742→3692,
    drifting) is **not** the denominator and does not enter the health figure.
 
@@ -99,10 +106,10 @@ More devices can be added as sibling directories under `devices/`.
    The step-down is *protective*. Full projection:
    [`docs/lifetime-projection.md`](docs/lifetime-projection.md).
 
-6. **Charging behaviour**: 325 sessions / 76 days, 98.83 equivalent full
-   cycles, mean 1.65%/min (1.76%/min excluding anomalies). 18 sessions
-   (5.5%) recorded zero net charge, one recorded SOC *dropping* while
-   plugged in — 19 anomalous rows (5.8%) in total.
+6. **Charging behaviour**: <!--v:sessions-->325<!--/--> sessions / <!--v:span_days-->76<!--/--> days, <!--v:efc-->98.83<!--/--> equivalent full
+   cycles, mean <!--v:rate_mean-->1.65<!--/-->%/min (<!--v:rate_mean_clean-->1.76<!--/-->%/min excluding anomalies). <!--v:zero_sessions-->18<!--/--> sessions
+   (<!--v:zero_pct-->5.5<!--/-->%) recorded zero net charge, one recorded SOC *dropping* while
+   plugged in — <!--v:anom_sessions-->19<!--/--> anomalous rows (<!--v:anom_pct-->5.8<!--/-->%) in total.
 
 7. **`Raw Capacity` is a drifting estimate, proven by consecutive snapshots**:
    11-14 → 11-15 shows `AppleRawMaxCapacity` 3683→3692 (+9 mAh) with
@@ -131,9 +138,13 @@ The source charging diary contains second-resolution wall-clock timestamps.
 `duration_sec`, `soc_start`, `soc_end`, `charged_pct`,
 `rate_pct_per_min`, `anomaly`.
 
-Publishing the raw timestamps would expose sleep/wake and travel patterns, so
-they are stripped at parse time. Health snapshots keep their dates (6 points,
-no behavioural detail). Serial numbers, UDIDs, exact model-variant
+Publishing the diary's raw timestamps would expose sleep/wake and travel
+patterns, so they are stripped at parse time. Two published fields *are*
+behavioural, and are listed here deliberately rather than buried:
+`gauge_update_time_utc` in every analytics snapshot (second resolution — it is
+what distinguishes a stale re-report from a new gauge write) and the daily
+`daily_min_soc_pct` / `daily_max_soc_pct` envelope. Health-export rows keep
+their dates (6 points, no behavioural detail). Serial numbers, UDIDs, exact model-variant
 identifiers and the analytics source filenames are excluded. The model
 family (`iPhone 17`) is published with the owner's consent; the specific
 variant is not.
@@ -160,12 +171,12 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | Path | Contents |
 |------|----------|
 | [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | 6-row third-party health export (not analytics snapshots) |
-| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | 325 de-identified sessions |
+| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->325<!--/--> de-identified sessions |
 | [`devices/iphone-01/device.json`](devices/iphone-01/device.json) | nameplate parameters |
 | [`devices/iphone-01/voltage-reading.md`](devices/iphone-01/voltage-reading.md) | single 4.04V @ 70% reading + OCV check |
 | [`docs/findings.md`](docs/findings.md) | full analysis |
 | [`docs/lifetime-projection.md`](docs/lifetime-projection.md) | general lifetime reasoning (cross-device context; **not** the iphone-01 forecast) |
-| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.md) | **iphone-01-only future battery curve** — at current usage (1.30 cycles/day = 4801 mAh/day), with real mAh |
+| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.md) | **iphone-01-only future battery curve** — at current usage (<!--v:rate-->1.30<!--/--> cycles/day = <!--v:mah_day-->4801<!--/--> mAh/day), with real mAh |
 | `docs/iphone17-forecast.csv` / `.json` / `.svg` | forecast data and chart |
 | [`docs/voltage-capacity-experiment.json`](docs/voltage-capacity-experiment.json) | A/B measurement: voltage limit vs reported capacity |
 | [`scripts/forecast.py`](scripts/forecast.py) | regenerates the iphone-01-only forecast |
