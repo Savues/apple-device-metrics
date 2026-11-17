@@ -157,7 +157,7 @@ Source-log integrity: 325/325 sessions parsed, 0 parse errors.
   final analysis — the curve is steep near full charge. An earlier linear
   estimate of 4.132 V at 70% was wrong (see `corrections.md`).
 - **Retention ceiling**: iOS keeps only ~7–8 days of daily analytics. The
-  archive (11-09 … 11-15) is the complete obtainable window; no pre-200 or
+  archive (11-09 … 11-17) is the complete obtainable window; no pre-200 or
   ~138-cycle snapshot exists. A direct 4500 mV reading and the exact step
   timestamp are unrecoverable. The lifetime `MaximumPackVoltage = 4496 mV`
   is used as indirect evidence of the earlier ceiling instead.

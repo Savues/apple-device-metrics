@@ -61,10 +61,10 @@ is configured but pre-empted.
 
 | Evidence | Value | Weight |
 |---|---|---|
-| `DailyMaxSoc` in all 8 analytics files | `42, 72, 72, 72, 74, 59, 63, 71`: **max 74%, never ≥80%** | strongest: written by iOS itself, but covers 8 days only |
+| `DailyMaxSoc` in all 9 analytics files | `42, 72, 72, 72, 74, 59, 63, 71, 69`: **max 74%, never ≥80%** | strongest: written by iOS itself, but covers 9 days only |
 | Charging diary, 325 sessions / 76 days | `soc_end` max **81%**; only **4** sessions ≥80% | covers the whole window |
 | `MaximumPackVoltage` | **4496 mV**, constant, lifetime peak from before 09-01 under the ~4.50 V ceiling | confirms a full charge once existed before the window; a lifetime max cannot by itself prove none happened later |
-| `CycleCountLastQmax` | **138**, identical in all 8 files; `QmaxCell0 = 3824` unchanged | no Qmax learning event during the 8 analytics days |
+| `CycleCountLastQmax` | **138**, identical in all 9 files; `QmaxCell0 = 3824` unchanged | no Qmax learning event during the 9 analytics days |
 
 Caveats kept explicit:
 
@@ -81,7 +81,7 @@ Caveats kept explicit:
 
 | Layer | Driven by | Effect of always stopping below 80% |
 |---|---|---|
-| `CycleCount` | accumulated charge throughput, not "full charges" | **unaffected**: 121→209 with no full charge |
+| `CycleCount` | accumulated charge throughput, not "full charges" | **unaffected**: 121→212 with no full charge |
 | `VacVoltageLimit` step table | CycleCount | **unaffected**: 4500→4480 fired exactly at cycle 200 |
 | `NominalChargeCapacity` | slow model value | noise stays small (±1 mAh), but a **bias** cannot be excluded |
 | `AppleRawMaxCapacity` | instantaneous voltage/SOC estimate | **precision degraded**: 3678→3708 (30 mAh), 30× NCC jitter |
@@ -115,9 +115,11 @@ it.
   forecast's calendar dates.** It comes from `sum(charged_pct) = 9883%`.
   `charged_pct` is a difference of *displayed* SOC integers, so a **gain
   error** in SOC estimation scales it proportionally (a pure offset error
-  cancels in the difference). The analytics regression gives 1.233
-  cycles/day, about 5% lower. That gap is consistent with a small SOC gain
-  error, but it is **not a clean test**: `CycleCount` is also based on
+  cancels in the difference). The analytics regression gave 1.233
+  cycles/day (5% lower) on 8 files, and **1.324 (2% higher)** after the
+  11-17 file added +3 cycles in one gauge write. The sign flipped with one
+  data point, so the gap is within sampling noise and gives **no evidence**
+  of an SOC gain error either way. It was never a clean test: `CycleCount` is also based on
   coulomb counting and may share the same error source, and the two cover
   different windows. Recorded as a hypothesis, not a finding.
 

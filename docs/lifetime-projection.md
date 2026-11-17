@@ -97,16 +97,16 @@ long-term degradation — that is why the 0.0165 %/day extrapolation was
 withdrawn — but the "concavity" must not be interpreted as a pure ageing
 law either.
 
-At **1.30 cycles/day** from 209 cycles on 2026-11-16 (this document is
+At **1.30 cycles/day** from 212 cycles on 2026-11-17 (this document is
 general context, not the iphone-01 forecast — see
 [`iphone17-forecast.md`](iphone17-forecast.md) for that):
 
 | Node | Expected date | Note |
 |------|---------------|------|
-| 250 cycles | ~2026-12-17 | 2nd voltage step (4460 mV) |
-| 300 cycles | ~2027-01-25 | 3rd step (4440 mV) |
-| 500 cycles | ~2027-08 | — |
-| **1000 cycles** | **~2028-07-16** | ≥1000 step (extrapolated 4390 mV) |
+| 250 cycles | ~2026-12-16 | 2nd voltage step (4460 mV) |
+| 300 cycles | ~2027-01-23 | 3rd step (4440 mV) |
+| 500 cycles | ~2027-06 | — |
+| **1000 cycles** | **~2028-07-15** | ≥1000 step (extrapolated 4390 mV) |
 
 ### B. Usable capacity per full charge
 
@@ -177,7 +177,7 @@ user will notice.
 **Medium term (500–1000 cycles, ~2027–2028).** Note this section draws on
 cross-device context only. The iphone-01-only forecast
 ([`iphone17-forecast.md`](iphone17-forecast.md)) puts NCC health at ~94.9%
-(3505 mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
+(3506 mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
 Where a displayed 80% does occur, per §0 a large part of it is reversible
 lock-in rather than wear, so it is neither a pure wear measure nor an
 end-of-life threshold.
@@ -193,7 +193,7 @@ gives dramatically more cycles).
 **Bottom line: the observed behaviour is protective, not deteriorating.**
 The step-down costs a few percent of runtime per charge and buys a flatter
 ageing curve; most of the *displayed* health loss is reversible lock-in, not
-wear. At 209 cycles / 99.13% (NCC ratio) / 101 (Apple health), the battery
+wear. At 212 cycles / 99.13% (NCC ratio) / 101 (Apple health), the battery
 is in excellent condition and is not the limiting factor for the device's
 useful life. The official 1000-cycle / 80% number should be read as a
 displayed-value commitment, not a prediction of when the cell is worn out.
@@ -230,7 +230,7 @@ a hot environment, and high-current fast charging.
 | Derating slows chemical ageing | **High (direction)** — well-established electrochemistry; magnitude not quantified for this cell |
 | Dates for future nodes | Medium — assumes 1.30 cycles/day (current measured usage) continues |
 
-Revisit after the 250-cycle node (~2026-12-17): a new analytics snapshot
+Revisit after the 250-cycle node (~2026-12-16): a new analytics snapshot
 will show whether `VacVoltageLimit = 4460 mV` and whether displayed health
 moves at all.
 

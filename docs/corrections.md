@@ -228,6 +228,26 @@ Also fixed in this pass:
 - `device.json` gains a `charging_regime` block that records the setting as
   owner-reported.
 
+## 12. Gauge cross-check rate 1.233 → 1.324/day (2026-11-17)
+
+The 11-17 analytics file (gauge write 2026-11-16 18:08 UTC) shows cycle
+**212**, +3 in a single write (26.3 h after 209). NCC stays **3660 mAh**,
+4480 mV, `MaximumCapacityPercent` 101, `CycleCountLastQmax` 138,
+`DailyMaxSoc` 69; `AppleRawMaxCapacity` 3681 (inside the 3678–3708 band).
+
+- **Base**: 2026-11-16 / 209 → **2026-11-17 / 212** (NCC and health unchanged).
+- **Gauge regression**: 7 writes / 1.233/day (5% below the diary) →
+  **8 writes / 1.324/day (2% above)**. The diary primary 1.30/day is unchanged.
+  The earlier reading "5% lower, consistent with a small SOC gain error" in
+  §10/§11 and `shallow-charging-accuracy.md` §5 is withdrawn: one extra point
+  flipped the sign, so the gap is sampling noise and says nothing about gain error.
+- **Knock-on figures** (base moved 3 cycles but only 1 day): 250 node
+  2026-12-17 → **12-16**; 300 node 2027-01-25 → **01-23**; 1000 cycles
+  2028-07-16 / 3505 mAh → **2028-07-15 / 3506 mAh** (3554 chemical-only,
+  138 mAh real wear); 500 cycles ~2027-08 → **~2027-06** (the old month was
+  stale). Pre-registered predictions in `docs/predictions.json` are **not**
+  changed: their 12-12…12-28 window already contains 12-16.
+
 ---
 
 All final numbers in `README.md`, `docs/findings.md` and

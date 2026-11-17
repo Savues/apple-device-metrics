@@ -40,8 +40,8 @@ Consequences:
   only 3659 → 3660 (+1 mAh, a rebound) — the two gauges are independent.
 - Therefore the −0.43 pp drop is a real **−16 mAh** reduction in reported
   nominal capacity (3675→3659), not an artefact of a moving denominator or
-  rounding noise. Eight consecutive analytics snapshots (11-09…11-16,
-  cycles 200/202/203/203/205/207/208/209) all report NCC 3658–3660, so the drop
+  rounding noise. Nine consecutive analytics snapshots (11-09…11-17,
+  cycles 200/202/203/203/205/207/208/209/212) all report NCC 3658–3660, so the drop
   is bracketed to **cycles 194 → 200** — 6 cycles over 4 days (1.50
   cycles/day). **The 11-09 file shows `VacVoltageLimit = 4480 mV` at exactly
   cycle 200**, i.e. the step fires at the node itself. That file is
@@ -49,10 +49,10 @@ Consequences:
   to before that evening. The 11-11/11-12 files share the later `UpdateTime`
   (11-10 22:03) with identical payloads, so 11-12 is a stale re-report of
   the same gauge state, not an independent observation.
-- **Noise scale**: over the eight archived files NCC is 3658–3660 mAh,
+- **Noise scale**: over the nine archived files NCC is 3658–3660 mAh,
   i.e. 1 mAh = 0.027 pp of jitter (with rebounds 3658→3659→3660), while
   `AppleRawMaxCapacity` swings 3707 → 3708 → 3678 → 3678 → 3690 → 3683 →
-  3692 → 3708 (30 mAh = 0.813 pp, **30× noisier**). The −0.43 pp cliff is ~16× the daily
+  3692 → 3708 → 3681 (30 mAh = 0.813 pp, **30× noisier**). The −0.43 pp cliff is ~16× the daily
   NCC noise — a genuine step, not sampling jitter. NCC is *not* strictly
   monotonic day-to-day, even though the sparse 6-row export is.
 - The >100% readings early on are normal pre-calibration overshoot.
@@ -66,7 +66,7 @@ Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal
 
 > Scope note: every percentage in this section is the **export tool's
 > NCC-derived ratio**. Apple's `MaximumCapacityPercent` remained 101 on all
-> eight analytics files and shows no step. See
+> nine analytics files and shows no step. See
 > [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6.
 
 | Interval | Days | +Cycles | Δ health | %/day | %/cycle |
@@ -99,9 +99,9 @@ one rather than a coincidental voltage match. The 2026-11-09 analytics
 file reports `last_value_VacVoltageLimit = 4480 mV` at
 **`CycleCount = 200`** — the step is already active at the node itself, not
 after it. The 4.50 V nameplate is the hardware ceiling, so the software
-target is exactly 0.02 V below it, matching the 200–249 row. Seven further
-snapshots (202–209 cycles) all show 4480 mV. The earliest independent gauge
-write is 2026-11-08 17:08 local; the latest is 2026-11-15 23:48 local.
+target is exactly 0.02 V below it, matching the 200–249 row. Eight further
+snapshots (202–212 cycles) all show 4480 mV. The earliest independent gauge
+write is 2026-11-08 17:08 local; the latest is 2026-11-17 02:08 local.
 See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md)
 and [`voltage-nodes.md`](voltage-nodes.md).
 
@@ -155,15 +155,15 @@ value (4390 mV) is extrapolated.
 ### Predicted upcoming nodes
 
 At the **current measured usage of 1.30 cycles/day = 4801 mAh/day** (76-day
-charging diary, confirmed by 7 non-stale gauge writes = 1.233/day) from 209
-cycles on 2026-11-16. Full forecast with mAh and rate sensitivity:
+charging diary, cross-checked by 8 non-stale gauge writes = 1.324/day) from 212
+cycles on 2026-11-17. Full forecast with mAh and rate sensitivity:
 [`iphone17-forecast.md`](iphone17-forecast.md).
 
 | Node | Expected date | Expected effect |
 |------|---------------|-----------------|
-| 250 | ~2026-12-17 | another ~−0.43 pp / −15.9 mAh step |
-| 300 | ~2027-01-25 | another ~−0.43 pp / −15.9 mAh step |
-| 1000 | ~2028-07-16 | ≥1000 step (extrapolated 4390 mV) |
+| 250 | ~2026-12-16 | another ~−0.43 pp / −15.9 mAh step |
+| 300 | ~2027-01-23 | another ~−0.43 pp / −15.9 mAh step |
+| 1000 | ~2028-07-15 | ≥1000 step (extrapolated 4390 mV) |
 
 The earlier 1.51–1.54 cycles/day estimate came from a regression on sparse
 export rows and was inflated by a heavy 30-day stretch; see the sensitivity
@@ -262,7 +262,7 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
 3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138 can
    be recovered. `CycleCountLastQmax = 138` remains a plausible but untestable
    explanation for the first cliff.
-4. **Next observable node — cycle 250 (~2026-12-17 at current usage)**: expect
+4. **Next observable node — cycle 250 (~2026-12-16 at current usage)**: expect
    `VacVoltageLimit = 4460 mV` and another ~−0.43 pp / −15.9 mAh step. This is
    fully within reach of the rolling 7-day window.
 5. Meaning of the `hrs_soc` column (always 0) is still unknown — no matching
@@ -277,8 +277,8 @@ See [`voltage-reading.md`](../devices/iphone-01/voltage-reading.md).
 
 ## 6. Bottom line
 
-At 209 cycles / 99.13%, the cell is in excellent condition and is not the
+At 212 cycles / 99.13%, the cell is in excellent condition and is not the
 bottleneck. The November drop is best explained by a cycle-node policy
 adjustment rather than sudden chemical failure. Mid-term linear lifetime
 extrapolation is invalid here; the next verifiable event is the 250-cycle
-node around 2026-12-17 (at the measured current usage of 1.30 cycles/day).
+node around 2026-12-16 (at the measured current usage of 1.30 cycles/day).
