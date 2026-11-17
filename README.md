@@ -1,11 +1,33 @@
+<div align="center">
+
 # apple-device-metrics
+
+**English** · [中文](README.zh.md) · [Website](https://savues.github.io/apple-device-metrics/)
+
+[![verify](https://github.com/Savues/apple-device-metrics/actions/workflows/verify.yml/badge.svg)](https://github.com/Savues/apple-device-metrics/actions/workflows/verify.yml)
+[![pages](https://github.com/Savues/apple-device-metrics/actions/workflows/pages.yml/badge.svg)](https://savues.github.io/apple-device-metrics/)
+[![license: CC0-1.0](https://img.shields.io/badge/license-CC0--1.0-blue.svg)](LICENSE)
+![device: iPhone 17](https://img.shields.io/badge/device-iPhone%2017-30a46c.svg)
 
 Longitudinal battery and charging measurements from Apple devices, published as
 de-identified open data.
 
+</div>
+
 All numbers here are **derived from iOS analytics snapshots and charging logs**,
 not from marketing material. The goal is a reproducible record of how the
 reported battery health figure actually behaves over time.
+
+### At a glance (`iphone-01`, latest snapshot 2026-11-16)
+
+| Cycles | NCC | NCC ÷ 3692 | Apple displayed | Voltage target | Usage |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| **209** | **3660 mAh** | **99.13%** | **101%** | **4480 mV** | **1.30 cycles/day** |
+
+Next node: **250 cycles → 4460 mV, ~2026-12-17** (pre-registered in
+[`docs/predictions.json`](docs/predictions.json)).
+
+<p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 forecast curve" width="760"></p>
 
 > **Data-collection condition.** On `iphone-01` iOS *Charge Limit* is set to
 > **80% as a safety net**, but the owner unplugs **before 80%** on almost
@@ -137,32 +159,32 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 
 | Path | Contents |
 |------|----------|
-| `devices/iphone-01/health-samples.csv` | 6 analytics snapshots |
-| `devices/iphone-01/charging-sessions.csv` | 325 de-identified sessions |
-| `devices/iphone-01/device.json` | nameplate parameters |
-| `devices/iphone-01/voltage-reading.md` | single 4.04V @ 70% reading + OCV check |
-| `docs/findings.md` | full analysis |
-| `docs/lifetime-projection.md` | general lifetime reasoning (cross-device context; **not** the iphone-01 forecast) |
-| `docs/iphone17-forecast.md` | **iphone-01-only future battery curve** — at current usage (1.30 cycles/day = 4801 mAh/day), with real mAh |
+| [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | 6-row third-party health export (not analytics snapshots) |
+| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | 325 de-identified sessions |
+| [`devices/iphone-01/device.json`](devices/iphone-01/device.json) | nameplate parameters |
+| [`devices/iphone-01/voltage-reading.md`](devices/iphone-01/voltage-reading.md) | single 4.04V @ 70% reading + OCV check |
+| [`docs/findings.md`](docs/findings.md) | full analysis |
+| [`docs/lifetime-projection.md`](docs/lifetime-projection.md) | general lifetime reasoning (cross-device context; **not** the iphone-01 forecast) |
+| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.md) | **iphone-01-only future battery curve** — at current usage (1.30 cycles/day = 4801 mAh/day), with real mAh |
 | `docs/iphone17-forecast.csv` / `.json` / `.svg` | forecast data and chart |
-| `docs/voltage-capacity-experiment.json` | A/B measurement: voltage limit vs reported capacity |
-| `scripts/forecast.py` | regenerates the iphone-01-only forecast |
-| `scripts/params.py` | derives every forecast parameter (base, usage rates, plateau, node step) from the published data; no hand-entered constants |
-| `scripts/update.sh` | one-command import → timeline → forecast → verify |
-| `scripts/check_links.py` | fails on broken relative Markdown links |
-| `docs/predictions.json` | **pre-registered** 250-node predictions, scored automatically by `verify.py` |
-| `docs/voltage-nodes.md` | cycle-node voltage table and its provenance |
-| `docs/methodology.md` | field definitions, units, known limitations |
-| `docs/shallow-charging-accuracy.md` | **Charge Limit 80% on, but unplugged before 80%**: why the calibration full charge never runs, and which readings it affects |
-| `docs/corrections.md` | errors found and corrected during analysis |
-| `devices/iphone-01/ANALYTICS-EVIDENCE.md` | raw analytics fields + confirmed voltage step |
+| [`docs/voltage-capacity-experiment.json`](docs/voltage-capacity-experiment.json) | A/B measurement: voltage limit vs reported capacity |
+| [`scripts/forecast.py`](scripts/forecast.py) | regenerates the iphone-01-only forecast |
+| [`scripts/params.py`](scripts/params.py) | derives every forecast parameter (base, usage rates, plateau, node step) from the published data; no hand-entered constants |
+| [`scripts/update.sh`](scripts/update.sh) | one-command import → timeline → forecast → verify |
+| [`scripts/check_links.py`](scripts/check_links.py) | fails on broken relative Markdown links |
+| [`docs/predictions.json`](docs/predictions.json) | **pre-registered** 250-node predictions, scored automatically by `verify.py` |
+| [`docs/voltage-nodes.md`](docs/voltage-nodes.md) | cycle-node voltage table and its provenance |
+| [`docs/methodology.md`](docs/methodology.md) | field definitions, units, known limitations |
+| [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.md) | **Charge Limit 80% on, but unplugged before 80%**: why the calibration full charge never runs, and which readings it affects |
+| [`docs/corrections.md`](docs/corrections.md) | errors found and corrected during analysis |
+| [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md) | raw analytics fields + confirmed voltage step |
 | `devices/iphone-01/analytics/YYYY-MM-DD.json` | whitelisted extraction, one file per date |
-| `devices/iphone-01/analytics-timeline.csv` | consolidated date / cycle / voltage / health timeline |
-| `docs/charging-summary.json` | computed aggregates |
-| `scripts/verify.py` | consistency checks |
-| `scripts/parse_charging_log.py` | charging diary parser / de-identifier |
-| `scripts/extract_analytics.py` | analytics `.ips` parser / de-identifier |
-| `scripts/ingest_analytics.py` | append plain-text health-table exports |
+| [`devices/iphone-01/analytics-timeline.csv`](devices/iphone-01/analytics-timeline.csv) | consolidated date / cycle / voltage / health timeline |
+| [`docs/charging-summary.json`](docs/charging-summary.json) | computed aggregates |
+| [`scripts/verify.py`](scripts/verify.py) | consistency checks |
+| [`scripts/parse_charging_log.py`](scripts/parse_charging_log.py) | charging diary parser / de-identifier |
+| [`scripts/extract_analytics.py`](scripts/extract_analytics.py) | analytics `.ips` parser / de-identifier |
+| [`scripts/ingest_analytics.py`](scripts/ingest_analytics.py) | append plain-text health-table exports |
 
 ---
 

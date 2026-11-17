@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>apple-device-metrics</title>
+<meta name="description" content="De-identified longitudinal battery and charging measurements from an iPhone 17: cycle-node voltage steps, health, forecast.">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='3' y='9' width='23' height='14' rx='3' fill='none' stroke='%2330a46c' stroke-width='2.5'/><rect x='27' y='13' width='3' height='6' rx='1' fill='%2330a46c'/><rect x='6' y='12' width='14' height='8' rx='1.5' fill='%2330a46c'/></svg>">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="9" width="23" height="14" rx="3"/><rect x="27" y="13" width="3" height="6" rx="1" class="fill"/><rect x="6" y="12" width="14" height="8" rx="1.5" class="fill"/></svg>
+      apple-device-metrics
+    </a>
+    <nav>
+      <a href="#findings" data-i18n="nav.findings"></a>
+      <a href="#forecast" data-i18n="nav.forecast"></a>
+      <a href="#charging" data-i18n="nav.charging"></a>
+      <a href="#docs" data-i18n="nav.docs"></a>
+      <button id="lang" class="lang" type="button" aria-label="Switch language">中文</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="hero.eyebrow"></p>
+    <h1 data-i18n="hero.title"></h1>
+    <p class="lead" data-i18n="hero.lead"></p>
+    <div class="kpis" id="kpis"></div>
+    <div class="callout">
+      <strong data-i18n="cond.title"></strong>
+      <span data-i18n-html="cond.body"></span>
+    </div>
+  </div>
+</section>
+
+<section id="findings" class="wrap">
+  <h2 data-i18n="find.title"></h2>
+  <div class="grid2">
+    <article class="card">
+      <h3 data-i18n="ladder.title"></h3>
+      <p class="muted" data-i18n="ladder.sub"></p>
+      <div id="ladder" class="ladder"></div>
+      <p class="note" data-i18n-html="ladder.note"></p>
+    </article>
+    <article class="card">
+      <h3 data-i18n="two.title"></h3>
+      <div class="two">
+        <div><div class="big" id="two-ncc"></div><div class="lbl" data-i18n="two.ncc"></div></div>
+        <div><div class="big alt" id="two-apple"></div><div class="lbl" data-i18n="two.apple"></div></div>
+      </div>
+      <p class="note" data-i18n-html="two.note"></p>
+    </article>
+  </div>
+  <article class="card">
+    <h3 data-i18n="hist.title"></h3>
+    <p class="muted" data-i18n="hist.sub"></p>
+    <div id="hist" class="chart"></div>
+  </article>
+  <ol class="facts" id="facts"></ol>
+</section>
+
+<section id="forecast" class="wrap">
+  <h2 data-i18n="fc.title"></h2>
+  <p class="muted" data-i18n="fc.sub"></p>
+  <article class="card">
+    <div id="fc" class="chart tall"></div>
+    <div class="legend">
+      <span><i class="sw blue"></i><span data-i18n="fc.ncc"></span></span>
+      <span><i class="sw green dash"></i><span data-i18n="fc.chem"></span></span>
+    </div>
+  </article>
+  <div class="tbl-wrap"><table id="fc-table"></table></div>
+  <article class="card">
+    <h3 data-i18n="pred.title"></h3>
+    <p class="muted" data-i18n="pred.sub"></p>
+    <ul class="preds" id="preds"></ul>
+  </article>
+</section>
+
+<section id="charging" class="wrap">
+  <h2 data-i18n="ch.title"></h2>
+  <div class="grid2">
+    <article class="card">
+      <h3 data-i18n="ch.end"></h3>
+      <div id="endsoc" class="chart"></div>
+    </article>
+    <article class="card">
+      <h3 data-i18n="ch.stats"></h3>
+      <dl class="stats" id="chstats"></dl>
+    </article>
+  </div>
+</section>
+
+<section id="docs" class="wrap">
+  <h2 data-i18n="docs.title"></h2>
+  <div class="docs" id="doclist"></div>
+  <h3 data-i18n="repro.title"></h3>
+  <pre><code>git clone https://github.com/Savues/apple-device-metrics
+cd apple-device-metrics
+python3 scripts/verify.py        # all checks + prediction scoring
+scripts/update.sh new.ips        # import → forecast → verify</code></pre>
+</section>
+</main>
+
+<footer class="wrap foot">
+  <span data-i18n-html="foot.text"></span>
+  <span id="gen"></span>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -400,6 +400,18 @@ check("forecast: first CSV row matches base",
       int(frows[0]["cycle"]) == latest["cycle_count"] and
       float(frows[0]["ncc_mah"]) == float(latest["nominal_charge_capacity_mah"]))
 
+print("\n=== README at-a-glance tables (en + zh) ===")
+b = fc["base"]
+glance = (f"| **{b['cycle']}** | **{b['ncc_mah']} mAh** | "
+          f"**{b['health_pct']:.2f}%** | **{b['apple_max_capacity_percent']}%** | "
+          f"**{latest['vac_voltage_limit_mv']} mV** | "
+          f"**{fc['current_usage']['cycles_per_day']:.2f} ")
+for readme in ("README.md", "README.zh.md"):
+    text = open(os.path.join(ROOT, readme), encoding="utf-8").read()
+    check(f"{readme}: at-a-glance row matches latest snapshot",
+          glance in text and f"snapshot {b['date']}" in text.replace("快照 ", "snapshot "),
+          "update the table after importing a new snapshot")
+
 print("\n=== pre-registered predictions ===")
 pr = json.load(open(os.path.join(ROOT, "docs/predictions.json"),
                     encoding="utf-8"))["predictions"]
