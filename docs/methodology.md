@@ -37,8 +37,8 @@ D, while the charging diary uses calendar days.
 
 ### Charging diary
 
-`devices/iphone-01/charging-sessions.csv` — <!--v:sessions-->336<!--/--> sessions, 2026-09-01 to
-2026-11-15 (<!--v:span_days-->78<!--/--> days). Source is a plain-text diary with three lines per
+`devices/iphone-01/charging-sessions.csv` — <!--v:sessions-->336<!--/--> sessions since
+2026-09-01 (<!--v:span_days-->78<!--/--> days). Source is a plain-text diary with three lines per
 session:
 
 ```

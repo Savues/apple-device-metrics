@@ -44,7 +44,7 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + 6-row health export, <!--v:sessions-->336<!--/--> charge sessions, 1 voltage reading | 2026-09-01 → <!--v:base_date-->2026-11-17<!--/--> (<!--v:span_days-->78<!--/-->-day charging diary) |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + 6-row health export, <!--v:sessions-->336<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->78<!--/--> days |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, reference only | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); no `VacVoltageLimit` | 2026-11-15 |
 

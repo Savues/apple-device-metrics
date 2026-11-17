@@ -12,7 +12,7 @@ Two facts, neither of them visible in the data:
    the normal stopping point.
 2. In practice the session ends **before 80%** on essentially every charge.
 
-The data agree. The <!--v:span_days-->78<!--/-->-day diary (<!--v:sessions-->336<!--/--> sessions, 2026-09-01 … 2026-11-15)
+The data agree. The <!--v:span_days-->78<!--/-->-day diary (<!--v:sessions-->336<!--/--> sessions since 2026-09-01)
 never exceeds 81% SOC, and only 4 sessions end at ≥80% (80/80/80/81). Those
 four are consistent with the limit catching a late unplug. Termination piles
 up at <!--v:top_a-->69<!--/-->% (<!--v:top_a_n-->46<!--/--> sessions) and <!--v:top_b-->79<!--/-->% (<!--v:top_b_n-->27<!--/--> sessions).

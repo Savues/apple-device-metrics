@@ -40,7 +40,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 
 | ID | 平台 | 数据 | 覆盖 |
 |----|------|------|------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->9<!--/--> 份 analytics 快照 + 6 行健康导出，<!--v:sessions-->336<!--/--> 次充电会话，1 次电压读数 | 2026-09-01 → <!--v:base_date-->2026-11-17<!--/-->（<!--v:span_days-->78<!--/--> 天充电日志） |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->9<!--/--> 份 analytics 快照 + 6 行健康导出，<!--v:sessions-->336<!--/--> 次充电会话，1 次电压读数 | 2026-09-01 起的充电日志，<!--v:span_days-->78<!--/--> 天 |
 | [`reference-01`](devices/reference-01/README.zh.md) | iOS 17.6.1，1420 次循环，3.83V / 2815mAh / 4.45V | 单份 analytics 快照，仅作参考 | 2026-11-15 |
 | [`reference-02`](devices/reference-02/README.zh.md) | iOS 15.1，3.83V / 3110mAh / 4.45V | 铭牌 + 一份电量计快照（2919 次循环，67%）；没有 `VacVoltageLimit` | 2026-11-15 |
 

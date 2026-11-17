@@ -36,8 +36,8 @@ D 标注，而充电日志使用自然日。
 
 ### 充电日志
 
-`devices/iphone-01/charging-sessions.csv` —— <!--v:sessions-->336<!--/--> 个充电会话，2026-09-01 至
-2026-11-15（<!--v:span_days-->78<!--/--> 天）。来源是纯文本日志，每个充电会话三行：
+`devices/iphone-01/charging-sessions.csv` —— <!--v:sessions-->336<!--/--> 个充电会话，自
+2026-09-01 起（<!--v:span_days-->78<!--/--> 天）。来源是纯文本日志，每个充电会话三行：
 
 ```
 开始充电：<date> <time> | 结束充电：<date> <time>
