@@ -89,7 +89,7 @@ numbers should be treated as an empirical hypothesis, not a specification.
 
 ## Relation to this dataset
 
-`iphone-01` is an **iPhone 17** (model family confirmed by the owner), so the
+`iphone-01` is an **iPhone 17** (model family confirmed, exact variant unknown), so the
 **iPhone 17 series** table above is the applicable one, not merely a table
 that happens to share the same 4.50 V limit. Its 1–199 row (4.50 V) matches
 the nameplate, and the 200–249 row (4.48 V) is what the 2026-11-09 analytics

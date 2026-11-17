@@ -127,8 +127,8 @@ at current usage it is **~2028-07**, three months later.
 - On this device's own numbers there is **no sign of accelerating wear**.
   The plateau slope is measured from its own data and is tiny.
 - That is why the earlier cross-device concave curve should not be applied:
-  it was shaped by `reference-01/02`, whose usage the owner describes as
-  irregular.
+  it was shaped by `reference-01/02`, which are older phones with irregular
+  usage.
 - **80% is not a deadline here.** With ~0.0048 pp/day plateau plus three
   remaining node steps, this curve does not reach 80% within the modelled
   window (to 1500 cycles). The official 1000/80 figure is a displayed-value
@@ -148,7 +148,7 @@ at current usage it is **~2028-07**, three months later.
 | Long-term plateau staying linear | **Low** — real cells can accelerate with heat/high SOC; not modelled |
 | Apple displayed health | **Not modelled** — no observed variation |
 
-The model deliberately contains **no ageing acceleration term**. That makes
+The model has **no ageing acceleration term**. That makes
 it optimistic beyond ~500 cycles. Treat everything past 1000 cycles as an
 extrapolation, not a prediction.
 

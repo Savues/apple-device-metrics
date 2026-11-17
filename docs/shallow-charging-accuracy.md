@@ -4,13 +4,13 @@
 correction, see [`corrections.md` §11](corrections.md)). No repository
 conclusions are overturned; several gain an explicit condition.
 
-## 1. The actual charging method (owner-reported)
+## 1. The actual charging method
 
-Two facts, both from the owner:
+Two facts, both from my own records:
 
 1. iOS **Charge Limit is enabled and set to 80%**. It is a safety net, not
    the normal stopping point.
-2. In practice the owner **unplugs before 80%** on essentially every session.
+2. In practice I **unplug before 80%** on essentially every session.
 
 The data agree. The <!--v:span_days-->76<!--/-->-day diary (<!--v:sessions-->325<!--/--> sessions, 2026-09-01 … 2026-11-15)
 never exceeds 81% SOC, and only 4 sessions end at ≥80% (80/80/80/81). Those
@@ -19,7 +19,7 @@ up at 69% (45 sessions) and 79% (26 sessions).
 
 The date Charge Limit was switched on is **not recorded**. The analytics
 whitelist has no charge-limit configuration field, so the setting itself
-rests on the owner's report, not on a bit in the data.
+rests on what I say it does, not on a bit in the data.
 
 An earlier revision of this note said Charge Limit was **not** enabled. That
 was wrong and is withdrawn ([`corrections.md` §11](corrections.md)).
@@ -43,7 +43,7 @@ Two precise readings:
 
 Apple does not say *when* or *how* the occasional 100% charge happens. It
 can only happen while the phone is on the charger. A charge that is always
-ended by the owner below 80% leaves the system no session in which to run
+ended by me below 80% leaves the system no session in which to run
 past the limit.
 
 | Method | Calibration mechanism | Can it complete? |
@@ -68,7 +68,7 @@ is configured but pre-empted.
 
 Caveats kept explicit:
 
-- The Charge Limit setting and its start date are owner-reported only.
+- The Charge Limit setting and its start date come from me, not from the data.
 - `CycleCountLastQmax` semantics are **not publicly documented**. Cycle 138
   maps to roughly 2026-09-29 … 10-01, *inside* the diary window where no full
   charge occurred. So either Qmax learning does not require 100%, or the

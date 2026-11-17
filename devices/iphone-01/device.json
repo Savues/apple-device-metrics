@@ -2,7 +2,7 @@
   "device_id": "iphone-01",
   "label": "Primary iPhone",
   "model": "iPhone 17",
-  "model_note": "Model family supplied by the owner; specific variant (Pro / Pro Max / etc.) is not identified and is not inferred from the nameplate capacity.",
+  "model_note": "Model family as reported; specific variant (Pro / Pro Max / etc.) is not identified and is not inferred from the nameplate capacity.",
   "nominal_voltage_v": 3.887,
   "rated_capacity_mah": 3692,
   "charge_limit_voltage_v": 4.5,
@@ -24,8 +24,8 @@
   ],
   "charging_regime": {
     "ios_charge_limit_pct": 80,
-    "ios_charge_limit_role": "safety net; the owner unplugs before 80% on almost every session",
-    "source": "owner-reported 2026-11-16; not present in analytics fields",
+    "ios_charge_limit_role": "safety net; unplugged before 80% on almost every session",
+    "source": "reported 2026-11-16; not present in analytics fields",
     "enabled_since": null,
     "observed": "76-day diary max soc_end 81%, 4 of 325 sessions at >=80%; DailyMaxSoc max 74% across every archived analytics file"
   },

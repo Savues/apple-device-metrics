@@ -47,7 +47,7 @@ session:
 电池电量：<a>% → <b>%  | 每分钟充入：<r>%
 ```
 
-The raw diary is **deliberately excluded** from this repository. It carries a
+The raw diary is **not in this repository**. It carries a
 device identifier in its header line and second-resolution wall-clock
 timestamps that would reveal sleep, wake and travel patterns.
 
@@ -104,7 +104,7 @@ Applied by `scripts/parse_charging_log.py`:
 shape remain analysable, while no absolute date or clock time can be
 recovered. Health snapshot dates are retained (6 coarse points, no
 behavioural detail). `device.json` contains nameplate electrical parameters
-plus the model family (`iPhone 17`, published with the owner's consent) —
+plus the model family (`iPhone 17`, published on purpose) —
 no serial, UDID, exact variant identifier or analytics filename.
 
 ## Derived fields

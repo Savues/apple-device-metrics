@@ -50,7 +50,7 @@ was necessarily recorded **before** the step, under the ~4.50 V target.
 never exceeds **81% SOC** — only 4 sessions reach ≥80% (80/80/80/81) and the
 termination SOC piles up at 69% (45 sessions) and 79% (26 sessions),
 consistent with **unplugging before the 80% Charge Limit** (enabled as a
-safety net, owner-reported). A
+safety net, as I described it). A
 near-full charge is required to reach ~4.50 V, so no session inside the log
 window could have produced 4496 mV.
 
@@ -129,7 +129,7 @@ gap, versus only 1.89 pp on `iphone-01`. Two devices show the gap is not a
 fixed offset or rounding; Apple uses its own calibrated baseline. See
 [`devices/reference-01/README.md`](../reference-01/README.md).
 **Third device — sign reversal, unexplained.** `reference-02` (2919
-cycles, **original battery**, owner-confirmed) gives `NCC/nameplate =
+cycles, **original battery**, confirmed on the device) gives `NCC/nameplate =
 71.13%` vs Apple **67**, a **−4.13 pp** gap. So the "gap grows with age"
 statement above does **not** generalise — with three devices the gap is
 clearly device-dependent. Apple's implied baseline there is 3301 mAh,

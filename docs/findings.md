@@ -63,7 +63,7 @@ Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal
 
 ## 2. Degradation shape: steps, not a slope
 
-> Scope note: every percentage in this section is the **export tool's
+> Every percentage in this section is the **export tool's
 > NCC-derived ratio**. Apple's `MaximumCapacityPercent` remained 101 on all
 > <!--v:snap_word-->nine<!--/--> analytics files and shows no step. See
 > [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6.
@@ -93,7 +93,7 @@ charge-voltage target at 200 / 250 / 300 / 1000 cycles by 0.02 V each
 the reported health figure.
 
 **Confirmed on this device**: `iphone-01` is an **iPhone 17** (model family
-confirmed by the owner), so the iPhone 17 series table is the applicable
+confirmed, exact variant unknown), so the iPhone 17 series table is the applicable
 one rather than a coincidental voltage match. The 2026-11-09 analytics
 file reports `last_value_VacVoltageLimit = 4480 mV` at
 **`CycleCount = 200`** — the step is already active at the node itself, not
@@ -115,7 +115,7 @@ snapshot exists and a direct 4500 mV reading is unobtainable. Indirect
 evidence fills the gap: the lifetime `MaximumPackVoltage = 4496 mV` exceeds
 the current 4480 mV target by 16 mV, so it must have been recorded under a
 higher ceiling (~4.50 V). The diary never exceeds 81% SOC (termination piles
-up at 69/79%: the owner unplugs before the 80% Charge Limit), so the peak must come from a full
+up at 69/79%: I unplug before the 80% Charge Limit), so the peak must come from a full
 charge **before 09-01**, at ≈101 cycles or fewer — well inside the 1–199
 band. See
 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §1.1.

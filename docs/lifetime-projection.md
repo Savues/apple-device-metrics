@@ -6,9 +6,9 @@ easy to conflate: **displayed health**, **usable capacity per charge**, and
 **chemical ageing rate**.
 
 > ⚠️ **For the main device's future curve, use
-> [`iphone17-forecast.md`](iphone17-forecast.md) instead.** Per the owner,
-> the two reference devices had irregular usage and must not be used to fit
-> `iphone-01`'s trajectory. The cross-device anchors in §1A below are kept
+> [`iphone17-forecast.md`](iphone17-forecast.md) instead.** My two reference
+> phones had irregular usage and must not be used to fit `iphone-01`'s
+> trajectory. The cross-device anchors in §1A below are kept
 > as general context only, **not** as a prediction for this device.
 >
 > ⚠️ **Correction (2026-11-15)**: an earlier version of this document used
@@ -40,7 +40,7 @@ voltage limit changed. Full data:
 **Qmax does not move.** Changing the voltage limit alone removed 8.0 pp from
 the reported capacity without any chemical change — it is a **reversible
 charge-limit effect**, not ageing. A 4.08 V reading also appears in both
-screenshots; per the owner it is the battery's current level/voltage and is
+screenshots; as far as I can tell it is the battery's current level/voltage and is
 irrelevant to the comparison (the independent variable is the configured
 voltage limit: 4500 vs 4390 mV).
 

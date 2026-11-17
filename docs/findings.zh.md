@@ -55,7 +55,7 @@ nominal_health_pct = nominal_capacity_mah / 3692 × 100
 
 ## 2. 衰减形态：阶跃，而非斜坡
 
-> 范围说明：本节中所有百分比均为**导出工具基于 NCC 计算的比值**。Apple 的 `MaximumCapacityPercent` 在全部
+> 本节中所有百分比均为**导出工具基于 NCC 计算的比值**。Apple 的 `MaximumCapacityPercent` 在全部
 > <!--v:snap_n-->9<!--/--> 个 analytics 文件中都保持 101，没有出现阶跃。见
 > [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.zh.md) §6。
 
@@ -77,7 +77,7 @@ nominal_health_pct = nominal_capacity_mah / 3692 × 100
 
 一份广为流传的第三方说法称，iOS 会在 200 / 250 / 300 / 1000 次循环时各将软件充电电压上限降低 0.02 V（≥1000 时降 0.05 V），从而减少可充入的容量，并体现在报告的健康度数字中。
 
-**已在本设备上证实**：`iphone-01` 是一台 **iPhone 17**（机型系列已由机主确认），因此适用的是 iPhone 17 系列的对照表，而不是碰巧电压吻合。2026-11-09 的 analytics
+**已在本设备上证实**：`iphone-01` 是一台 **iPhone 17**（机型系列已确认，具体变体未知），因此适用的是 iPhone 17 系列的对照表，而不是碰巧电压吻合。2026-11-09 的 analytics
 文件在 **`CycleCount = 200`** 时报告 `last_value_VacVoltageLimit = 4480 mV` — 阶跃在节点处即已生效，而非在节点之后。4.50 V 铭牌值是硬件上限，因此软件目标值恰好比它低 0.02 V，与 200–249 一行吻合。之后另外 <!--v:further_n-->8<!--/--> 个快照（<!--v:further_range-->202–212<!--/--> 次循环）均显示 4480 mV。最早的独立电量计写入为 2026-11-08 17:08 本地时间；最晚为 <!--v:gauge_last_local-->2026-11-17 02:08<!--/--> 本地时间。
 见 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.zh.md)
 和 [`voltage-nodes.md`](voltage-nodes.zh.md)。
@@ -87,7 +87,7 @@ nominal_health_pct = nominal_capacity_mah / 3692 × 100
 ⇒ 约 1 pp 的满充容量；实测为 0.43 pp。数量级相同，报告值经过了平滑 / 重新基准化。
 
 **数据边界**：iOS 只保留约 7–8 天的 analytics 数据，因此不存在 200 次循环之前的快照，也无法获得 4500 mV 的直接读数。间接证据弥补了这一空缺：全生命周期
-`MaximumPackVoltage = 4496 mV` 比当前 4480 mV 的目标高出 16 mV，因此它必然是在更高的上限（约 4.50 V）下记录的。充电日志中 SOC 从未超过 81%（结束点集中在 69/79%：机主在 80% 充电上限（Charge Limit）之前拔掉插头），所以该峰值必然来自 **09-01 之前**的一次满充，当时循环次数 ≈101 或更少 — 完全处于 1–199
+`MaximumPackVoltage = 4496 mV` 比当前 4480 mV 的目标高出 16 mV，因此它必然是在更高的上限（约 4.50 V）下记录的。充电日志中 SOC 从未超过 81%（结束点集中在 69/79%：我在 80% 充电上限（Charge Limit）之前拔掉插头），所以该峰值必然来自 **09-01 之前**的一次满充，当时循环次数 ≈101 或更少 — 完全处于 1–199
 区间内。见
 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.zh.md) §1.1。
 
