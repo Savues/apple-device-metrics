@@ -106,8 +106,8 @@ What can be computed is the baseline implied by Apple's figure
 On the first two devices Apple's baseline sits **below** the nameplate;
 here it sits **6% above** it. That is why the sign flips. Note the implied
 3301 mAh is close to `MaximumFCC = 3265 mAh` and `NCCMax = 3211 mAh`, but
-with only aggregate values we cannot establish the exact formula — and we
-do not guess one.
+with only aggregate values the exact formula cannot be established, and it is
+not guessed at here.
 
 This still **supports §6** rather than contradicting it: Apple's health
 figure is demonstrably not `NCC / nameplate`, and its internal baseline is

@@ -50,7 +50,7 @@ was necessarily recorded **before** the step, under the ~4.50 V target.
 never exceeds **81% SOC** — only 4 sessions reach ≥80% (80/80/80/81) and the
 termination SOC piles up at 69% (45 sessions) and 79% (26 sessions),
 consistent with **unplugging before the 80% Charge Limit** (enabled as a
-safety net, as I described it). A
+safety net, as reported). A
 near-full charge is required to reach ~4.50 V, so no session inside the log
 window could have produced 4496 mV.
 
@@ -185,7 +185,7 @@ So the two cliffs plausibly have **different** causes:
 | 09-23 → 10-13 | 126→152, contains **138** | −0.41 pp | Qmax / gauge recalibration |
 | 11-05 → 11-09 | 194→200, ends at the **200** node | −0.43 pp | `VacVoltageLimit` 4500→4480 |
 
-This is a hypothesis, not yet proven: the <!--v:snap_word-->nine<!--/--> analytics files we have all
+This is a hypothesis, not yet proven: the <!--v:snap_word-->nine<!--/--> analytics files available all
 sit at <!--v:cycle_range-->200–212<!--/--> cycles, i.e. at or after the step. An analytics snapshot from
 **before 200 cycles** (and ideally one from around 138) would show whether
 `VacVoltageLimit` was 4500 mV and

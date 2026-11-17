@@ -11,7 +11,7 @@
 
 </div>
 
-这是我自己的几台 iPhone 的电池与充电测量数据，去标识化后公开。数字来自 iOS
+三台 iPhone 的电池与充电测量数据，去标识化后公开。数字来自 iOS
 analytics 文件和充电日志，不来自宣传材料；把这些文件变成下面这些表格的脚本也
 在仓库里。
 
@@ -21,7 +21,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | **<!--v:base_cycle-->212<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> 次循环/天** |
 
-下一个节点：250 次循环 → 4460 mV，点估计约 <!--v:date_next-->2026-12-16<!--/-->；按我能测到的几种用量口径，落在
+下一个节点：250 次循环 → 4460 mV，点估计约 <!--v:date_next-->2026-12-16<!--/-->；按数据里现有的几种用量口径，落在
 <!--v:date_next_lo-->2026-12-11<!--/--> … <!--v:date_next_hi-->2026-12-25<!--/-->（已事前登记在
 [`docs/predictions.json`](docs/predictions.json)）。1000 次循环那一行同样是 <!--v:date_kilo-->2028-07-15<!--/-->，区间也一样宽：
 <!--v:date_kilo_lo-->2028-04-15<!--/--> … <!--v:date_kilo_hi-->2029-01-20<!--/-->。单个日期只是点估计，不是承诺
@@ -29,9 +29,9 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 预测曲线" width="760"></p>
 
-> 这台机器的充电上限（Charge Limit）设在 80% 兜底，但我几乎每次在 80% 之前就拔线，
+> 这台机器的充电上限（Charge Limit）设在 80% 兜底，但几乎每次充电都在 80% 之前结束，
 > 所以苹果偶尔进行的满充校准，在这 <!--v:span_days-->76<!--/--> 天里一次也没轮到。依赖循环次数的结论（降压节点、预测）
-> 不受影响；由电量计推算的容量和显示的 SOC 带有偏差，我无法量化。细节见
+> 不受影响；由电量计推算的容量和显示的 SOC 带有偏差，无法在此量化。细节见
 > [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.zh.md)。
 
 ---
@@ -44,7 +44,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 | [`reference-01`](devices/reference-01/README.zh.md) | iOS 17.6.1，1420 次循环，3.83V / 2815mAh / 4.45V | 单份 analytics 快照，仅作参考 | 2026-11-15 |
 | [`reference-02`](devices/reference-02/README.zh.md) | iOS 15.1，3.83V / 3110mAh / 4.45V | 铭牌 + 一份电量计快照（2919 次循环，67%）；没有 `VacVoltageLimit` | 2026-11-15 |
 
-这两台参考机器本来就在手上，我用它们核对降压节点表、两种健康度算法和铭牌能量的
+两台参考机是较旧的机器、使用不规律，仅用来核对降压节点表、两种健康度算法和铭牌能量
 算术。它们不进入 `iphone-01` 的统计，也不进入它的预测。唯一作为数据出现的地方是
 [`docs/lifetime-projection.md`](docs/lifetime-projection.zh.md) 里的跨设备锚点，那处
 标注了它们是参考点。
@@ -94,7 +94,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
    11-11 的过期重复上报，不是新的观测。
 
 完整分析在 [`docs/findings.md`](docs/findings.zh.md)；
-[`docs/corrections.md`](docs/corrections.zh.md) 记录了我在过程中搞错的地方，以及哪些
+[`docs/corrections.md`](docs/corrections.zh.md) 记录了分析过程中发现的错误，以及哪些
 早先的说法现在已经作废。
 
 ---

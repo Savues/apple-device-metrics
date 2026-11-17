@@ -11,7 +11,7 @@
 
 </div>
 
-Battery and charging measurements from my own iPhones, published de-identified.
+Battery and charging measurements from three iPhones, published de-identified.
 The numbers come from iOS analytics files and the charging log, not from
 marketing material; the scripts that turn those files into the tables below are
 in the repository.
@@ -23,7 +23,7 @@ in the repository.
 | **<!--v:base_cycle-->212<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> cycles/day** |
 
 Next node: 250 cycles → 4460 mV, point estimate ~<!--v:date_next-->2026-12-16<!--/-->, i.e.
-<!--v:date_next_lo-->2026-12-11<!--/--> … <!--v:date_next_hi-->2026-12-25<!--/--> across the usage windows I could measure
+<!--v:date_next_lo-->2026-12-11<!--/--> … <!--v:date_next_hi-->2026-12-25<!--/--> across the usage windows present in the data
 (pre-registered in [`docs/predictions.json`](docs/predictions.json)). The 1000-cycle row is
 <!--v:date_kilo-->2028-07-15<!--/--> by the same arithmetic and spreads just as widely,
 <!--v:date_kilo_lo-->2028-04-15<!--/--> … <!--v:date_kilo_hi-->2029-01-20<!--/-->; treat the single date as a point estimate, not a
@@ -31,11 +31,11 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 forecast curve" width="760"></p>
 
-> Charge Limit on this phone is set to 80% as a fallback, but I unplug before
-> 80% almost every session, so the calibration full charge iOS occasionally runs
+> Charge Limit on this phone is set to 80% as a fallback, but sessions end
+> before 80% almost every time, so the calibration full charge iOS occasionally runs
 > never got a chance during these <!--v:span_days-->76<!--/--> days. Findings that depend on cycle count
 > (the voltage steps, the forecast) are unaffected. The gauge-derived capacity
-> and the displayed SOC carry a bias I cannot quantify. Details in
+> and the displayed SOC carry a bias that cannot be quantified here. Details in
 > [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.md).
 
 ---
@@ -48,9 +48,9 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, reference only | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); no `VacVoltageLimit` | 2026-11-15 |
 
-The two reference phones were here anyway, so I used them to check the
-voltage-node ladder, the two ways of measuring health, and the nameplate energy
-arithmetic. They never enter `iphone-01`'s statistics or its forecast. The one
+The two reference phones are older machines with irregular usage. They serve to
+check the voltage-node ladder, the two ways of measuring health, and the
+nameplate energy arithmetic. They never enter `iphone-01`'s statistics or its forecast. The one
 place they show up as data is the cross-device anchors in
 [`docs/lifetime-projection.md`](docs/lifetime-projection.md), where they are
 labelled as reference points.
@@ -108,8 +108,8 @@ More devices can be added as sibling directories under `devices/`.
    11-11, not a new observation.
 
 The full analysis is in [`docs/findings.md`](docs/findings.md), and
-[`docs/corrections.md`](docs/corrections.md) lists what I got wrong on the way,
-including which earlier statements are now void.
+[`docs/corrections.md`](docs/corrections.md) lists the errors found along the
+way, with their current status.
 
 ---
 
@@ -122,8 +122,7 @@ since the first record, no calendar date), `duration_sec`, `soc_start`,
 timestamps would show sleep and travel patterns, so they are dropped at parse
 time.
 
-Two published fields do carry behaviour, and I would rather name them than
-leave them unmentioned: `gauge_update_time_utc` in each analytics snapshot
+Two published fields do carry behaviour, so both are named here: `gauge_update_time_utc` in each analytics snapshot
 (second resolution; it is what separates a stale re-report from a new gauge
 write) and the daily `daily_min_soc_pct` / `daily_max_soc_pct` envelope.
 Health-export rows keep their dates, six of them, with no behavioural detail.

@@ -5,7 +5,7 @@ that anyone reusing the numbers knows which earlier statements are void.
 
 ## Status at a glance
 
-Twelve entries. Five describe claims I later withdrew; the status column says
+Twelve entries. Five describe claims withdrawn later; the status column says
 what still holds.
 
 | § | Topic | Status | What the data says now |
@@ -20,7 +20,7 @@ what still holds.
 | 8 | Apple "80% at 1000 cycles" as an anchor | withdrawn | it is a display-value target that includes reversible lock-in |
 | 9 | Forecast base refresh (11-16) | superseded by §12 | base is now 11-17 / 212 cycles |
 | 10 | Firmware full-charge fallback | withdrawn | premise (§11) was wrong |
-| 11 | "Charge Limit is not enabled" | withdrawn | it is on (80%); I unplug before it |
+| 11 | "Charge Limit is not enabled" | withdrawn | it is on (80%); sessions end before it |
 | 12 | Gauge rate 1.233 → 1.324/day | **standing** | latest import; predictions unchanged |
 
 
@@ -249,7 +249,7 @@ Also fixed in this pass:
   <80), and the arbitrary "≤5 sessions at ≥80%" check is replaced by "no
   session ≥95%".
 - `device.json` gains a `charging_regime` block that records the setting as
-  reported by me, since no analytics field carries it.
+  reported, since no analytics field carries it.
 
 ## 12. Gauge cross-check rate 1.233 → 1.324/day (2026-11-17)
 

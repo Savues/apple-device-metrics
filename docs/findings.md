@@ -115,7 +115,7 @@ snapshot exists and a direct 4500 mV reading is unobtainable. Indirect
 evidence fills the gap: the lifetime `MaximumPackVoltage = 4496 mV` exceeds
 the current 4480 mV target by 16 mV, so it must have been recorded under a
 higher ceiling (~4.50 V). The diary never exceeds 81% SOC (termination piles
-up at 69/79%: I unplug before the 80% Charge Limit), so the peak must come from a full
+up at 69/79%: sessions end before the 80% Charge Limit), so the peak must come from a full
 charge **before 09-01**, at ≈101 cycles or fewer — well inside the 1–199
 band. See
 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §1.1.

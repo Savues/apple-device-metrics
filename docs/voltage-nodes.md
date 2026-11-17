@@ -100,7 +100,7 @@ applicable table and the −0.02 V magnitude.
 
 The 250 / 300 / ≥1000 rows (4.46 / 4.44 / ~4.39 V) remain **predictions for
 this model** — the third-party post gives no ≥1000 value for the iPhone 17
-series; our 4390 mV figure is extrapolated from the iPhone 13 series'
+series; the 4390 mV figure here is extrapolated from the iPhone 13 series'
 −0.05 V final step.
 
 - The nameplate value (4.50 V) is the cell's **hardware ceiling**; the iOS

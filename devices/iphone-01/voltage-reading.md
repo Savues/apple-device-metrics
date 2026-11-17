@@ -26,7 +26,7 @@ Interpolated: **4.04 V ≈ 68.8% SOC**. Expected ~4.05 V at 70%; offset
 −0.01 V, consistent with a light load sag. No voltage collapse or elevated
 internal resistance is indicated — the cell itself looks healthy.
 
-## What this reading cannot tell us
+## What this reading cannot establish
 
 - It is a **loaded terminal voltage**, not a resting OCV.
 - A mid-SOC point cannot distinguish a 4.50 V from a 4.48 V full-charge
