@@ -390,6 +390,28 @@ check("forecast: committed outputs equal a fresh forecast.py run",
       not stale_out, "stale: " + ", ".join(stale_out) if stale_out else "")
 check("forecast: sensitivity covers 6 usage windows",
       len(fc["sensitivity_to_usage_rate"]) == 6)
+
+# Chart labels must not collide. The x axis starts at the base cycle, so the
+# early nodes (250/300) land close together: their labels have to be stacked.
+import forecast  # noqa: E402  (module has a main guard, importing is safe)
+svg = open(os.path.join(ROOT, "docs/iphone17-forecast.svg"), encoding="utf-8").read()
+labels = []
+for m in re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"([^>]*)>(.*?)</text>', svg):
+    x, y, attrs, txt = float(m.group(1)), float(m.group(2)), m.group(3), m.group(4)
+    size = float(re.search(r'font-size="([\d.]+)"', attrs).group(1)) \
+        if 'font-size="' in attrs else 12.0
+    w = forecast.text_width(txt, size)
+    if 'text-anchor="end"' in attrs:
+        x -= w
+    elif 'text-anchor="middle"' in attrs:
+        x -= w / 2
+    labels.append((x, y - 0.9 * size, w, 1.2 * size, txt))
+clashes = [f"{a[4]!r} x {b[4]!r}"
+           for i, a in enumerate(labels) for b in labels[i + 1:]
+           if a[0] < b[0] + b[2] - 1 and b[0] < a[0] + a[2] - 1
+           and a[1] < b[1] + b[3] - 1 and b[1] < a[1] + a[3] - 1]
+check("forecast: chart labels do not overlap",
+      not clashes, "; ".join(clashes) if clashes else f"{len(labels)} labels")
 frows = load("docs/iphone17-forecast.csv")
 check("forecast: CSV has real mAh columns",
       "ncc_mah" in frows[0] and "chemical_only_mah" in frows[0])
