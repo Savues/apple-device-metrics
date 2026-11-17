@@ -26,6 +26,10 @@ import json
 import os
 from datetime import datetime, timezone
 
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from params import band_of  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARCHIVE_DIR = os.path.join(ROOT, "devices", "iphone-01", "analytics")
 TIMELINE = os.path.join(ROOT, "devices", "iphone-01", "analytics-timeline.csv")
@@ -69,24 +73,16 @@ TIMELINE_COLS = ["date", "cycle_count", "vac_voltage_limit_mv",
                  "cycle_count_last_qmax", "qmax_cell0_mah",
                  "gauge_update_time_utc", "ios_version"]
 
-# iPhone 17 series (iphone-01 model family, owner-confirmed), third-party
-# table (see docs/voltage-nodes.md). (upper_bound_exclusive, limit_mV, label)
-# Rows 1-199 .. 300-999 are from the published table; the >=1000 value is
-# EXTRAPOLATED from the iPhone 13 series' -0.05V final step, because the
-# source post gives no >=1000 value for the 17 series.
-BANDS = [(200, 4500, "1-199"), (250, 4480, "200-249"),
-         (300, 4460, "250-299"), (1000, 4440, "300-999"),
-         (10 ** 9, 4390, ">=1000")]
+# The cycle-node ladder lives in params.py (BANDS); rows 1-199 .. 300-999 are
+# from the published third-party table, the >=1000 value is extrapolated from
+# the iPhone 13 series' -0.05V final step (see docs/voltage-nodes.md).
 
 BANNED = ("deviceId", "uuid", "incident_id", "configUuid", "carrier",
           "Country", "productSku", "serial", "Serial", "ChemID")
 
 
 def expected_voltage(cycles):
-    for upper, mv, label in BANDS:
-        if cycles < upper:
-            return mv, label
-    return None, "unknown"
+    return band_of(cycles)
 
 
 def parse(path):

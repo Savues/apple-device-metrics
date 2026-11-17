@@ -61,6 +61,12 @@ def zh_word(n):
     return str(n)
 
 
+def sessions_csv():
+    with open(os.path.join(ROOT, "devices/iphone-01/charging-sessions.csv"),
+              newline="", encoding="utf-8") as f:
+        return list(csv.DictReader(f))
+
+
 def timeline():
     with open(os.path.join(ROOT, "devices/iphone-01/analytics-timeline.csv"),
               newline="", encoding="utf-8") as f:
@@ -86,6 +92,8 @@ def values():
         latest["gauge_update_time_utc"].replace("Z", "+00:00"))
     d500 = date.fromisoformat(base["date"]) + \
         timedelta(days=(500 - base["cycle"]) / rate)
+    sens = [c for c in fc["sensitivity_to_usage_rate"]
+            if "withdrawn" not in c["case"] and "old" not in c["case"]]
     n = len(snaps)
     raw_range = max(raw) - min(raw)
 
@@ -128,6 +136,13 @@ def values():
         "date_next": nodes[250]["date"],
         "date_after": nodes[300]["date"],
         "date_kilo": nodes[1000]["date"],
+        # Spread of the forecast dates over the measured usage windows. The
+        # withdrawn 57-day regression is excluded: it is kept as a sensitivity
+        # case, not as a live usage estimate.
+        "date_next_lo": min(c["date_250"] for c in sens),
+        "date_next_hi": max(c["date_250"] for c in sens),
+        "date_kilo_lo": min(c["date_1000"] for c in sens),
+        "date_kilo_hi": max(c["date_1000"] for c in sens),
         "date_half": d500.strftime("%Y-%m"),
         "ncc_kilo": rnd(k['ncc_mah']),
         "chem_kilo": rnd(k['chemical_only_mah']),
@@ -135,20 +150,52 @@ def values():
         "wear_kilo": rnd(k['total_wear_mah']),
         "wear_kilo_pct": rnd(k['total_wear_mah'] / RATED * 100, 1),
     }
+    # Usage/charging figures quoted in prose. They move whenever the diary is
+    # re-parsed, so they are marked too instead of being edited by hand.
+    ss = json.load(open(os.path.join(ROOT, "docs/charging-summary.json"),
+                        encoding="utf-8"))
+    zero = sum(1 for r in sessions_csv() if int(r["charged_pct"]) == 0)
+    anom = sum(1 for r in sessions_csv() if r["anomaly"])
+    v.update({
+        "sessions": str(ss["sessions"]),
+        "span_days": str(ss["span_days"]),
+        "efc": f"{ss['equivalent_full_cycles']:.2f}",
+        "mah_day": str(round(P["diary"]["mah_per_day"])),
+        "rate_mean": f"{ss['avg_rate_pct_per_min']:.2f}",
+        "rate_mean_clean": f"{ss['avg_rate_excl_anomaly']:.2f}",
+        "rate_mean_clean_1": f"{ss['avg_rate_excl_anomaly']:.1f}",
+        "rate_mean_3": f"{ss['avg_rate_pct_per_min']:.3f}",
+        "rate_clean_3": f"{ss['avg_rate_excl_anomaly']:.3f}",
+        "clean_sessions": str(ss["clean_sessions"]),
+        "zero_sessions": str(zero),
+        "zero_pct": f"{zero / ss['sessions'] * 100:.1f}",
+        "dropped_sessions": str(ss["soc_dropped_sessions"]),
+        "anom_sessions": str(anom),
+        "anom_pct": f"{anom / ss['sessions'] * 100:.1f}",
+        "dur_hours": f"{ss['total_duration_hours']:.1f}",
+    })
     return v, blocks(P, fc)
 
 
-SENS_LABELS = {
-    "recent 7 days": ("recent 7 days", "最近 7 天"),
-    "recent 14 days": ("recent 14 days", "最近 14 天"),
-    "recent 30 days": ("recent 30 days", "最近 30 天"),
-    "independent gauge snapshots (regression)":
-        ("independent gauge snapshots (regression)", "独立电量计快照（回归）"),
-    "full 76-day diary (primary)":
-        ("full 76-day diary (primary)", "完整 76 天充电日志（主值）"),
-    "57-day export regression (old, biased high)":
-        ("old 57-day regression (withdrawn)", "旧的 57 天回归（已撤回）"),
-}
+def sens_label(case):
+    """(en, zh) label for a sensitivity row.
+
+    The case strings carry the diary length ("full 76-day diary (primary)"),
+    so they are matched by shape: a hard-coded key would raise KeyError the
+    first time the diary is re-parsed and the span changes.
+    """
+    if case.startswith("recent ") and case.endswith(" days"):
+        d = case.split()[1]
+        return case, f"最近 {d} 天"
+    if case.startswith("independent gauge"):
+        return "independent gauge snapshots (regression)", "独立电量计快照（回归）"
+    if case.startswith("full ") and "diary" in case:
+        d = case.split()[1].split("-")[0]
+        return case, f"完整 {d} 天充电日志（主值）"
+    if "export regression" in case:
+        d = case.split("-")[0]
+        return f"old {d}-day regression (withdrawn)", f"旧的 {d} 天回归（已撤回）"
+    return case, case
 
 
 def blocks(P, fc):
@@ -191,7 +238,7 @@ def blocks(P, fc):
     ):
         rows = [head, "|--------------|-----------|---------|----------|-----------|---------------|"]
         for r in fc["sensitivity_to_usage_rate"]:
-            en, zh = SENS_LABELS[r["case"]]
+            en, zh = sens_label(r["case"])
             primary = "primary" in r["case"]
             cells = [en if lang == "en" else zh,
                      f"{r['cycles_per_day']:.2f}" if primary else f"{r['cycles_per_day']}",

@@ -23,6 +23,20 @@ RATED = 3692
 # The >=1000 value is extrapolated from the iPhone 13 series.
 NODES = [(250, 40), (300, 60), (1000, 110)]
 FIRST_BAND_MV = 4500
+
+# (upper bound exclusive, software limit mV, band label) — the third-party
+# iPhone 17 ladder both the importer and the site render. Kept here so the
+# table exists exactly once; annotate_analytics/verify/build_site import it.
+BANDS = [(200, 4500, "1-199"), (250, 4480, "200-249"), (300, 4460, "250-299"),
+         (1000, 4440, "300-999"), (10 ** 9, 4390, ">=1000")]
+
+
+def band_of(cycles):
+    """-> (expected software limit mV, band label) for a cycle count."""
+    for upper, mv, label in BANDS:
+        if cycles < upper:
+            return mv, label
+    return None, "unknown"
 STEP_NODE = 200            # the node observed on this device
 STEP_THRESHOLD_MAH = 10    # NCC drop above this in one export segment = step
                            # (daily gauge jitter is <=2 mAh)

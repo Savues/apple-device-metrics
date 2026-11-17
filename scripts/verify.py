@@ -13,7 +13,7 @@ from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from params import RATED, derive  # noqa: E402
+from params import RATED, band_of, derive  # noqa: E402
 
 P = derive()
 failures = []
@@ -137,8 +137,7 @@ ana_files = sorted(f for f in os.listdir(ana_dir) if f.endswith(".json")) \
     if os.path.isdir(ana_dir) else []
 check("at least one analytics snapshot", len(ana_files) > 0, f"{len(ana_files)} file(s)")
 
-# Third-party node table: (<upper bound exclusive>, limit mV)
-bands = [(200, 4500), (250, 4480), (300, 4460), (1000, 4440), (10 ** 9, 4390)]
+# Third-party node table lives in params.BANDS (single copy).
 snaps = []
 for fn in ana_files:
     p = os.path.join(ana_dir, fn)
@@ -156,7 +155,7 @@ for fn in ana_files:
     check(f"{fn}: health matches NCC/3692",
           abs(r.get("nominal_health_pct", 0) -
               r.get("nominal_charge_capacity_mah", 0) / RATED * 100) < 0.01)
-    exp = next(mv for upper, mv in bands if r.get("cycle_count", 0) < upper)
+    exp = band_of(r.get("cycle_count", 0))[0]
     check(f"{fn}: VacVoltageLimit matches node band",
           r.get("vac_voltage_limit_mv") == exp,
           f"cycle={r.get('cycle_count')} {r.get('vac_voltage_limit_mv')}mV "
@@ -363,7 +362,12 @@ check("forecast: base is the latest analytics snapshot",
       fc["base"]["cycle"] == latest["cycle_count"] and
       fc["base"]["ncc_mah"] == latest["nominal_charge_capacity_mah"],
       f"{fc['base']['date']} / {fc['base']['cycle']} / {fc['base']['ncc_mah']}")
-LADDER = {250: 4460, 300: 4440, 1000: 4390}
+# Future nodes = the ladder rows the base has not passed yet (last band is
+# the extrapolated >=1000 value, so it is keyed by its lower bound).
+from params import BANDS  # noqa: E402
+# The ladder node sits at each band's lower bound (BANDS[i][0]) and takes the
+# next band's limit, e.g. 250 -> 4460 mV. The final band is extrapolated.
+LADDER = {BANDS[i][0]: BANDS[i + 1][1] for i in range(len(BANDS) - 1)}
 future = [n for n in LADDER if n > fc["base"]["cycle"]]
 check("forecast: node table = future nodes on the 4460/4440/4390 ladder",
       [(n["cycle"], n["vac_voltage_limit_mv"]) for n in fc["nodes"]] ==
