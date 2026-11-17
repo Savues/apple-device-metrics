@@ -5,10 +5,14 @@ Copies site/ plus the published data files the page reads, so the page always
 shows the repository's current numbers.
     python3 scripts/build_site.py && python3 -m http.server -d _site
 """
+import json
 import os
 import shutil
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
+from params import BANDS, RATED  # noqa: E402
 OUT = os.path.join(ROOT, "_site")
 DATA = [
     "docs/iphone17-forecast.json", "docs/iphone17-forecast.csv",
@@ -24,6 +28,16 @@ shutil.copytree(os.path.join(ROOT, "site"), OUT)
 os.makedirs(os.path.join(OUT, "data"))
 for p in DATA:
     shutil.copy(os.path.join(ROOT, p), os.path.join(OUT, "data"))
+# The voltage ladder and the nameplate are derived, not typed into the page:
+# BANDS[i][0] is a band's lower bound, and the ladder step at that node takes
+# the next band's limit (250 -> 4460 mV).
+ladder = {"rated_mah": RATED,
+          "bands": [{"from": 1, "mv": BANDS[0][1]}] +
+                   [{"from": BANDS[i][0], "mv": BANDS[i + 1][1]}
+                    for i in range(len(BANDS) - 1)]}
+with open(os.path.join(OUT, "data", "voltage-ladder.json"), "w", encoding="utf-8") as f:
+    json.dump(ladder, f, indent=2)
+
 # Cache-bust static assets with a content hash so updates show immediately.
 import hashlib  # noqa: E402
 html = os.path.join(OUT, "index.html")
@@ -33,4 +47,4 @@ for asset in ("style.css", "i18n.js", "app.js"):
     text = text.replace(f'"{asset}"', f'"{asset}?v={h}"')
 open(html, "w", encoding="utf-8").write(text)
 open(os.path.join(OUT, ".nojekyll"), "w").close()
-print(f"built {os.path.relpath(OUT, ROOT)}/ with {len(DATA)} data files")
+print(f"built {os.path.relpath(OUT, ROOT)}/ with {len(DATA) + 1} data files")

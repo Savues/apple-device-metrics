@@ -1,5 +1,6 @@
 // Renders the page from the repository's own data files (copied to data/ at
-// build time by scripts/build_site.py). No numbers are hard-coded here.
+// build time by scripts/build_site.py). Every figure comes from data/ — the
+// voltage ladder included (data/voltage-ladder.json, built from params.py).
 (() => {
   const REPO = "https://github.com/Savues/apple-device-metrics/blob/main/";
   const DOCS = {
@@ -8,14 +9,16 @@
     "lifetime-projection": "docs/lifetime-projection", "methodology": "docs/methodology",
     "corrections": "docs/corrections", "ANALYTICS-EVIDENCE": "devices/iphone-01/ANALYTICS-EVIDENCE",
   };
-  const LADDER = [[1, 4500], [200, 4480], [250, 4460], [300, 4440], [1000, 4390]];
-  const RATED = 3692;
   let lang = localStorage.getItem("adm-lang") ||
     ((navigator.language || "en").toLowerCase().startsWith("zh") ? "zh" : "en");
   let D = null;
 
   const $ = (s) => document.querySelector(s);
-  const t = (k) => (I18N[lang][k] ?? I18N.en[k] ?? k);
+  const t = (k) => {
+    const v = I18N[lang][k] ?? I18N.en[k] ?? k;
+    // Some entries are [title, desc] arrays; only strings carry {rated}.
+    return typeof v === "string" ? v.replace(/\{rated\}/g, D ? fmt(D.rated) : "…") : v;
+  };
   const docUrl = (k, l = lang) => REPO + DOCS[k] + (l === "zh" ? ".zh.md" : ".md");
   const fill = (s) => s.replace(/\{doc:([\w-]+)\}/g, (_, k) => docUrl(k));
   const fmt = (n, d = 0) => Number(n).toLocaleString(lang === "zh" ? "zh-CN" : "en-US",
@@ -29,16 +32,18 @@
   }
   async function load() {
     const get = (f) => fetch("data/" + f).then((r) => { if (!r.ok) throw new Error(f); return r; });
-    const [fc, pred, sum, tl, hx, ss] = await Promise.all([
+    const [fc, pred, sum, tl, hx, ss, lad] = await Promise.all([
       get("iphone17-forecast.json").then((r) => r.json()),
       get("predictions.json").then((r) => r.json()),
       get("charging-summary.json").then((r) => r.json()),
       get("analytics-timeline.csv").then((r) => r.text()).then(csv),
       get("health-samples.csv").then((r) => r.text()).then(csv),
       get("charging-sessions.csv").then((r) => r.text()).then(csv),
+      get("voltage-ladder.json").then((r) => r.json()),
     ]);
     const fcRows = await get("iphone17-forecast.csv").then((r) => r.text()).then(csv);
-    D = { fc, pred, sum, tl, hx, ss, fcRows };
+    D = { fc, pred, sum, tl, hx, ss, fcRows,
+      ladder: lad.bands.map((b) => [b.from, b.mv]), rated: lad.rated_mah };
   }
 
   // ---------- tiny SVG helpers ----------
@@ -84,13 +89,14 @@
 
   function ladder() {
     const cyc = D.fc.base.cycle;
-    const cur = LADDER.filter(([c]) => cyc >= c).pop()[0];
-    const lo = 4350, hi = 4500;
-    $("#ladder").innerHTML = LADDER.map(([c, mv], i) => {
-      const next = LADDER[i + 1] ? LADDER[i + 1][0] - 1 : "∞";
+    const L = D.ladder;
+    const cur = L.filter(([c]) => cyc >= c).pop()[0];
+    const lo = L[L.length - 1][1] - 40, hi = L[0][1];
+    $("#ladder").innerHTML = L.map(([c, mv], i) => {
+      const next = L[i + 1] ? L[i + 1][0] - 1 : "∞";
       const cls = c === cur ? "now" : c < cur ? "past" : "";
       const tag = c === cur ? `<span class="tag">${t("now")}</span>`
-        : c === 1000 ? `<span class="tag ext">${t("extrapolated")}</span>` : "";
+        : i === L.length - 1 ? `<span class="tag ext">${t("extrapolated")}</span>` : "";
       const pct = ((mv - lo) / (hi - lo)) * 100;
       return `<div class="rung ${cls}"><span>${c}–${next}</span><div class="bar"><i style="width:${pct}%"></i></div><span class="mv">${mv} mV${tag}</span></div>`;
     }).join("");
@@ -108,14 +114,31 @@
     D.tl.forEach((r) => pts.set(+r.cycle_count, +r.nominal_charge_capacity_mah));
     const data = [...pts].sort((a, b) => a[0] - b[0]);
     const [W, H] = size($("#hist")), m = { l: 46, r: 14, t: 14, b: 26 };
-    const x0 = 115, x1 = Math.max(215, data[data.length - 1][0] + 5);
-    const y0 = 3650, y1 = 3700;
+    // Domains follow the data: a fixed 3650-3700 window silently clipped the
+    // newest points once a voltage step pushed NCC below it.
+    const cs = data.map((d) => d[0]), vs = data.map((d) => d[1]);
+    const x0 = Math.min(...cs) - 4, x1 = Math.max(...cs) + 4;
+    const lo = Math.min(...vs), hi = Math.max(...vs);
+    const pad = Math.max(4, (hi - lo) * 0.15);
+    const ystep = Math.max(5, Math.ceil((hi - lo + 2 * pad) / 5 / 5) * 5);
+    const y0 = Math.floor((lo - pad) / ystep) * ystep;
+    const y1 = Math.ceil((hi + pad) / ystep) * ystep;
+    const yt = [];
+    for (let v = y0; v <= y1; v += ystep) yt.push(v);
+    const xstep = Math.max(20, Math.ceil((x1 - x0) / 4 / 20) * 20);
+    const xt = [];
+    for (let c = Math.ceil(x0 / xstep) * xstep; c <= x1; c += xstep) xt.push(c);
     const X = (c) => m.l + (c - x0) / (x1 - x0) * (W - m.l - m.r);
     const Y = (v) => m.t + (y1 - v) / (y1 - y0) * (H - m.t - m.b);
     const s = svg($("#hist"), W, H);
-    axes(s, W, H, m, [3650, 3660, 3670, 3680, 3690, 3700], (v) => v, [120, 140, 160, 180, 200], (v) => v, X, Y);
-    add(s, "line", { x1: X(200), x2: X(200), y1: m.t, y2: H - m.b, stroke: css("--amber"), "stroke-dasharray": "4 4" });
-    add(s, "text", { x: X(200) + 4, y: m.t + 10, class: "lbl" }, "200 → 4480 mV");
+    axes(s, W, H, m, yt, (v) => v, xt, (v) => v, X, Y);
+    // Mark the start of the band the device is in now, from the ladder data.
+    const band = D.ladder.filter(([c]) => D.fc.base.cycle >= c).pop();
+    if (band && band[0] > x0) {
+      add(s, "line", { x1: X(band[0]), x2: X(band[0]), y1: m.t, y2: H - m.b,
+        stroke: css("--amber"), "stroke-dasharray": "4 4" });
+      add(s, "text", { x: X(band[0]) + 4, y: m.t + 10, class: "lbl" }, `${band[0]} → ${band[1]} mV`);
+    }
     add(s, "path", { d: data.map(([c, v], i) => `${i ? "L" : "M"}${X(c)},${Y(v)}`).join(""),
       fill: "none", stroke: css("--blue"), "stroke-width": 2.5 });
     data.forEach(([c, v]) => add(s, "circle", { cx: X(c), cy: Y(v), r: 3.2, fill: css("--blue") }));
