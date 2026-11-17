@@ -53,7 +53,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 
 ---
 
-## 主要发现
+## 数据说明了什么
 
 1. "电池健康度"有两个不同的数字。`nominal_health_pct`（<!--v:base_health_two-->99.13<!--/-->%）是
    `NominalChargeCapacity / 3692`，导出工具按固定铭牌算出的比值；苹果自己的

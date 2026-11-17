@@ -49,7 +49,7 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); no `VacVoltageLimit` | 2026-11-15 |
 
 The two reference phones were here anyway, so I used them to check the
-voltage-node ladder, the two way of measuring health, and the nameplate energy
+voltage-node ladder, the two ways of measuring health, and the nameplate energy
 arithmetic. They never enter `iphone-01`'s statistics or its forecast. The one
 place they show up as data is the cross-device anchors in
 [`docs/lifetime-projection.md`](docs/lifetime-projection.md), where they are
@@ -59,7 +59,7 @@ More devices can be added as sibling directories under `devices/`.
 
 ---
 
-## Headline findings
+## What the data shows
 
 1. There are two different "battery health" numbers. `nominal_health_pct`
    (<!--v:base_health_two-->99.13<!--/-->%) is `NominalChargeCapacity / 3692`, a ratio the export tool computes
