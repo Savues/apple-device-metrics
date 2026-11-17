@@ -337,6 +337,24 @@ check("forecast: usage rate equals diary throughput",
       fc["current_usage"]["mah_per_day_throughput"] ==
       round(P["diary"]["mah_per_day"]),
       f"{fc['current_usage']['cycles_per_day']}/day")
+# The distributions quoted in findings.md §3 are derived, not typed: check
+# they still cover every session, so a re-parsed diary cannot leave a stale
+# band behind.
+import sync_docs  # noqa: E402
+_v, _b = sync_docs.values()
+_shares = sum(float(_v[k]) for k in ("speed_gt2", "speed_15_2", "speed_1_15",
+                                     "speed_0_1", "speed_le0"))
+check("charging: speed shares sum to 100%", abs(_shares - 100) < 0.4,
+      f"{_shares:.1f}%")
+_bands = [int(r.split("|")[2]) for r in
+          _b["soc_bands_en"].strip().splitlines()[2:]]
+check("charging: start-SOC bands cover every session",
+      sum(_bands) == len(sess), f"{sum(_bands)} of {len(sess)}")
+check("charging: top end points are the two largest clusters",
+      int(_v["top_a_n"]) >= int(_v["top_b_n"]) and
+      int(_v["ge80_n"]) <= int(_v["end_mid_n"]),
+      f"{_v['top_a']}%={_v['top_a_n']}, {_v['top_b']}%={_v['top_b_n']}")
+
 check("forecast: diary total matches charging-summary.json",
       P["diary"]["total_charged_pct"] ==
       json.load(open(os.path.join(ROOT, "docs/charging-summary.json")))

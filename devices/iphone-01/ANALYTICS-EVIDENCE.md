@@ -46,9 +46,9 @@ target:
 A pack cannot reach 4496 mV while the charge target is 4480 mV, so the peak
 was necessarily recorded **before** the step, under the ~4.50 V target.
 
-**When was that peak recorded?** The <!--v:span_days-->76<!--/-->-day charging diary (09-01…11-15)
+**When was that peak recorded?** The <!--v:span_days-->78<!--/-->-day charging diary (09-01…11-15)
 never exceeds **81% SOC** — only 4 sessions reach ≥80% (80/80/80/81) and the
-termination SOC piles up at 69% (45 sessions) and 79% (26 sessions),
+termination SOC piles up at <!--v:top_a-->69<!--/-->% (<!--v:top_a_n-->46<!--/--> sessions) and <!--v:top_b-->79<!--/-->% (<!--v:top_b_n-->27<!--/--> sessions),
 consistent with **unplugging before the 80% Charge Limit** (enabled as a
 safety net, as reported). A
 near-full charge is required to reach ~4.50 V, so no session inside the log

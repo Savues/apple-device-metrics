@@ -24,6 +24,7 @@ import math
 import os
 import re
 import sys
+from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -154,8 +155,23 @@ def values():
     # re-parsed, so they are marked too instead of being edited by hand.
     ss = json.load(open(os.path.join(ROOT, "docs/charging-summary.json"),
                         encoding="utf-8"))
-    zero = sum(1 for r in sessions_csv() if int(r["charged_pct"]) == 0)
-    anom = sum(1 for r in sessions_csv() if r["anomaly"])
+    sess = sessions_csv()
+    zero = sum(1 for r in sess if int(r["charged_pct"]) == 0)
+    anom = sum(1 for r in sess if r["anomaly"])
+
+    # Distributions quoted in findings.md §3. Computed here rather than read
+    # from charging-summary.json, which only carries the aggregates.
+    rate = [float(r["rate_pct_per_min"]) for r in sess]
+    ends = [int(r["soc_end"]) for r in sess]
+    total = len(sess)
+
+    def share(pred):
+        return f"{sum(1 for x in rate if pred(x)) / total * 100:.1f}"
+
+    top = Counter(ends).most_common(2)
+    ge80 = sorted(e for e in ends if e >= 80)
+    longest = max(sess, key=lambda r: int(r["duration_sec"]))
+    fastest = max(sess, key=lambda r: float(r["rate_pct_per_min"]))
     v.update({
         "sessions": str(ss["sessions"]),
         "span_days": str(ss["span_days"]),
@@ -173,6 +189,30 @@ def values():
         "anom_sessions": str(anom),
         "anom_pct": f"{anom / ss['sessions'] * 100:.1f}",
         "dur_hours": f"{ss['total_duration_hours']:.1f}",
+        "dur_hours_2": f"{ss['total_duration_hours']:.2f}",
+        "charged_sum": str(ss["total_charged_pct"]),
+        "avg_dur": f"{ss['avg_duration_min']:.2f}",
+        "avg_charge": f"{ss['avg_charged_pct']:.2f}",
+        "sess_day": f"{ss['avg_sessions_per_day']:.2f}",
+        "sess_day_min": str(ss["min_sessions_one_day"]),
+        "sess_day_max": str(ss["max_sessions_one_day"]),
+        "ge80_n": str(len(ge80)),
+        "ge80_list": "/".join(map(str, ge80)),
+        "end_mid_n": str(sum(1 for e in ends if 65 <= e <= 81)),
+        "top_a": str(top[0][0]),
+        "top_a_n": str(top[0][1]),
+        "top_b": str(top[1][0]),
+        "top_b_n": str(top[1][1]),
+        "speed_gt2": share(lambda x: x > 2.0),
+        "speed_15_2": share(lambda x: 1.5 < x <= 2.0),
+        "speed_1_15": share(lambda x: 1.0 < x <= 1.5),
+        "speed_0_1": share(lambda x: 0 < x <= 1.0),
+        "speed_le0": share(lambda x: x <= 0),
+        "longest_h": f"{int(longest['duration_sec']) / 3600:.2f}",
+        "longest_pct": longest["charged_pct"],
+        "fastest": f"{float(fastest['rate_pct_per_min']):.2f}",
+        "fastest_lo": fastest["soc_start"],
+        "fastest_hi": fastest["soc_end"],
     })
     return v, blocks(P, fc)
 
@@ -248,6 +288,24 @@ def blocks(P, fc):
                 cells = [f"**{c}**" for c in cells]
             rows.append("| " + " | ".join(cells) + " |")
         out[f"fc_sens_{lang}"] = "\n".join(rows)
+
+    # Start-SOC bands, recomputed from the sessions CSV.
+    sess = sessions_csv()
+    bands = [(0, 20, "0–20%"), (20, 40, "20–40%"),
+             (40, 60, "40–60%"), (60, 80, "60–80%")]
+    for lang, head in (
+        ("en", "| Start SOC | Sessions | Mean charged | Mean rate |"),
+        ("zh", "| 起始 SOC | 会话数 | 平均充入 | 平均速率 |"),
+    ):
+        rows = [head, "|-----------|----------|--------------|-----------|"]
+        for lo, hi, label in bands:
+            sel = [r for r in sess if lo <= int(r["soc_start"]) < hi]
+            if not sel:
+                continue
+            mean_charged = sum(int(r["charged_pct"]) for r in sel) / len(sel)
+            mean_rate = sum(float(r["rate_pct_per_min"]) for r in sel) / len(sel)
+            rows.append(f"| {label} | {len(sel)} | {mean_charged:.1f}% | {mean_rate:.2f} %/min |")
+        out[f"soc_bands_{lang}"] = "\n".join(rows)
 
     tl = timeline()
     for lang, head, stale in (

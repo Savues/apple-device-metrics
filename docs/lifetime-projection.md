@@ -97,7 +97,7 @@ long-term degradation — that is why the 0.0165 %/day extrapolation was
 withdrawn — but the "concavity" must not be interpreted as a pure ageing
 law either.
 
-At **<!--v:rate-->1.30<!--/--> cycles/day** from <!--v:base_cycle-->212<!--/--> cycles on <!--v:base_date-->2026-11-17<!--/--> (this document is
+At **<!--v:rate-->1.31<!--/--> cycles/day** from <!--v:base_cycle-->212<!--/--> cycles on <!--v:base_date-->2026-11-17<!--/--> (this document is
 general context, not the iphone-01 forecast — see
 [`iphone17-forecast.md`](iphone17-forecast.md) for that):
 
@@ -106,7 +106,7 @@ general context, not the iphone-01 forecast — see
 | 250 cycles | ~<!--v:date_next-->2026-12-16<!--/--> | 2nd voltage step (4460 mV) |
 | 300 cycles | ~<!--v:date_after-->2027-01-23<!--/--> | 3rd step (4440 mV) |
 | 500 cycles | ~<!--v:date_half-->2027-06<!--/--> | — |
-| **1000 cycles** | **~<!--v:date_kilo-->2028-07-15<!--/-->** | ≥1000 step (extrapolated 4390 mV) |
+| **1000 cycles** | **~<!--v:date_kilo-->2028-07-10<!--/-->** | ≥1000 step (extrapolated 4390 mV) |
 
 ### B. Usable capacity per full charge
 
@@ -177,7 +177,7 @@ user will notice.
 **Medium term (500–1000 cycles, ~2027–2028).** Note this section draws on
 cross-device context only. The iphone-01-only forecast
 ([`iphone17-forecast.md`](iphone17-forecast.md)) puts NCC health at ~94.9%
-(<!--v:ncc_kilo-->3506<!--/--> mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
+(<!--v:ncc_kilo-->3507<!--/--> mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
 Where a displayed 80% does occur, per §0 a large part of it is reversible
 lock-in rather than wear, so it is neither a pure wear measure nor an
 end-of-life threshold.
@@ -186,7 +186,7 @@ end-of-life threshold.
 still report 73% and 67%. A battery is usable well beyond 1000 cycles. With
 this owner's habit of **unplugging before the 80% Charge Limit, with shallow 20–70% top-ups** (documented in
 `findings.md` §3), the effective stress is lower still — the log shows the
-device never once reached a full charge in 76 days, which is itself a
+device never once reached a full charge in <!--v:span_days-->78<!--/--> days, which is itself a
 strong life-extension factor (BU-808 Table 2: shallower depth of discharge
 gives dramatically more cycles).
 
