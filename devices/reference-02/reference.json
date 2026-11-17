@@ -46,7 +46,7 @@
     ">=1000": 4340
   },
   "prediction_basis": "Same 4.45 V nameplate as reference-01 (measured 4340 mV at 1420 cycles) and this device's MaximumPackVoltage = 4449 mV ~ 4450 mV top rung. The ladder itself is NOT measured on this device.",
-  "battery_status": "Owner confirms original, never-replaced battery. OriginalBattery=0 has unconfirmed semantics (only null/1 are documented publicly); BatterySerialChanged=False is consistent with an original battery.",
+  "battery_status": "Original, never-replaced battery, confirmed on the device. OriginalBattery=0 has unconfirmed semantics (only null/1 are documented publicly); BatterySerialChanged=False is consistent with an original battery.",
   "caveats": [
     "OriginalBattery = 0 must NOT be read as 'replacement battery'. That inference was withdrawn; see docs/corrections.md.",
     "NCC/nameplate (71.13%) is LOWER than Apple's MaximumCapacityPercent (67) is above it: the implied Apple baseline is 3301 mAh, 6% above the 3110 mAh nameplate. This sign reversal is currently unexplained and is device-dependent, not simply age-related.",

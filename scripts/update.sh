@@ -20,12 +20,13 @@ fi
 python3 scripts/forecast.py > /dev/null
 echo "forecast regenerated: $(python3 -c 'import json;b=json.load(open("docs/iphone17-forecast.json"))["base"];print(b["date"], b["cycle"], "cycles", b["ncc_mah"], "mAh")')"
 python3 scripts/sync_docs.py
-python3 scripts/verify.py > /tmp/adm-verify.$$ 2>&1 || {
-    grep -E 'FAIL|FAILURES' /tmp/adm-verify.$$
-    rm -f /tmp/adm-verify.$$
+log="${TMPDIR:-/tmp}/adm-verify.$$.log"
+python3 scripts/verify.py > "$log" 2>&1 || {
+    echo "verify failed; full output kept in $log"
+    grep -E 'FAIL|FAILURES' "$log" || tail -n 20 "$log"
     exit 1
 }
-tail -n 1 /tmp/adm-verify.$$
-rm -f /tmp/adm-verify.$$
+tail -n 1 "$log"
+rm -f "$log"
 git status --short
 echo "Marked numbers in the docs were refreshed by sync_docs.py; review unmarked prose (e.g. new findings) by hand."

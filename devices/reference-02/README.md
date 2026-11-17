@@ -9,7 +9,7 @@ snapshot. This device is kept separate and is **not** merged into
 > ⚠️ `OriginalBattery = 0` appears in the gauge record. Public references
 > only document `null` / `1` for this field, so **`0` has no confirmed
 > meaning**; an earlier note in this repo read it as "replacement battery"
-> and that was an unfounded inference. The owner confirms this device has
+> and that was an unfounded inference. This device has
 > its **original, never-replaced battery**, consistent with
 > `BatterySerialChanged = False`. See
 > [`docs/corrections.md`](../../docs/corrections.md).
@@ -91,7 +91,7 @@ aggregate set entirely.
 
 The gap **reverses sign** on this device. An earlier version of this repo
 attributed that to a replacement battery; **that explanation was withdrawn**
-— the owner confirms an original, never-replaced battery. The sign reversal
+— the battery is original and never replaced. The sign reversal
 is currently **unexplained**.
 
 What can be computed is the baseline implied by Apple's figure

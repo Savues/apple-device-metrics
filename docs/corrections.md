@@ -99,8 +99,8 @@ The `reference-02` gauge record has `OriginalBattery = 0`. It was read as
 `NCC / nameplate` vs `MaximumCapacityPercent` gap reversed sign (−4.13 pp).
 
 That inference was **unfounded**: public sources only document `null` / `1`
-for this field, and the device owner confirms the battery is **original and
-never replaced** (`BatterySerialChanged = False` is consistent with that).
+for this field, and the battery is **original and
+never replaced** — confirmed on the device (`BatterySerialChanged = False` is consistent with that).
 The field's `0` value is now recorded with **unconfirmed semantics**.
 
 Consequences:
@@ -161,7 +161,7 @@ forecast. Changes:
   diary primary. The sensitivity table now uses 1.233.
 - **A 7th row briefly added to `health-samples.csv` was withdrawn**: its
   `raw_capacity=3692` and `min_soc=39` were copied from the previous row, not
-  measured (11-16 analytics has 3708 / 15). The 6-row export stays a pure
+  measured (11-16 analytics has 3708 / 15). The <!--v:export_n-->6<!--/-->-row export stays a pure
   single-source dataset; analytics data lives only in
   `analytics/` + `analytics-timeline.csv`. `verify.py` now cross-checks the
   two sources **on overlapping dates** instead of assuming the newest rows
@@ -181,7 +181,7 @@ forecast. Changes:
 
 An analysis of long-term 80% charging asserted: *"Apple's 80% limit is an
 official feature, so firmware must know the device may never reach full and
-will not naively assume 100% every time."* The owner corrected the premise:
+will not naively assume 100% every time."* The premise was corrected later:
 
 - The device does **not** use iOS *Charge Limit*. Charging is cut manually by
   a timer before 80% — an external interrupt with no configured state.
@@ -199,10 +199,11 @@ assessment is therefore **raised**, with a concrete causal mechanism rather
 than a vague correlation — see
 [`shallow-charging-accuracy.md`](shallow-charging-accuracy.md).
 
-Verified on-device: `DailyMaxSoc` across all 8 analytics files is
-`42/72/72/72/74/59/63/71` (max 74%); the 76-day diary has 325 sessions with
-`soc_end ≤ 81` and only 4 at ≥80%. No full charge and no calibration occurred
-in the window.
+Verified on-device on 2026-11-16, when 8 analytics files were available:
+`DailyMaxSoc` read `42/72/72/72/74/59/63/71` (max 74%), and the 76-day diary
+had 325 sessions with `soc_end ≤ 81` and only 4 at ≥80%. No full charge and no
+calibration occurred in the window. Later imports have not changed either
+conclusion.
 
 Unaffected conclusions: CycleCount, the voltage step table, `NCC/3692`, the
 A/B lock-in result, and the forecast curve — none depends on a full charge.
@@ -221,8 +222,8 @@ resolves to an Apple TV Remote page; replaced with the verified `108055`.
 
 §10 and the first version of `shallow-charging-accuracy.md` stated that iOS
 Charge Limit was **off** and charging was cut only by a manual timer. The
-owner corrected this: **Charge Limit is on at 80% as a safety net**, and the
-owner unplugs before 80% on almost every session.
+this was corrected later: **Charge Limit is on at 80% as a safety net**, and
+sessions end before 80% on almost every charge.
 
 What changes:
 

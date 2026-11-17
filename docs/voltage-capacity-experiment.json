@@ -1,6 +1,6 @@
 {
   "experiment_id": "voltage-capacity-ab-2026-11-15",
-  "source": "Two screenshots of a battery diagnostic tool, supplied by the owner as reference",
+  "source": "Two screenshots of a battery diagnostic tool, supplied as reference",
   "device_under_test": {
     "model": "iPhone 16 Pro Max",
     "battery": "original",
@@ -50,14 +50,21 @@
     "pct_capacity_per_70mv": 5.1,
     "total_pct_points_for_110mv": 8.01
   },
-  "interpretation": "Qmax (chemical capacity) is identical in A and B while the reported actual/full-charge capacity falls by 371 mAh. The displayed capacity loss is therefore a reversible charge-limit effect, not chemical ageing. A separate 4.08 V UI reading appears identically in both screenshots; per the owner it is a current battery-level reading and is irrelevant to this comparison.",
-  "limits_note_4_08v": "Owner-confirmed: the 4.08 V item is a current battery level/voltage reading, not a configured limit. It is identical in both conditions and is excluded from the A/B analysis.",
+  "interpretation": "Qmax (chemical capacity) is identical in A and B while the reported actual/full-charge capacity falls by 371 mAh. The displayed capacity loss is therefore a reversible charge-limit effect, not chemical ageing. A separate 4.08 V UI reading appears identically in both screenshots; it is a current battery-level reading, not a configured limit, and is irrelevant to this comparison.",
+  "limits_note_4_08v": "Confirmed: the 4.08 V item is a current battery level/voltage reading, not a configured limit. It is identical in both conditions and is excluded from the A/B analysis.",
   "relevance_to_iphone_01": "The iPhone 17 nameplate top band is 4500 mV and the extrapolated >=1000 band is 4390 mV, i.e. the exact same 110 mV span. This makes the measured slope a directly relevant empirical calibration for the voltage-node capacity cost, in place of generic estimates.",
   "limitations": [
     "Different device/capacity (4630 mAh vs 3692 mAh); slope is applied as a percentage, assuming similar OCV shape on the same 4.50 V platform.",
     "The 4390 mV reading was set on a diagnostic tool, not observed as an iOS-configured limit on iphone-01.",
     "Single A/B pair, single battery; no error bars.",
-    "The 4.08 V reading is a current battery-level value (owner-confirmed), identical in both conditions, and excluded from analysis."
+    "The 4.08 V reading is a current battery-level value (confirmed), identical in both conditions, and excluded from analysis."
   ],
-  "fields_not_published": ["battery serial number", "factory code", "chip info", "manufacturer", "manufacture date", "screenshots themselves"]
+  "fields_not_published": [
+    "battery serial number",
+    "factory code",
+    "chip info",
+    "manufacturer",
+    "manufacture date",
+    "screenshots themselves"
+  ]
 }

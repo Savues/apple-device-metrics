@@ -8,7 +8,7 @@
 
 ### 健康度快照
 
-`devices/iphone-01/health-samples.csv` —— 6 行数据，提取自每个采样日期**本地时间 08:00 生成的 iOS
+`devices/iphone-01/health-samples.csv` —— <!--v:export_n-->6<!--/--> 行数据，提取自每个采样日期**本地时间 08:00 生成的 iOS
 analytics 快照**。这些是系统生成的每日汇总，既不是手工读数，也不是实时电量计查询。源导出中的列名：
 
 ```
@@ -65,7 +65,7 @@ D 标注，而充电日志使用自然日。
 | `iOS` | 文件头 `os_version` |
 | `Hrs Soc` | 未找到对应字段 |
 
-注意 analytics 中的 `MaximumCapacityPercent` 为 **101**，而不是 99.11 —— 导出工具的 `Nominal Health` 是它自己计算的比值，并非该系统字段。
+注意 analytics 中的 `MaximumCapacityPercent` 为 **101**，而不是 <!--v:base_health_two-->99.13<!--/--> —— 导出工具的 `Nominal Health` 是它自己计算的比值，并非该系统字段。
 见 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.zh.md) §6：
 本仓库中所有阶跃式衰减的结论描述的都是基于 NCC 推导的比值，而 Apple 自己的健康度字段在跨越 200 循环阶跃时始终保持 101。
 

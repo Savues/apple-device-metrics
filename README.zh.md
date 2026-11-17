@@ -109,7 +109,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 有两个确实带行为信息的字段是公开的，与其不提，不如点名：每份 analytics 快照里的
 `gauge_update_time_utc`（精确到秒；它正是用来区分"过期的重复上报"和"新的一次电量
 计写入"），以及每日的 `daily_min_soc_pct` / `daily_max_soc_pct` 区间。健康导出表保留
-日期，6 行，不含行为细节。序列号、UDID、具体机型变体和 analytics 文件名都不发布。
+日期，<!--v:export_zh-->六<!--/-->行，不含行为细节。序列号、UDID、具体机型变体和 analytics 文件名都不发布。
 机型系列（`iPhone 17`）发布，具体变体不发布。
 
 ---
@@ -133,7 +133,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 
 | 路径 | 内容 |
 |------|------|
-| [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | 6 行第三方健康导出，与 analytics 快照是两回事 |
+| [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | <!--v:export_n-->6<!--/--> 行第三方健康导出，与 analytics 快照是两回事 |
 | [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->336<!--/--> 次去标识化会话 |
 | [`devices/iphone-01/device.json`](devices/iphone-01/device.json) | 铭牌参数 |
 | [`devices/iphone-01/voltage-reading.md`](devices/iphone-01/voltage-reading.zh.md) | 一次 4.04V @ 70% 读数与 OCV 核对 |
@@ -147,6 +147,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | [`scripts/update.sh`](scripts/update.sh) | 导入 → 时间线 → 预测 → 文档同步 → 校验 |
 | [`scripts/sync_docs.py`](scripts/sync_docs.py) | 重填文档里带标记的数字（`<!--v:KEY-->…<!--/-->`、`<!--b:KEY-->…<!--/b-->`）；`--check` 在 `verify.py` 里跑 |
 | [`scripts/check_links.py`](scripts/check_links.py) | 断链检查 |
+| [`scripts/check_i18n.py`](scripts/check_i18n.py) | 检查 `.zh.md` 是否与英文原文一致 |
 | [`docs/predictions.json`](docs/predictions.json) | 事前登记的 250 节点预测，由 `verify.py` 打分 |
 | [`docs/voltage-nodes.md`](docs/voltage-nodes.zh.md) | 循环节点电压表，以及它的出处 |
 | [`docs/methodology.md`](docs/methodology.zh.md) | 字段定义、单位、已知局限 |
@@ -175,7 +176,7 @@ iOS 只保留大约 7–8 天的 analytics，所以 200 次循环之前的快照
 拿不到了。生命周期峰值 `MaximumPackVoltage = 4496 mV` 是 09-01 之前那次满充留下的
 化石（≈101 次循环时 4.50V 上限还有效）；现在充电停在 81% SOC，峰值也不会再被刷新。
 
-## 喂入新的 analytics 文件
+## 导入新的 analytics 文件
 
 任何 `.ips` / `.ips.ca.synced` 每日 analytics 文件都可以，一天一份：NDJSON，第一行
 是 header，后面是带名字的聚合记录。可以一次导入多份。

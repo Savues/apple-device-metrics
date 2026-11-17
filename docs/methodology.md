@@ -73,7 +73,7 @@ This file confirms the exact source of each health-table column:
 | `iOS` | header `os_version` |
 | `Hrs Soc` | no matching field found |
 
-Note `MaximumCapacityPercent` in the analytics is **101**, not 99.11 — the
+Note `MaximumCapacityPercent` in the analytics is **101**, not <!--v:base_health_two-->99.13<!--/--> — the
 export tool's `Nominal Health` is its own ratio, not that system field.
 See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6:
 all stepwise-decay conclusions in this repo describe the NCC-derived ratio,

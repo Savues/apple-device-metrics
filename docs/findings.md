@@ -53,7 +53,7 @@ Consequences:
   i.e. 1 mAh = 0.027 pp of jitter (with rebounds 3658→3659→3660), while
   `AppleRawMaxCapacity` swings <!--v:raw_list-->3707 → 3708 → 3678 → 3678 → 3690 → 3683 → 3692 → 3708 → 3681<!--/--> (<!--v:raw_range-->30<!--/--> mAh = <!--v:raw_range_pp-->0.813<!--/--> pp, **<!--v:raw_ratio-->30<!--/-->× noisier**). The −0.43 pp cliff is ~16× the daily
   NCC noise — a genuine step, not sampling jitter. NCC is *not* strictly
-  monotonic day-to-day, even though the sparse 6-row export is.
+  monotonic day-to-day, even though the sparse <!--v:export_n-->6<!--/-->-row export is.
 - The >100% readings early on are normal pre-calibration overshoot.
 
 Nameplate energy: 3.887 V × 3.692 Ah = **14.351 Wh**; current nominal
@@ -82,7 +82,7 @@ ageing does not behave this way. Plateau mean: **0.0041 %/day**.
 Full span: 57 days, +86 cycles (1.51 cycles/day over that historical
 window), 100.05% → 99.11% (−0.94 pp, 0.0165 %/day, 0.0109 %/cycle).
 Note this is a historical average, **not** the current usage rate used for
-forecasts (1.30 cycles/day — see
+forecasts (<!--v:rate-->1.31<!--/--> cycles/day — see
 [`iphone17-forecast.md`](iphone17-forecast.md)).
 
 ### The 200-cycle node — CONFIRMED
@@ -153,7 +153,7 @@ value (4390 mV) is extrapolated.
 
 ### Predicted upcoming nodes
 
-At the **current measured usage of 1.30 cycles/day = <!--v:mah_day-->4836<!--/--> mAh/day** (<!--v:span_days-->78<!--/-->-day
+At the **current measured usage of <!--v:rate-->1.31<!--/--> cycles/day = <!--v:mah_day-->4836<!--/--> mAh/day** (<!--v:span_days-->78<!--/-->-day
 charging diary, cross-checked by <!--v:gauge_n-->8<!--/--> non-stale gauge writes = <!--v:gauge_rate-->1.324<!--/-->/day) from <!--v:base_cycle-->212<!--/-->
 cycles on <!--v:base_date-->2026-11-17<!--/-->. Full forecast with mAh and rate sensitivity:
 [`iphone17-forecast.md`](iphone17-forecast.md).
@@ -284,4 +284,4 @@ At <!--v:base_cycle-->212<!--/--> cycles / <!--v:base_health_two-->99.13<!--/-->
 bottleneck. The November drop is best explained by a cycle-node policy
 adjustment rather than sudden chemical failure. Mid-term linear lifetime
 extrapolation is invalid here; the next verifiable event is the 250-cycle
-node around <!--v:date_next-->2026-12-16<!--/--> (at the measured current usage of 1.30 cycles/day).
+node around <!--v:date_next-->2026-12-16<!--/--> (at the measured current usage of <!--v:rate-->1.31<!--/--> cycles/day).

@@ -46,7 +46,7 @@ check("nameplate battery energy matches V x mAh",
 check("cell energy exceeds pack energy",
       dev.get("cell_energy_wh", 0) > dev.get("battery_energy_wh", 0),
       f"{dev.get('cell_energy_wh')} vs {dev.get('battery_energy_wh')} Wh")
-check("model family is iPhone 17 (owner-confirmed)",
+check("model family is iPhone 17 (confirmed on the device)",
       dev.get("model") == "iPhone 17")
 check("nameplate ceiling equals iPhone 17 series 1-199 band",
       int(round(dev["charge_limit_voltage_v"] * 1000)) == 4500)
@@ -86,7 +86,7 @@ bad_soc = [r["session_id"] for r in sess
 check("soc delta == charged for all rows", not bad_soc, f"{len(bad_soc)} mismatches")
 
 # The dataset's defining collection condition: iOS Charge Limit is set to
-# 80% as a safety net, but the owner unplugs before 80%, so NO full charge
+# 80% as a safety net, but sessions end before 80%, so NO full charge
 # (and no completed Apple calibration charge) occurs anywhere in the window.
 # If a future import breaks this, every conclusion in
 # docs/shallow-charging-accuracy.md must be re-examined.
@@ -294,7 +294,7 @@ check("ref-02: peak pack voltage ~= 4.45V nameplate",
       f"{int(n2['charge_limit_voltage_v']*1000)} mV")
 check("ref-02: VacVoltageLimit explicitly absent",
       r2["vac_voltage_limit_available"] is False)
-check("ref-02: battery status recorded as original (owner-confirmed)",
+check("ref-02: battery status recorded as original (confirmed on the device)",
       "original" in r2["battery_status"].lower() and
       g2["battery_serial_changed"] is False)
 check("ref-02: OriginalBattery=0 semantics left unconfirmed",
@@ -445,6 +445,14 @@ check("forecast: first CSV row matches base",
       float(frows[0]["ncc_mah"]) == float(latest["nominal_charge_capacity_mah"]))
 
 print("\n=== docs: marked numbers match the data (sync_docs.py) ===")
+# Every .zh.md must still mirror its English original. The check lives in
+# scripts/check_i18n.py and exits non-zero on any drift.
+i18n = subprocess.run([sys.executable, os.path.join(ROOT, "scripts/check_i18n.py")],
+                      capture_output=True, text=True)
+check("docs: translations mirror the English originals",
+      i18n.returncode == 0,
+      (i18n.stdout.strip().splitlines() or ["no output"])[-1])
+
 sync = subprocess.run([sys.executable, os.path.join(ROOT, "scripts/sync_docs.py"), "--check"],
                       capture_output=True, text=True)
 check("docs: every <!--v:--> / <!--b:--> marker is up to date", sync.returncode == 0,
@@ -462,8 +470,12 @@ check("predictions: ids unique",
 # Ex-ante: every prediction must be registered at a cycle below its node.
 check("predictions: registered before the 250 node",
       all(p["registered_at_cycle"] < 250 for p in pr))
-pre = [s for s in snaps if s["cycle_count"] < 250]
-post = [s for s in snaps if s["cycle_count"] >= 250]
+# Score against the deduplicated series: a stale re-report repeats the previous
+# gauge write, so it must not become the "last snapshot before the node".
+uniq = [s for i, s in enumerate(snaps)
+        if i == 0 or s["gauge_update_time_utc"] != snaps[i - 1]["gauge_update_time_utc"]]
+pre = [s for s in uniq if s["cycle_count"] < 250]
+post = [s for s in uniq if s["cycle_count"] >= 250]
 first = post[0] if post else None
 for p in pr:
     if first is None:

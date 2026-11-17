@@ -1,6 +1,6 @@
 {
   "scope": "iphone-01 ONLY. Other reference devices excluded from fitting.",
-  "owner_question": "Is this based on current daily usage, and does it include real mAh? YES to both.",
+  "answers": "current daily usage from the charging diary; all capacities in mAh, not only percentages.",
   "generated_from": "scripts/params.py (derived from published CSV/JSON; no hand-entered constants)",
   "base": {
     "date": "2026-11-17",

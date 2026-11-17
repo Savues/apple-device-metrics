@@ -29,7 +29,8 @@ from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, ROUND_HALF_UP
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from params import RATED, ROOT, derive, non_stale, snapshots  # noqa: E402
+from params import (RATED, ROOT, derive, health_export, non_stale,  # noqa: E402
+                    snapshots)
 
 INLINE = re.compile(r"<!--v:([a-z_]+)-->(.*?)<!--/-->", re.S)
 BLOCK = re.compile(r"<!--b:([a-z_]+)-->\n.*?\n<!--/b-->", re.S)
@@ -108,6 +109,12 @@ def values():
         "apple": str(base["apple_max_capacity_percent"]),
         "vac": str(latest["vac_voltage_limit_mv"]),
         "rate": f"{rate:.2f}",
+        "export_n": str(len(health_export())),
+        "export_word": en_word(len(health_export())),
+        "export_zh": zh_word(len(health_export())),
+        # Slowest non-withdrawn usage window; with "rate" it brackets the
+        # range the docs quote instead of hard-coding it.
+        "rate_low": f"{min(c['cycles_per_day'] for c in fc['sensitivity_to_usage_rate'] if not c['case'].startswith('old')):.2f}",
         "first_md": snaps[0]["date"][5:],
         "snap_n": str(n),
         "snap_word": en_word(n),

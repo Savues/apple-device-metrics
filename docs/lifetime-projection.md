@@ -184,7 +184,7 @@ end-of-life threshold.
 
 **Long term (>1000 cycles).** Reference devices at 1420 and 2919 cycles
 still report 73% and 67%. A battery is usable well beyond 1000 cycles. With
-this owner's habit of **unplugging before the 80% Charge Limit, with shallow 20–70% top-ups** (documented in
+the charging habit of **unplugging before the 80% Charge Limit, with shallow 20–70% top-ups** (documented in
 `findings.md` §3), the effective stress is lower still — the log shows the
 device never once reached a full charge in <!--v:span_days-->78<!--/--> days, which is itself a
 strong life-extension factor (BU-808 Table 2: shallower depth of discharge
@@ -228,7 +228,7 @@ a hot environment, and high-current fast charging.
 | 80% at 1000 cycles contains ~8 pp reversible lock-in | Medium — combines measured slope with the extrapolated 4390 mV ≥1000 band |
 | Displayed curve is concave | Medium — two measured anchors (1420, 2919), but different platforms; partially lock-in, not pure ageing |
 | Derating slows chemical ageing | **High (direction)** — well-established electrochemistry; magnitude not quantified for this cell |
-| Dates for future nodes | Medium — assumes 1.30 cycles/day (current measured usage) continues |
+| Dates for future nodes | Medium — assumes <!--v:rate-->1.31<!--/--> cycles/day (current measured usage) continues |
 
 Revisit after the 250-cycle node (~<!--v:date_next-->2026-12-16<!--/-->): a new analytics snapshot
 will show whether `VacVoltageLimit = 4460 mV` and whether displayed health

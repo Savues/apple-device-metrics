@@ -1,6 +1,6 @@
 # iphone-01 (iPhone 17) — battery curve forecast
 
-**Owner instruction**: compute the main device's future curve from its own
+**Scope**: compute the main device's future curve from its own
 data only. The two reference devices are **excluded** from this forecast
 (irregular usage; their ageing anchors must not be fitted to this device).
 Apple's "80% at 1000 cycles" is likewise not used as an anchor.
@@ -37,7 +37,8 @@ every forecast figure up by ~1 mAh / 0.027 pp; see §4 confidence.
 **Rate correction**: an earlier version used **1.5386 cycles/day** from a
 57-day regression on sparse export rows. That is *not* current usage — it
 was pulled up by a heavy 30-day stretch. Measured current usage is
-~1.23–1.30 cycles/day, cross-checked two ways on this device. The old rate
+~<!--v:rate_low-->1.14<!--/-->–<!--v:rate-->1.31<!--/--> cycles/day across the windows in §3.1, cross-checked two
+ways on this device. The old rate
 is kept only as a sensitivity case in §3.1.
 
 Not used: `reference-01` (1420/73%), `reference-02` (2919/67%), the
@@ -142,7 +143,7 @@ at current usage it is **~2028-07**, three months later.
 | Current usage rate (<!--v:mah_day-->4836<!--/--> mAh/day) | **Medium** — diary and gauge regression (<!--v:gauge_rate-->1.324<!--/-->/day) agree within <!--v:gauge_agree-->2<!--/-->%, but share the coulomb-count source; an uncalibrated SOC gain error would shift calendar dates, not the curve shape. See [`shallow-charging-accuracy.md`](shallow-charging-accuracy.md) §5 |
 | Plateau slope | **High** — measured on this device |
 | Base NCC (<!--v:base_ncc-->3660<!--/--> mAh, <!--v:base_md-->11-17<!--/--> single point) | Medium — daily jitter ±1–2 mAh; a 3-day mean would be steadier |
-| 250 / 300 node dates | Medium — assumes 1.30/day continues; see §3.1 sensitivity |
+| 250 / 300 node dates | Medium — assumes <!--v:rate-->1.31<!--/-->/day continues; see §3.1 sensitivity |
 | −0.43 pp (−15.9 mAh) per node | Medium — one node observed; assumes later nodes same size |
 | ≥1000 band (4390 mV) | **Low** — extrapolated from the iPhone 13 series |
 | Long-term plateau staying linear | **Low** — real cells can accelerate with heat/high SOC; not modelled |

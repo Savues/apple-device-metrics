@@ -22,6 +22,17 @@ jobs:
       - name: Internal Markdown links
         run: python3 scripts/check_links.py
 
+      - name: Translations mirror the English originals
+        run: python3 scripts/check_i18n.py
+
+      # The pages workflow only builds on main; catch a broken build (or a JS
+      # syntax error) on the pull request instead.
+      - name: Site builds and the front-end parses
+        run: |
+          python3 scripts/build_site.py
+          node --check site/app.js
+          node --check site/i18n.js
+
       - name: No raw analytics or diary files committed
         run: |
           bad=$(git ls-files | grep -Ei '\.ips($|\.)|raw.*\.txt$|diary.*\.txt$|_private' || true)

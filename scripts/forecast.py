@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """iphone-01-only battery curve forecast, using CURRENT daily usage and mAh.
 
-Owner request: forecast from the main device's own data only, at its present
-daily usage, and report real mAh (not just percentages). The two other
-reference devices are excluded (irregular usage).
+Scope: forecast from the main device's own data only, at its present daily
+usage, and report real mAh (not just percentages). The two other reference
+devices are excluded (irregular usage).
 
 Every parameter is derived from the published data by scripts/params.py:
 base = latest analytics snapshot; usage = charging diary throughput;
@@ -137,7 +137,7 @@ def main():
 
     params = {
         "scope": "iphone-01 ONLY. Other reference devices excluded from fitting.",
-        "owner_question": "Is this based on current daily usage, and does it include real mAh? YES to both.",
+        "answers": "current daily usage from the charging diary; all capacities in mAh, not only percentages.",
         "generated_from": "scripts/params.py (derived from published CSV/JSON; no hand-entered constants)",
         "base": {
             "date": BASE_DATE.isoformat(), "cycle": BASE_CYCLE,

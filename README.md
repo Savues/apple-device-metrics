@@ -44,7 +44,7 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + 6-row health export, <!--v:sessions-->336<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->78<!--/--> days |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->9<!--/--> analytics snapshots + <!--v:export_n-->6<!--/-->-row health export, <!--v:sessions-->336<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->78<!--/--> days |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, reference only | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); no `VacVoltageLimit` | 2026-11-15 |
 
@@ -125,7 +125,7 @@ time.
 Two published fields do carry behaviour, so both are named here: `gauge_update_time_utc` in each analytics snapshot
 (second resolution; it is what separates a stale re-report from a new gauge
 write) and the daily `daily_min_soc_pct` / `daily_max_soc_pct` envelope.
-Health-export rows keep their dates, six of them, with no behavioural detail.
+Health-export rows keep their dates, <!--v:export_word-->six<!--/--> of them, with no behavioural detail.
 Serial numbers, UDIDs, the exact model variant and the analytics file names are
 excluded. The model family (`iPhone 17`) is published; the variant is not.
 
@@ -150,7 +150,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 
 | Path | Contents |
 |------|----------|
-| [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | 6-row third-party health export, separate from the analytics snapshots |
+| [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | <!--v:export_n-->6<!--/-->-row third-party health export, separate from the analytics snapshots |
 | [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->336<!--/--> de-identified sessions |
 | [`devices/iphone-01/device.json`](devices/iphone-01/device.json) | nameplate parameters |
 | [`devices/iphone-01/voltage-reading.md`](devices/iphone-01/voltage-reading.md) | one 4.04V @ 70% reading with the OCV check |
@@ -164,6 +164,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | [`scripts/update.sh`](scripts/update.sh) | import → timeline → forecast → doc sync → verify |
 | [`scripts/sync_docs.py`](scripts/sync_docs.py) | refills the marked numbers in the docs (`<!--v:KEY-->…<!--/-->`, `<!--b:KEY-->…<!--/b-->`); `--check` runs inside `verify.py` |
 | [`scripts/check_links.py`](scripts/check_links.py) | fails on broken relative Markdown links |
+| [`scripts/check_i18n.py`](scripts/check_i18n.py) | fails when a `.zh.md` drifts from its English original |
 | [`docs/predictions.json`](docs/predictions.json) | pre-registered 250-node predictions, scored by `verify.py` |
 | [`docs/voltage-nodes.md`](docs/voltage-nodes.md) | cycle-node voltage table and where it comes from |
 | [`docs/methodology.md`](docs/methodology.md) | field definitions, units, known limitations |
@@ -195,11 +196,11 @@ is a leftover from a full charge before 09-01 (≈101 cycles), when the 4.50V
 ceiling was still active, and the peak cannot be refreshed now that charging
 stops at 81% SOC.
 
-## Feeding in new analytics files
+## Importing new analytics files
 
-Send any `.ips` / `.ips.ca.synced` daily analytics files, one per date:
-NDJSON with a header line plus named aggregate records. Any number can be
-imported at once.
+A `.ips` / `.ips.ca.synced` daily analytics file is NDJSON: a header line
+plus named aggregate records. One file per date; any number can be imported
+at once.
 
 ```sh
 python3 scripts/extract_analytics.py --archive /path/Analytics-A.ips /path/Analytics-B.ips

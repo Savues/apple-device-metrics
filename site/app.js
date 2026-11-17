@@ -16,8 +16,15 @@
   const $ = (s) => document.querySelector(s);
   const t = (k) => {
     const v = I18N[lang][k] ?? I18N.en[k] ?? k;
-    // Some entries are [title, desc] arrays; only strings carry {rated}.
-    return typeof v === "string" ? v.replace(/\{rated\}/g, D ? fmt(D.rated) : "…") : v;
+    if (typeof v !== "string") return v;  // some entries are [title, desc] arrays
+    if (!D) return v.replace(/\{\w+\}/g, "…");
+    // Counts and cycle numbers come from the data, not from the string.
+    const vars = {
+      rated: fmt(D.rated),
+      exportrows: String(D.hx.length),
+      registered: String(D.pred.predictions[0].registered_at_cycle),
+    };
+    return v.replace(/\{(\w+)\}/g, (m, k2) => (k2 in vars ? vars[k2] : m));
   };
   const docUrl = (k, l = lang) => REPO + DOCS[k] + (l === "zh" ? ".zh.md" : ".md");
   const fill = (s) => s.replace(/\{doc:([\w-]+)\}/g, (_, k) => docUrl(k));
@@ -25,10 +32,26 @@
     { minimumFractionDigits: d, maximumFractionDigits: d });
   const NS = "http://www.w3.org/2000/svg";
 
+  // Minimal RFC 4180 reader: quoted fields may contain commas and "" escapes.
+  function parseLine(line) {
+    const out = []; let cur = "", q = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (q) {
+        if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (c === '"') q = false;
+        else cur += c;
+      } else if (c === '"') q = true;
+      else if (c === ",") { out.push(cur); cur = ""; }
+      else cur += c;
+    }
+    out.push(cur);
+    return out;
+  }
   function csv(text) {
     const [h, ...rows] = text.trim().split(/\r?\n/);
-    const keys = h.split(",");
-    return rows.map((r) => Object.fromEntries(r.split(",").map((v, i) => [keys[i], v])));
+    const keys = parseLine(h);
+    return rows.map((r) => Object.fromEntries(parseLine(r).map((v, i) => [keys[i], v])));
   }
   async function load() {
     const get = (f) => fetch("data/" + f).then((r) => { if (!r.ok) throw new Error(f); return r; });
@@ -191,8 +214,12 @@
 
   function score(p) {
     const snaps = D.tl.map((r) => ({ d: r.date, c: +r.cycle_count, mv: +r.vac_voltage_limit_mv,
-      n: +r.nominal_charge_capacity_mah, a: r.maximum_capacity_percent_reported }));
-    const pre = snaps.filter((s) => s.c < 250), post = snaps.filter((s) => s.c >= 250);
+      n: +r.nominal_charge_capacity_mah, a: r.maximum_capacity_percent_reported,
+      g: r.gauge_update_time_utc }));
+    // Ignore stale re-reports (same gauge write as the row before) so the
+    // "last snapshot before the node" is a real measurement.
+    const uniq = snaps.filter((s, i) => i === 0 || s.g !== snaps[i - 1].g);
+    const pre = uniq.filter((s) => s.c < 250), post = uniq.filter((s) => s.c >= 250);
     const f = post[0];
     if (!f) return ["pending", ""];
     if (p.observe_only) return ["obs", f.a + "%"];
