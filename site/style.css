@@ -38,8 +38,8 @@ nav a{color:var(--muted)}nav a:hover{color:var(--ink);text-decoration:none}
 .lang:hover{border-color:var(--green)}
 @media (max-width:640px){
   nav a{display:none}
-  .rung{grid-template-columns:56px 1fr;gap:8px}
-  .rung .mv{grid-column:1/-1;justify-self:end;margin-top:4px}
+  .rung{grid-template-columns:80px 1fr;gap:8px}
+  .rung .tag{grid-column:1/-1;justify-self:end;margin-top:4px}
   .chart,.chart.tall{height:220px}
 }
 
@@ -70,14 +70,14 @@ nav a{color:var(--muted)}nav a:hover{color:var(--ink);text-decoration:none}
 
 /* ladder */
 .ladder{display:flex;flex-direction:column;gap:6px;margin:12px 0}
-.rung{display:grid;grid-template-columns:64px 1fr auto;align-items:center;gap:8px;font-size:13px}
+.rung{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:8px;font-size:13px}
+.rung .label{display:flex;flex-direction:column;gap:2px}
+.rung .mv{font-family:var(--mono);font-size:12px;color:var(--muted)}
 .rung .bar{height:22px;border-radius:6px;background:var(--line);position:relative;overflow:hidden}
 .rung .bar i{position:absolute;inset:0 auto 0 0;background:color-mix(in srgb,var(--blue) 35%,transparent)}
 .rung.now .bar i{background:var(--green)}
 .rung.past .bar i{background:color-mix(in srgb,var(--muted) 35%,transparent)}
-.rung .mv{font-family:var(--mono);text-align:right;white-space:nowrap}
-.rung .tag{font-size:11px;padding:1px 6px;border-radius:999px;margin-left:6px;background:var(--green);color:#fff}
-.rung .tag.ext{background:var(--amber)}
+.rung .tag{font-size:11px;padding:1px 6px;border-radius:999px;background:var(--green);color:#fff;white-space:nowrap}
 
 /* two numbers */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 4px;text-align:center}
