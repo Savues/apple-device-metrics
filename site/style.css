@@ -36,7 +36,15 @@ nav a{color:var(--muted)}nav a:hover{color:var(--ink);text-decoration:none}
 .lang{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;
   padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}
 .lang:hover{border-color:var(--green)}
-@media (max-width:640px){nav a{display:none}.rung{grid-template-columns:56px 1fr auto}.chart,.chart.tall{height:220px}}
+@media (max-width:640px){
+  nav a{display:none}
+  .rung{display:flex;flex-wrap:wrap;align-items:center;gap:8px;grid-template-columns:unset}
+  .rung>:nth-child(1){flex:0 0 56px}
+  .rung>:nth-child(2){flex:1}
+  .rung>:nth-child(3){flex:0 1 auto;order:3;width:100%}
+  .rung .tag{margin-left:0;display:inline-block}
+  .chart,.chart.tall{height:220px}
+}
 
 /* hero */
 .hero{padding:48px 0 8px;background:radial-gradient(1200px 300px at 20% -10%,color-mix(in srgb,var(--green) 14%,transparent),transparent)}
