@@ -118,9 +118,8 @@
     $("#ladder").innerHTML = L.map(([c, mv], i) => {
       const next = L[i + 1] ? L[i + 1][0] - 1 : "∞";
       const cls = c === cur ? "now" : c < cur ? "past" : "";
-      const tag = c === cur ? `<span class="tag">${t("now")}</span>` : "";
       const pct = ((mv - lo) / (hi - lo)) * 100;
-      return `<div class="rung ${cls}"><div class="label"><div>${c}–${next}</div><div class="mv">${mv} mV</div></div><div class="bar"><i style="width:${pct}%"></i></div>${tag}</div>`;
+      return `<div class="rung ${cls}"><div class="label"><div>${c}–${next}</div><div class="mv">${mv} mV</div></div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
     }).join("");
   }
 

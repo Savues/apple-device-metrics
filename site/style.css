@@ -39,7 +39,6 @@ nav a{color:var(--muted)}nav a:hover{color:var(--ink);text-decoration:none}
 @media (max-width:640px){
   nav a{display:none}
   .rung{grid-template-columns:80px 1fr;gap:8px}
-  .rung .tag{grid-column:1/-1;justify-self:end;margin-top:4px}
   .chart,.chart.tall{height:220px}
 }
 
