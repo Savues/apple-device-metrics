@@ -10,9 +10,9 @@
     "apple_max_capacity_percent": 101
   },
   "current_usage": {
-    "cycles_per_day": 1.31,
-    "mah_per_day_throughput": 4836,
-    "basis": "78-day charging diary (10216% = 377175 mAh total) = 4836 mAh/day; cross-checked by 9 non-stale analytics gauge writes (CycleCount +13 over 9.63 days) = 1.335 cycles/day by regression. Both rely on coulomb counting, so the cross-check is not independent",
+    "cycles_per_day": 1.3,
+    "mah_per_day_throughput": 4803,
+    "basis": "80-day charging diary (10408% = 384263 mAh total) = 4803 mAh/day; cross-checked by 9 non-stale analytics gauge writes (CycleCount +13 over 9.63 days) = 1.335 cycles/day by regression. Both rely on coulomb counting, so the cross-check is not independent",
     "gauge_regression_cycles_per_day": 1.335,
     "previous_rate_withdrawn": "1.5386 cycles/day (57-day regression on sparse export rows) was biased high by a heavy 30-day stretch; kept only as a sensitivity case",
     "plateau_wear_mah_per_day": 0.176,
@@ -20,7 +20,7 @@
   },
   "mah_conversion": "ncc_mah = ncc_health_pct / 100 * 3692 (fixed nameplate rated capacity). Same for chemical_only_mah and node_lockin_mah.",
   "assumptions": [
-    "Current 1.31 cycles/day continues (sensitivity table shows other windows)",
+    "Current 1.30 cycles/day continues (sensitivity table shows other windows)",
     "Plateau slope 0.00476 pp/day = 0.176 mAh/day stays constant",
     "Each future 20mV node costs the same -0.43pp = -15.9 mAh as the observed 200 node",
     ">=1000 band 4390 mV extrapolated from iPhone 13 series (low confidence)",
@@ -36,65 +36,65 @@
     {
       "cycle": 250,
       "date": "2026-12-17",
-      "days_from_base": 28.2,
+      "days_from_base": 28.5,
       "vac_voltage_limit_mv": 4460,
-      "ncc_health_pct": 98.569,
-      "ncc_mah": 3639.2,
+      "ncc_health_pct": 98.568,
+      "ncc_mah": 3639.1,
       "node_lockin_mah": 15.9,
-      "chemical_only_pct": 98.999,
+      "chemical_only_pct": 98.998,
       "chemical_only_mah": 3655.0
     },
     {
       "cycle": 300,
       "date": "2027-01-24",
-      "days_from_base": 66.4,
+      "days_from_base": 66.9,
       "vac_voltage_limit_mv": 4440,
-      "ncc_health_pct": 97.957,
-      "ncc_mah": 3616.6,
+      "ncc_health_pct": 97.955,
+      "ncc_mah": 3616.5,
       "node_lockin_mah": 31.8,
-      "chemical_only_pct": 98.817,
-      "chemical_only_mah": 3648.3
+      "chemical_only_pct": 98.815,
+      "chemical_only_mah": 3648.2
     },
     {
       "cycle": 1000,
-      "date": "2028-07-11",
-      "days_from_base": 600.8,
+      "date": "2028-07-16",
+      "days_from_base": 605.4,
       "vac_voltage_limit_mv": 4390,
-      "ncc_health_pct": 94.984,
-      "ncc_mah": 3506.8,
+      "ncc_health_pct": 94.962,
+      "ncc_mah": 3506.0,
       "node_lockin_mah": 47.6,
-      "chemical_only_pct": 96.274,
-      "chemical_only_mah": 3554.4
+      "chemical_only_pct": 96.252,
+      "chemical_only_mah": 3553.6
     }
   ],
   "at_1000_cycles": {
-    "ncc_health_pct": 94.984,
-    "ncc_mah": 3506.8,
+    "ncc_health_pct": 94.962,
+    "ncc_mah": 3506.0,
     "reversible_lockin_mah": 47.6,
-    "chemical_only_pct": 96.274,
-    "chemical_only_mah": 3554.4,
-    "total_wear_mah": 137.6
+    "chemical_only_pct": 96.252,
+    "chemical_only_mah": 3553.6,
+    "total_wear_mah": 138.4
   },
   "sensitivity_to_usage_rate": [
     {
       "case": "recent 7 days",
-      "cycles_per_day": 1.14,
-      "mah_per_day": 4209,
-      "date_250": "2026-12-21",
-      "date_300": "2027-02-03",
-      "date_1000": "2028-10-09",
-      "health_at_1000_pct": 94.557,
-      "ncc_mah_at_1000": 3491.1
+      "cycles_per_day": 1.18,
+      "mah_per_day": 4357,
+      "date_250": "2026-12-20",
+      "date_300": "2027-01-31",
+      "date_1000": "2028-09-15",
+      "health_at_1000_pct": 94.669,
+      "ncc_mah_at_1000": 3495.2
     },
     {
       "case": "recent 14 days",
-      "cycles_per_day": 1.24,
-      "mah_per_day": 4578,
-      "date_250": "2026-12-18",
-      "date_300": "2027-01-28",
-      "date_1000": "2028-08-14",
-      "health_at_1000_pct": 94.822,
-      "ncc_mah_at_1000": 3500.8
+      "cycles_per_day": 1.16,
+      "mah_per_day": 4283,
+      "date_250": "2026-12-20",
+      "date_300": "2027-02-02",
+      "date_1000": "2028-09-27",
+      "health_at_1000_pct": 94.614,
+      "ncc_mah_at_1000": 3493.1
     },
     {
       "case": "independent gauge snapshots (regression)",
@@ -107,24 +107,24 @@
       "ncc_mah_at_1000": 3508.8
     },
     {
-      "case": "full 78-day diary (primary)",
-      "cycles_per_day": 1.31,
-      "mah_per_day": 4836,
+      "case": "full 80-day diary (primary)",
+      "cycles_per_day": 1.3,
+      "mah_per_day": 4803,
       "date_250": "2026-12-17",
       "date_300": "2027-01-24",
-      "date_1000": "2028-07-11",
-      "health_at_1000_pct": 94.984,
-      "ncc_mah_at_1000": 3506.8
+      "date_1000": "2028-07-16",
+      "health_at_1000_pct": 94.962,
+      "ncc_mah_at_1000": 3506.0
     },
     {
       "case": "recent 30 days",
-      "cycles_per_day": 1.57,
-      "mah_per_day": 5796,
-      "date_250": "2026-12-12",
-      "date_300": "2027-01-13",
-      "date_1000": "2028-04-03",
-      "health_at_1000_pct": 95.457,
-      "ncc_mah_at_1000": 3524.3
+      "cycles_per_day": 1.53,
+      "mah_per_day": 5649,
+      "date_250": "2026-12-13",
+      "date_300": "2027-01-14",
+      "date_1000": "2028-04-16",
+      "health_at_1000_pct": 95.395,
+      "ncc_mah_at_1000": 3522.0
     },
     {
       "case": "57-day export regression (old, biased high)",

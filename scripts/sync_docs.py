@@ -198,6 +198,7 @@ def values():
         "dur_hours": f"{ss['total_duration_hours']:.1f}",
         "dur_hours_2": f"{ss['total_duration_hours']:.2f}",
         "charged_sum": str(ss["total_charged_pct"]),
+        "charged_mah": f"{ss['total_charged_pct'] * RATED / 100:,.0f}",
         "avg_dur": f"{ss['avg_duration_min']:.2f}",
         "avg_charge": f"{ss['avg_charged_pct']:.2f}",
         "sess_day": f"{ss['avg_sessions_per_day']:.2f}",

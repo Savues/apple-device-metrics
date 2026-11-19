@@ -82,7 +82,7 @@ ageing does not behave this way. Plateau mean: **0.0041 %/day**.
 Full span: 57 days, +86 cycles (1.51 cycles/day over that historical
 window), 100.05% → 99.11% (−0.94 pp, 0.0165 %/day, 0.0109 %/cycle).
 Note this is a historical average, **not** the current usage rate used for
-forecasts (<!--v:rate-->1.31<!--/--> cycles/day — see
+forecasts (<!--v:rate-->1.30<!--/--> cycles/day — see
 [`iphone17-forecast.md`](iphone17-forecast.md)).
 
 ### The 200-cycle node — CONFIRMED
@@ -153,7 +153,7 @@ value (4390 mV) is extrapolated.
 
 ### Predicted upcoming nodes
 
-At the **current measured usage of <!--v:rate-->1.31<!--/--> cycles/day = <!--v:mah_day-->4836<!--/--> mAh/day** (<!--v:span_days-->78<!--/-->-day
+At the **current measured usage of <!--v:rate-->1.30<!--/--> cycles/day = <!--v:mah_day-->4803<!--/--> mAh/day** (<!--v:span_days-->80<!--/-->-day
 charging diary, cross-checked by <!--v:gauge_n-->9<!--/--> non-stale gauge writes = <!--v:gauge_rate-->1.335<!--/-->/day) from <!--v:base_cycle-->213<!--/-->
 cycles on <!--v:base_date-->2026-11-19<!--/-->. Full forecast with mAh and rate sensitivity:
 [`iphone17-forecast.md`](iphone17-forecast.md).
@@ -162,7 +162,7 @@ cycles on <!--v:base_date-->2026-11-19<!--/-->. Full forecast with mAh and rate 
 |------|---------------|-----------------|
 | 250 | ~<!--v:date_next-->2026-12-17<!--/--> | another ~−0.43 pp / −15.9 mAh step |
 | 300 | ~<!--v:date_after-->2027-01-24<!--/--> | another ~−0.43 pp / −15.9 mAh step |
-| 1000 | ~<!--v:date_kilo-->2028-07-11<!--/--> | ≥1000 step (extrapolated 4390 mV) |
+| 1000 | ~<!--v:date_kilo-->2028-07-16<!--/--> | ≥1000 step (extrapolated 4390 mV) |
 
 The earlier 1.51–1.54 cycles/day estimate came from a regression on sparse
 export rows and was inflated by a heavy 30-day stretch; see the sensitivity
@@ -170,20 +170,20 @@ table in the forecast document.
 
 ---
 
-## 3. Charging behaviour (<!--v:sessions-->336<!--/--> sessions, <!--v:span_days-->78<!--/--> days)
+## 3. Charging behaviour (<!--v:sessions-->341<!--/--> sessions, <!--v:span_days-->80<!--/--> days)
 
 From [`charging-summary.json`](charging-summary.json):
 
 | Metric | Value |
 |--------|-------|
-| Sessions | <!--v:sessions-->336<!--/--> (<!--v:clean_sessions-->317<!--/--> clean, <!--v:anom_sessions-->19<!--/--> anomalous) |
+| Sessions | <!--v:sessions-->341<!--/--> (<!--v:clean_sessions-->322<!--/--> clean, <!--v:anom_sessions-->19<!--/--> anomalous) |
 | Total time | <!--v:dur_hours_2-->102.66<!--/--> h |
-| Total charged | <!--v:charged_sum-->10216<!--/--> % = **<!--v:efc-->102.16<!--/--> equivalent full cycles** |
-| Mean duration | <!--v:avg_dur-->18.33<!--/--> min |
-| Mean charge per session | <!--v:avg_charge-->30.40<!--/--> % |
+| Total charged | <!--v:charged_sum-->10408<!--/--> % = **<!--v:efc-->104.08<!--/--> equivalent full cycles** |
+| Mean duration | <!--v:avg_dur-->18.42<!--/--> min |
+| Mean charge per session | <!--v:avg_charge-->30.52<!--/--> % |
 | Mean rate | <!--v:rate_mean_3-->1.652<!--/--> %/min (<!--v:rate_clean_3-->1.757<!--/--> excluding anomalies) |
-| Sessions/day | <!--v:sess_day-->4.31<!--/--> (min <!--v:sess_day_min-->2<!--/-->, max <!--v:sess_day_max-->15<!--/-->) |
-| No net gain | <!--v:zero_sessions-->18<!--/--> sessions (<!--v:zero_pct-->5.4<!--/-->%) |
+| Sessions/day | <!--v:sess_day-->4.26<!--/--> (min <!--v:sess_day_min-->1<!--/-->, max <!--v:sess_day_max-->15<!--/-->) |
+| No net gain | <!--v:zero_sessions-->18<!--/--> sessions (<!--v:zero_pct-->5.3<!--/-->%) |
 | SOC dropped while plugged in | 1 session |
 | Longest | <!--v:longest_h-->2.25<!--/--> h for +<!--v:longest_pct-->30<!--/-->% (low-power / pass-through charging) |
 | Fastest | <!--v:fastest-->3.75<!--/--> %/min (short <!--v:fastest_lo-->17<!--/-->→<!--v:fastest_hi-->19<!--/-->% burst) |
@@ -198,21 +198,21 @@ By starting SOC:
 | Start SOC | Sessions | Mean charged | Mean rate |
 |-----------|----------|--------------|-----------|
 | 0–20% | 59 | 45.3% | 1.98 %/min |
-| 20–40% | 172 | 33.5% | 1.78 %/min |
-| 40–60% | 94 | 18.5% | 1.35 %/min |
+| 20–40% | 175 | 33.6% | 1.77 %/min |
+| 40–60% | 96 | 18.8% | 1.35 %/min |
 | 60–80% | 11 | 4.5% | 0.60 %/min |
 
 <!--/b-->
 
 Charging is dominated by shallow 20–60% top-ups; sessions ending above 80%
-are rare (<!--v:ge80_n-->4<!--/--> of <!--v:sessions-->336<!--/-->). Charge rate falls monotonically with starting SOC,
+are rare (<!--v:ge80_n-->4<!--/--> of <!--v:sessions-->341<!--/-->). Charge rate falls monotonically with starting SOC,
 consistent with CC/CV taper.
 
 Termination SOC is strongly clustered: **<!--v:top_a-->69<!--/-->% (<!--v:top_a_n-->46<!--/--> sessions)** and **<!--v:top_b-->79<!--/-->%
-(<!--v:top_b_n-->27<!--/--> sessions)** are the two most common end points, with <!--v:end_mid_n-->210<!--/-->/<!--v:sessions-->336<!--/--> sessions ending
+(<!--v:top_b_n-->27<!--/--> sessions)** are the two most common end points, with <!--v:end_mid_n-->215<!--/-->/<!--v:sessions-->341<!--/--> sessions ending
 in 65–81%. This is the signature of **unplugging before the 80% Charge
 Limit** (the limit is on as a safety net), and it explains why the device never reached a full
-charge during the <!--v:span_days-->78<!--/-->-day window. Consequence: the lifetime
+charge during the <!--v:span_days-->80<!--/-->-day window. Consequence: the lifetime
 `MaximumPackVoltage = 4496 mV` cannot have been produced inside this window —
 it is a fossil from a full charge before 09-01, when the 4.50 V target was
 still in effect (see
@@ -284,4 +284,4 @@ At <!--v:base_cycle-->213<!--/--> cycles / <!--v:base_health_two-->99.13<!--/-->
 bottleneck. The November drop is best explained by a cycle-node policy
 adjustment rather than sudden chemical failure. Mid-term linear lifetime
 extrapolation is invalid here; the next verifiable event is the 250-cycle
-node around <!--v:date_next-->2026-12-17<!--/--> (at the measured current usage of <!--v:rate-->1.31<!--/--> cycles/day).
+node around <!--v:date_next-->2026-12-17<!--/--> (at the measured current usage of <!--v:rate-->1.30<!--/--> cycles/day).

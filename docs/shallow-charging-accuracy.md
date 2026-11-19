@@ -12,7 +12,7 @@ Two facts, neither of them visible in the data:
    the normal stopping point.
 2. In practice the session ends **before 80%** on essentially every charge.
 
-The data agree. The <!--v:span_days-->78<!--/-->-day diary (<!--v:sessions-->336<!--/--> sessions since 2026-09-01)
+The data agree. The <!--v:span_days-->80<!--/-->-day diary (<!--v:sessions-->341<!--/--> sessions since 2026-09-01)
 never exceeds 81% SOC, and only 4 sessions end at ≥80% (80/80/80/81). Those
 four are consistent with the limit catching a late unplug. Termination piles
 up at <!--v:top_a-->69<!--/-->% (<!--v:top_a_n-->46<!--/--> sessions) and <!--v:top_b-->79<!--/-->% (<!--v:top_b_n-->27<!--/--> sessions).
@@ -49,7 +49,7 @@ past the limit.
 | Method | Calibration mechanism | Can it complete? |
 |---|---|---|
 | Charge Limit 80%, left plugged in | armed | yes, occasionally reaches 100% by design |
-| **Charge Limit 80%, unplugged before 80% (this device)** | **armed** | **no observed instance in <!--v:span_days-->78<!--/--> days**: every session ends before the limit is reached |
+| **Charge Limit 80%, unplugged before 80% (this device)** | **armed** | **no observed instance in <!--v:span_days-->80<!--/--> days**: every session ends before the limit is reached |
 | No Charge Limit, unplugged before 80% | not armed | no |
 
 So the practical outcome matches the "no calibration" case even though the
@@ -57,12 +57,12 @@ configuration matches the "calibrated" case. Physically this is the
 gentlest pattern for the cell. Metrologically, the calibration Apple designed
 is configured but pre-empted.
 
-## 3. Device evidence: no full charge, no calibration, in the <!--v:span_days-->78<!--/-->-day window
+## 3. Device evidence: no full charge, no calibration, in the <!--v:span_days-->80<!--/-->-day window
 
 | Evidence | Value | Weight |
 |---|---|---|
 | `DailyMaxSoc` in all <!--v:snap_n-->11<!--/--> analytics files | <!--v:maxsoc_list-->`42, 72, 72, 72, 74, 59, 63, 71, 69, 69, 75`<!--/-->: **max <!--v:maxsoc_max-->75<!--/-->%, never ≥80%** | strongest: written by iOS itself, but covers <!--v:snap_n-->11<!--/--> days only |
-| Charging diary, <!--v:sessions-->336<!--/--> sessions / <!--v:span_days-->78<!--/--> days | `soc_end` max **81%**; only **4** sessions ≥80% | covers the whole window |
+| Charging diary, <!--v:sessions-->341<!--/--> sessions / <!--v:span_days-->80<!--/--> days | `soc_end` max **81%**; only **4** sessions ≥80% | covers the whole window |
 | `MaximumPackVoltage` | **4496 mV**, constant, lifetime peak from before 09-01 under the ~4.50 V ceiling | confirms a full charge once existed before the window; a lifetime max cannot by itself prove none happened later |
 | `CycleCountLastQmax` | **138**, identical in all <!--v:snap_n-->11<!--/--> files; `QmaxCell0 = 3824` unchanged | no Qmax learning event during the <!--v:snap_n-->11<!--/--> analytics days |
 
@@ -111,8 +111,8 @@ it.
 - `AppleRawMaxCapacity`, `QmaxCell0`, `CycleCountLastQmax` and the constant
   `MaximumCapacityPercent = 101` as ground truth. All were observed with **no
   completed calibration** in the window.
-- **The usage rate `<!--v:rate-->1.31<!--/--> cycles/day = <!--v:mah_day-->4836<!--/--> mAh/day`, and therefore the
-  forecast's calendar dates.** It comes from `sum(charged_pct) = <!--v:charged_sum-->10216<!--/-->%`.
+- **The usage rate `<!--v:rate-->1.30<!--/--> cycles/day = <!--v:mah_day-->4803<!--/--> mAh/day`, and therefore the
+  forecast's calendar dates.** It comes from `sum(charged_pct) = <!--v:charged_sum-->10408<!--/-->%`.
   `charged_pct` is a difference of *displayed* SOC integers, so a **gain
   error** in SOC estimation scales it proportionally (a pure offset error
   cancels in the difference). The analytics regression gave 1.233

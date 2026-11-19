@@ -20,20 +20,20 @@ in the repository.
 
 | Cycles | NCC | NCC ÷ 3692 | Apple displayed | Voltage target | Usage |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **<!--v:base_cycle-->213<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.31<!--/--> cycles/day** |
+| **<!--v:base_cycle-->213<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> cycles/day** |
 
 Next node: 250 cycles → 4460 mV, point estimate ~<!--v:date_next-->2026-12-17<!--/-->, i.e.
-<!--v:date_next_lo-->2026-12-12<!--/--> … <!--v:date_next_hi-->2026-12-21<!--/--> across the usage windows present in the data
+<!--v:date_next_lo-->2026-12-13<!--/--> … <!--v:date_next_hi-->2026-12-20<!--/--> across the usage windows present in the data
 (pre-registered in [`docs/predictions.json`](docs/predictions.json)). The 1000-cycle row is
-<!--v:date_kilo-->2028-07-11<!--/--> by the same arithmetic and spreads just as widely,
-<!--v:date_kilo_lo-->2028-04-03<!--/--> … <!--v:date_kilo_hi-->2028-10-09<!--/-->; treat the single date as a point estimate, not a
+<!--v:date_kilo-->2028-07-16<!--/--> by the same arithmetic and spreads just as widely,
+<!--v:date_kilo_lo-->2028-04-16<!--/--> … <!--v:date_kilo_hi-->2028-09-27<!--/-->; treat the single date as a point estimate, not a
 promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 forecast curve" width="760"></p>
 
 > Charge Limit on this phone is set to 80% as a fallback, but sessions end
 > before 80% almost every time, so the calibration full charge iOS occasionally runs
-> never got a chance during these <!--v:span_days-->78<!--/--> days. Findings that depend on cycle count
+> never got a chance during these <!--v:span_days-->80<!--/--> days. Findings that depend on cycle count
 > (the voltage steps, the forecast) are unaffected. The gauge-derived capacity
 > and the displayed SOC carry a bias that cannot be quantified here. Details in
 > [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.md).
@@ -44,7 +44,7 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->11<!--/--> analytics snapshots + <!--v:export_n-->6<!--/-->-row health export, <!--v:sessions-->336<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->78<!--/--> days |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->11<!--/--> analytics snapshots + <!--v:export_n-->6<!--/-->-row health export, <!--v:sessions-->341<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->80<!--/--> days |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, reference only | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); no `VacVoltageLimit` | 2026-11-15 |
 
@@ -89,10 +89,10 @@ More devices can be added as sibling directories under `devices/`.
    cycles" is lock-in rather than wear. Dropping the target is protective.
    Full curve in [`docs/lifetime-projection.md`](docs/lifetime-projection.md).
 
-6. Charging behaviour: <!--v:sessions-->336<!--/--> sessions over <!--v:span_days-->78<!--/--> days, <!--v:efc-->102.16<!--/--> equivalent full
-   cycles, mean rate <!--v:rate_mean-->1.65<!--/-->%/min (<!--v:rate_mean_clean-->1.76<!--/-->%/min with anomalies excluded).
-   <!--v:zero_sessions-->18<!--/--> sessions (<!--v:zero_pct-->5.4<!--/-->%) gained nothing, one lost SOC while plugged in,
-   <!--v:anom_sessions-->19<!--/--> rows are flagged in total (<!--v:anom_pct-->5.7<!--/-->%).
+6. Charging behaviour: <!--v:sessions-->341<!--/--> sessions over <!--v:span_days-->80<!--/--> days, <!--v:efc-->104.08<!--/--> equivalent full
+   cycles, mean rate <!--v:rate_mean-->1.65<!--/-->%/min (<!--v:rate_mean_clean-->1.75<!--/-->%/min with anomalies excluded).
+   <!--v:zero_sessions-->18<!--/--> sessions (<!--v:zero_pct-->5.3<!--/-->%) gained nothing, one lost SOC while plugged in,
+   <!--v:anom_sessions-->19<!--/--> rows are flagged in total (<!--v:anom_pct-->5.6<!--/-->%).
 
 7. `Raw Capacity` is a drifting estimate, and two consecutive snapshots show it:
    on 11-14 → 11-15 it moved 3683→3692 mAh while `NominalChargeCapacity` and the
@@ -151,12 +151,12 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | Path | Contents |
 |------|----------|
 | [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | <!--v:export_n-->6<!--/-->-row third-party health export, separate from the analytics snapshots |
-| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->336<!--/--> de-identified sessions |
+| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->341<!--/--> de-identified sessions |
 | [`devices/iphone-01/device.json`](devices/iphone-01/device.json) | nameplate parameters |
 | [`devices/iphone-01/voltage-reading.md`](devices/iphone-01/voltage-reading.md) | one 4.04V @ 70% reading with the OCV check |
 | [`docs/findings.md`](docs/findings.md) | full analysis |
 | [`docs/lifetime-projection.md`](docs/lifetime-projection.md) | lifetime reasoning across devices; not the iphone-01 forecast |
-| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.md) | iphone-01-only curve at current usage (<!--v:rate-->1.31<!--/--> cycles/day = <!--v:mah_day-->4836<!--/--> mAh/day) |
+| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.md) | iphone-01-only curve at current usage (<!--v:rate-->1.30<!--/--> cycles/day = <!--v:mah_day-->4803<!--/--> mAh/day) |
 | `docs/iphone17-forecast.csv` / `.json` / `.svg` | forecast data and chart |
 | [`docs/voltage-capacity-experiment.json`](docs/voltage-capacity-experiment.json) | A/B measurement: voltage limit vs reported capacity |
 | [`scripts/forecast.py`](scripts/forecast.py) | regenerates the iphone-01-only forecast |
