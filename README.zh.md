@@ -15,14 +15,14 @@
 analytics 文件和充电日志，不来自宣传材料；把这些文件变成下面这些表格的脚本也
 在仓库里。
 
-### 速览（`iphone-01`，最新快照 <!--v:base_date-->2026-11-21<!--/-->）
+### 速览（`iphone-01`，最新快照 <!--v:base_date-->2026-11-24<!--/-->）
 
 | 循环 | NCC | NCC ÷ 3692 | 苹果显示值 | 充电电压上限 | 用量 |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **<!--v:base_cycle-->216<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> 次循环/天** |
+| **<!--v:base_cycle-->220<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> 次循环/天** |
 
 下一个节点：250 次循环 → 4460 mV，点估计约 <!--v:date_next-->2026-12-17<!--/-->；按数据里现有的几种用量口径，落在
-<!--v:date_next_lo-->2026-12-13<!--/--> … <!--v:date_next_hi-->2026-12-20<!--/-->（已事前登记在
+<!--v:date_next_lo-->2026-12-13<!--/--> … <!--v:date_next_hi-->2026-12-19<!--/-->（已事前登记在
 [`docs/predictions.json`](docs/predictions.json)）。1000 次循环那一行同样是 <!--v:date_kilo-->2028-07-16<!--/-->，区间也一样宽：
 <!--v:date_kilo_lo-->2028-04-16<!--/--> … <!--v:date_kilo_hi-->2028-09-26<!--/-->。单个日期只是点估计，不是承诺
 （见 [`docs/iphone17-forecast.md`](docs/iphone17-forecast.zh.md)）。
@@ -40,7 +40,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 
 | ID | 平台 | 数据 | 覆盖 |
 |----|------|------|------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->13<!--/--> 份 analytics 快照 + 6 行健康导出，<!--v:sessions-->341<!--/--> 次充电会话，1 次电压读数 | 2026-09-01 起的充电日志，<!--v:span_days-->80<!--/--> 天 |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->16<!--/--> 份 analytics 快照 + 6 行健康导出，<!--v:sessions-->341<!--/--> 次充电会话，1 次电压读数 | 2026-09-01 起的充电日志，<!--v:span_days-->80<!--/--> 天 |
 | [`reference-01`](devices/reference-01/README.zh.md) | iOS 17.6.1，1420 次循环，3.83V / 2815mAh / 4.45V | 单份 analytics 快照，仅作参考 | 2026-11-15 |
 | [`reference-02`](devices/reference-02/README.zh.md) | iOS 15.1，3.83V / 3110mAh / 4.45V | 铭牌 + 一份电量计快照（2919 次循环，67%）；没有 `VacVoltageLimit` | 2026-11-15 |
 
@@ -86,7 +86,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
    3683 走到 3692 mAh，而 `NominalChargeCapacity` 和健康度都没动。它最后正好落在
    3692 铭牌上，是巧合。
 
-8. −0.43 pp 这个断崖是日常噪声的 16 倍。<!--v:snap_zh-->十三<!--/-->份连续快照给出的 NCC 是
+8. −0.43 pp 这个断崖是日常噪声的 16 倍。<!--v:snap_zh-->十六<!--/-->份连续快照给出的 NCC 是
    <!--v:ncc_range-->3658–3660<!--/--> mAh（抖动 0.027 pp，回弹也算在内），而 `AppleRawMaxCapacity` 摆动了
    <!--v:raw_range-->41<!--/--> mAh（噪声大 <!--v:raw_ratio-->41<!--/--> 倍）。这把阶跃限定在 194→200 次循环之间，速率
    1.50 次循环/天。11-09 那份在第 200 次循环就已经是 4480 mV，说明阶跃在节点上发生；
@@ -169,7 +169,7 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 按这个前提标注。
 
 200 次循环这个阶跃在本机得到了确认：2026-11-09 的 analytics 里，`VacVoltageLimit = 4480 mV`
-恰好出现在 `CycleCount = 200`；之后 <!--v:further_zh-->十二<!--/-->份快照覆盖 <!--v:further_range-->202–216<!--/--> 次循环，读到的都是
+恰好出现在 `CycleCount = 200`；之后 <!--v:further_zh-->十五<!--/-->份快照覆盖 <!--v:further_range-->202–220<!--/--> 次循环，读到的都是
 4480 mV。见 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.zh.md)。
 
 iOS 只保留大约 7–8 天的 analytics，所以 200 次循环之前的快照（4500 mV 那档）已经

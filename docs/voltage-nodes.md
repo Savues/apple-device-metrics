@@ -94,7 +94,7 @@ numbers should be treated as an empirical hypothesis, not a specification.
 that happens to share the same 4.50 V limit. Its 1–199 row (4.50 V) matches
 the nameplate, and the 200–249 row (4.48 V) is what the 2026-11-09 analytics
 file reports at **`CycleCount = 200` exactly** — the step is active at the
-node itself, not after it. <!--v:further_word_cap-->Twelve<!--/--> further snapshots (<!--v:further_range-->202–216<!--/--> cycles) confirm
+node itself, not after it. <!--v:further_word_cap-->Fifteen<!--/--> further snapshots (<!--v:further_range-->202–220<!--/--> cycles) confirm
 4480 mV throughout. This is direct device-level confirmation of both the
 applicable table and the −0.02 V magnitude.
 
@@ -130,7 +130,7 @@ python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips
 Remaining checks:
 
 1. ~~**Pre-200 snapshot**~~ **Unobtainable** — iOS retains only ~7–8 days of
-   analytics; all <!--v:snap_word-->thirteen<!--/--> files available sit at <!--v:cycle_range-->200–216<!--/--> cycles. A direct
+   analytics; all <!--v:snap_word-->sixteen<!--/--> files available sit at <!--v:cycle_range-->200–220<!--/--> cycles. A direct
    4500 mV reading cannot be recovered. Indirect evidence: lifetime
    `MaximumPackVoltage = 4496 mV`, 16 mV above the current 4480 mV target,
    which must have been recorded under the earlier ~4.50 V ceiling.

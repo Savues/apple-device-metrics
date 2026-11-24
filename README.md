@@ -16,14 +16,14 @@ The numbers come from iOS analytics files and the charging log, not from
 marketing material; the scripts that turn those files into the tables below are
 in the repository.
 
-### At a glance (`iphone-01`, latest snapshot <!--v:base_date-->2026-11-21<!--/-->)
+### At a glance (`iphone-01`, latest snapshot <!--v:base_date-->2026-11-24<!--/-->)
 
 | Cycles | NCC | NCC ÷ 3692 | Apple displayed | Voltage target | Usage |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **<!--v:base_cycle-->216<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> cycles/day** |
+| **<!--v:base_cycle-->220<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> cycles/day** |
 
 Next node: 250 cycles → 4460 mV, point estimate ~<!--v:date_next-->2026-12-17<!--/-->, i.e.
-<!--v:date_next_lo-->2026-12-13<!--/--> … <!--v:date_next_hi-->2026-12-20<!--/--> across the usage windows present in the data
+<!--v:date_next_lo-->2026-12-13<!--/--> … <!--v:date_next_hi-->2026-12-19<!--/--> across the usage windows present in the data
 (pre-registered in [`docs/predictions.json`](docs/predictions.json)). The 1000-cycle row is
 <!--v:date_kilo-->2028-07-16<!--/--> by the same arithmetic and spreads just as widely,
 <!--v:date_kilo_lo-->2028-04-16<!--/--> … <!--v:date_kilo_hi-->2028-09-26<!--/-->; treat the single date as a point estimate, not a
@@ -44,7 +44,7 @@ promise ([`docs/iphone17-forecast.md`](docs/iphone17-forecast.md)).
 
 | ID | Platform | Data | Coverage |
 |----|----------|------|----------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->13<!--/--> analytics snapshots + <!--v:export_n-->6<!--/-->-row health export, <!--v:sessions-->341<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->80<!--/--> days |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**, iOS 26.4.2, 3.887V / 3692mAh / 4.50V limit | <!--v:snap_n-->16<!--/--> analytics snapshots + <!--v:export_n-->6<!--/-->-row health export, <!--v:sessions-->341<!--/--> charge sessions, 1 voltage reading | charging diary since 2026-09-01, <!--v:span_days-->80<!--/--> days |
 | [`reference-01`](devices/reference-01/) | iOS 17.6.1, 1420 cycles, 3.83V / 2815mAh / 4.45V | single analytics snapshot, reference only | 2026-11-15 |
 | [`reference-02`](devices/reference-02/) | iOS 15.1, 3.83V / 3110mAh / 4.45V | nameplate + one gauge snapshot (2919 cycles, 67%); no `VacVoltageLimit` | 2026-11-15 |
 
@@ -99,7 +99,7 @@ More devices can be added as sibling directories under `devices/`.
    health figure stayed put. Its landing exactly on the 3692 nameplate was a
    coincidence.
 
-8. The −0.43 pp cliff is 16× the daily noise. <!--v:snap_word_cap-->Thirteen<!--/--> consecutive snapshots give
+8. The −0.43 pp cliff is 16× the daily noise. <!--v:snap_word_cap-->Sixteen<!--/--> consecutive snapshots give
    NCC <!--v:ncc_range-->3658–3660<!--/--> mAh (0.027 pp of jitter, rebounds included), while
    `AppleRawMaxCapacity` swings <!--v:raw_range-->41<!--/--> mAh (<!--v:raw_ratio-->41<!--/-->× noisier). That brackets the step to
    cycles 194→200 at 1.50 cycles/day. 11-09 already shows 4480 mV at cycle 200,
@@ -187,8 +187,8 @@ performance-management and optimised-charging behaviour, and nothing about a
 step-down ladder, so every derived claim here is labelled as inference.
 
 The 200-cycle step is confirmed on this phone: `VacVoltageLimit = 4480 mV` at
-exactly `CycleCount = 200` in the 2026-11-09 analytics, and <!--v:further_word-->twelve<!--/--> more
-snapshots between <!--v:further_range-->202–216<!--/--> cycles all read 4480 mV. See
+exactly `CycleCount = 200` in the 2026-11-09 analytics, and <!--v:further_word-->fifteen<!--/--> more
+snapshots between <!--v:further_range-->202–220<!--/--> cycles all read 4480 mV. See
 [`devices/iphone-01/ANALYTICS-EVIDENCE.md`](devices/iphone-01/ANALYTICS-EVIDENCE.md).
 iOS keeps only about 7–8 days of analytics, so a pre-200 snapshot at 4500 mV
 cannot be obtained any more. The lifetime peak `MaximumPackVoltage = 4496 mV`

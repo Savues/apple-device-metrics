@@ -97,7 +97,7 @@ long-term degradation — that is why the 0.0165 %/day extrapolation was
 withdrawn — but the "concavity" must not be interpreted as a pure ageing
 law either.
 
-At **<!--v:rate-->1.30<!--/--> cycles/day** from <!--v:base_cycle-->216<!--/--> cycles on <!--v:base_date-->2026-11-21<!--/--> (this document is
+At **<!--v:rate-->1.30<!--/--> cycles/day** from <!--v:base_cycle-->220<!--/--> cycles on <!--v:base_date-->2026-11-24<!--/--> (this document is
 general context, not the iphone-01 forecast — see
 [`iphone17-forecast.md`](iphone17-forecast.md) for that):
 
@@ -177,7 +177,7 @@ user will notice.
 **Medium term (500–1000 cycles, ~2027–2028).** Note this section draws on
 cross-device context only. The iphone-01-only forecast
 ([`iphone17-forecast.md`](iphone17-forecast.md)) puts NCC health at ~94.9%
-(<!--v:ncc_kilo-->3506<!--/--> mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
+(<!--v:ncc_kilo-->3507<!--/--> mAh) at 1000 cycles and does **not** reach 80% in the modelled window.
 Where a displayed 80% does occur, per §0 a large part of it is reversible
 lock-in rather than wear, so it is neither a pure wear measure nor an
 end-of-life threshold.
@@ -193,7 +193,7 @@ gives dramatically more cycles).
 **Bottom line: the observed behaviour is protective, not deteriorating.**
 The step-down costs a few percent of runtime per charge and buys a flatter
 ageing curve; most of the *displayed* health loss is reversible lock-in, not
-wear. At <!--v:base_cycle-->216<!--/--> cycles / <!--v:base_health_two-->99.13<!--/-->% (NCC ratio) / <!--v:apple-->101<!--/--> (Apple health), the battery
+wear. At <!--v:base_cycle-->220<!--/--> cycles / <!--v:base_health_two-->99.13<!--/-->% (NCC ratio) / <!--v:apple-->101<!--/--> (Apple health), the battery
 is in excellent condition and is not the limiting factor for the device's
 useful life. The official 1000-cycle / 80% number should be read as a
 displayed-value commitment, not a prediction of when the cell is worn out.
