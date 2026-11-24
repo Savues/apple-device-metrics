@@ -103,7 +103,7 @@ python3 scripts/extract_analytics.py /path/to/Analytics-YYYY-MM-DD.ips
 2. **第 250 循环（按当前使用强度约 <!--v:date_next-->2026-12-17<!--/-->）**：预计 `VacVoltageLimit =
    4460` —— 下一个节点，在滚动窗口内可以完整观测。
 3. ~~**Qmax 假设**~~ 同样无法获取：没有第 138 循环附近的快照。
-4. 关注在 250 和 300（约 <!--v:date_after-->2027-01-24<!--/-->）处是否再出现约 −0.43 pp / −15.9 mAh 的健康度阶跃，其间为平坦的平台期。速率依据见
+4. 关注在 250 和 300（约 <!--v:date_after-->2027-01-25<!--/-->）处是否再出现约 −0.43 pp / −15.9 mAh 的健康度阶跃，其间为平坦的平台期。速率依据见
    [`iphone17-forecast.md`](iphone17-forecast.zh.md)。
 
 ## 参考资料

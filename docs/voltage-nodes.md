@@ -138,7 +138,7 @@ Remaining checks:
    4460` — the next node, fully observable with the rolling window.
 3. ~~**Qmax hypothesis**~~ Also unobtainable: no snapshot near cycle 138.
 4. Watch for another ~−0.43 pp / −15.9 mAh health step at 250 and 300
-   (~<!--v:date_after-->2027-01-24<!--/-->), with flat plateaus between. See
+   (~<!--v:date_after-->2027-01-25<!--/-->), with flat plateaus between. See
    [`iphone17-forecast.md`](iphone17-forecast.md) for the rate basis.
 
 ## References

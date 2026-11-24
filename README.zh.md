@@ -19,18 +19,18 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 
 | 循环 | NCC | NCC ÷ 3692 | 苹果显示值 | 充电电压上限 | 用量 |
 |:-:|:-:|:-:|:-:|:-:|:-:|
-| **<!--v:base_cycle-->220<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.30<!--/--> 次循环/天** |
+| **<!--v:base_cycle-->220<!--/-->** | **<!--v:base_ncc-->3660<!--/--> mAh** | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->%** | **<!--v:vac-->4480<!--/--> mV** | **<!--v:rate-->1.29<!--/--> 次循环/天** |
 
 下一个节点：250 次循环 → 4460 mV，点估计约 <!--v:date_next-->2026-12-17<!--/-->；按数据里现有的几种用量口径，落在
-<!--v:date_next_lo-->2026-12-13<!--/--> … <!--v:date_next_hi-->2026-12-19<!--/-->（已事前登记在
-[`docs/predictions.json`](docs/predictions.json)）。1000 次循环那一行同样是 <!--v:date_kilo-->2028-07-16<!--/-->，区间也一样宽：
-<!--v:date_kilo_lo-->2028-04-16<!--/--> … <!--v:date_kilo_hi-->2028-09-26<!--/-->。单个日期只是点估计，不是承诺
+<!--v:date_next_lo-->2026-12-16<!--/--> … <!--v:date_next_hi-->2026-12-21<!--/-->（已事前登记在
+[`docs/predictions.json`](docs/predictions.json)）。1000 次循环那一行同样是 <!--v:date_kilo-->2028-07-20<!--/-->，区间也一样宽：
+<!--v:date_kilo_lo-->2028-06-28<!--/--> … <!--v:date_kilo_hi-->2028-11-08<!--/-->。单个日期只是点估计，不是承诺
 （见 [`docs/iphone17-forecast.md`](docs/iphone17-forecast.zh.md)）。
 
 <p align="center"><img src="docs/iphone17-forecast.svg" alt="iphone-01 预测曲线" width="760"></p>
 
 > 这台机器的充电上限（Charge Limit）设在 80% 兜底，但几乎每次充电都在 80% 之前结束，
-> 所以苹果偶尔进行的满充校准，在这 <!--v:span_days-->80<!--/--> 天里一次也没轮到。依赖循环次数的结论（降压节点、预测）
+> 所以苹果偶尔进行的满充校准，在这 <!--v:span_days-->85<!--/--> 天里一次也没轮到。依赖循环次数的结论（降压节点、预测）
 > 不受影响；由电量计推算的容量和显示的 SOC 带有偏差，无法在此量化。细节见
 > [`docs/shallow-charging-accuracy.md`](docs/shallow-charging-accuracy.zh.md)。
 
@@ -40,7 +40,7 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
 
 | ID | 平台 | 数据 | 覆盖 |
 |----|------|------|------|
-| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->16<!--/--> 份 analytics 快照 + 6 行健康导出，<!--v:sessions-->341<!--/--> 次充电会话，1 次电压读数 | 2026-09-01 起的充电日志，<!--v:span_days-->80<!--/--> 天 |
+| [`iphone-01`](devices/iphone-01/) | **iPhone 17**，iOS 26.4.2，3.887V / 3692mAh / 4.50V 上限 | <!--v:snap_n-->16<!--/--> 份 analytics 快照 + 6 行健康导出，<!--v:sessions-->357<!--/--> 次充电会话，1 次电压读数 | 2026-09-01 起的充电日志，<!--v:span_days-->85<!--/--> 天 |
 | [`reference-01`](devices/reference-01/README.zh.md) | iOS 17.6.1，1420 次循环，3.83V / 2815mAh / 4.45V | 单份 analytics 快照，仅作参考 | 2026-11-15 |
 | [`reference-02`](devices/reference-02/README.zh.md) | iOS 15.1，3.83V / 3110mAh / 4.45V | 铭牌 + 一份电量计快照（2919 次循环，67%）；没有 `VacVoltageLimit` | 2026-11-15 |
 
@@ -78,9 +78,9 @@ analytics 文件和充电日志，不来自宣传材料；把这些文件变成�
    大约 40% 是锁容，不是磨损。把目标电压降下来是保护性的。完整曲线见
    [`docs/lifetime-projection.md`](docs/lifetime-projection.zh.md)。
 
-6. 充电行为：<!--v:sessions-->341<!--/--> 次会话、<!--v:span_days-->80<!--/--> 天、<!--v:efc-->104.08<!--/--> 次等效完整循环，平均速率
-   <!--v:rate_mean-->1.65<!--/-->%/min（剔除异常后 <!--v:rate_mean_clean-->1.75<!--/-->%/min）。<!--v:zero_sessions-->18<!--/--> 次会话（<!--v:zero_pct-->5.3<!--/-->%）净充入为零，
-   有一次插着电 SOC 反而下降；异常行共 <!--v:anom_sessions-->19<!--/--> 条（<!--v:anom_pct-->5.6<!--/-->%）。
+6. 充电行为：<!--v:sessions-->357<!--/--> 次会话、<!--v:span_days-->85<!--/--> 天、<!--v:efc-->109.80<!--/--> 次等效完整循环，平均速率
+   <!--v:rate_mean-->1.66<!--/-->%/min（剔除异常后 <!--v:rate_mean_clean-->1.75<!--/-->%/min）。<!--v:zero_sessions-->18<!--/--> 次会话（<!--v:zero_pct-->5.0<!--/-->%）净充入为零，
+   有一次插着电 SOC 反而下降；异常行共 <!--v:anom_sessions-->19<!--/--> 条（<!--v:anom_pct-->5.3<!--/-->%）。
 
 7. `Raw Capacity` 是个会漂移的估计值，连续两份快照就能看出来：11-14 → 11-15 它从
    3683 走到 3692 mAh，而 `NominalChargeCapacity` 和健康度都没动。它最后正好落在
@@ -134,12 +134,12 @@ python3 scripts/parse_charging_log.py /path/to/private/raw.txt \
 | 路径 | 内容 |
 |------|------|
 | [`devices/iphone-01/health-samples.csv`](devices/iphone-01/health-samples.csv) | <!--v:export_n-->6<!--/--> 行第三方健康导出，与 analytics 快照是两回事 |
-| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->341<!--/--> 次去标识化会话 |
+| [`devices/iphone-01/charging-sessions.csv`](devices/iphone-01/charging-sessions.csv) | <!--v:sessions-->357<!--/--> 次去标识化会话 |
 | [`devices/iphone-01/device.json`](devices/iphone-01/device.json) | 铭牌参数 |
 | [`devices/iphone-01/voltage-reading.md`](devices/iphone-01/voltage-reading.zh.md) | 一次 4.04V @ 70% 读数与 OCV 核对 |
 | [`docs/findings.md`](docs/findings.zh.md) | 完整分析 |
 | [`docs/lifetime-projection.md`](docs/lifetime-projection.zh.md) | 跨设备的寿命推理，不是 iphone-01 的预测 |
-| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.zh.md) | 仅用 iphone-01 数据的曲线，按当前用量（<!--v:rate-->1.30<!--/--> 次循环/天 = <!--v:mah_day-->4803<!--/--> mAh/天） |
+| [`docs/iphone17-forecast.md`](docs/iphone17-forecast.zh.md) | 仅用 iphone-01 数据的曲线，按当前用量（<!--v:rate-->1.29<!--/--> 次循环/天 = <!--v:mah_day-->4769<!--/--> mAh/天） |
 | `docs/iphone17-forecast.csv` / `.json` / `.svg` | 预测数据与图表 |
 | [`docs/voltage-capacity-experiment.json`](docs/voltage-capacity-experiment.json) | A/B 测量：电压上限与报告容量 |
 | [`scripts/forecast.py`](scripts/forecast.py) | 重新生成 iphone-01 的预测 |
