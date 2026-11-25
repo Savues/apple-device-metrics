@@ -97,16 +97,16 @@ long-term degradation — that is why the 0.0165 %/day extrapolation was
 withdrawn — but the "concavity" must not be interpreted as a pure ageing
 law either.
 
-At **<!--v:rate-->1.29<!--/--> cycles/day** from <!--v:base_cycle-->220<!--/--> cycles on <!--v:base_date-->2026-11-24<!--/--> (this document is
+At **<!--v:rate-->1.29<!--/--> cycles/day** from <!--v:base_cycle-->220<!--/--> cycles on <!--v:base_date-->2026-11-25<!--/--> (this document is
 general context, not the iphone-01 forecast — see
 [`iphone17-forecast.md`](iphone17-forecast.md) for that):
 
 | Node | Expected date | Note |
 |------|---------------|------|
-| 250 cycles | ~<!--v:date_next-->2026-12-17<!--/--> | 2nd voltage step (4460 mV) |
-| 300 cycles | ~<!--v:date_after-->2027-01-25<!--/--> | 3rd step (4440 mV) |
+| 250 cycles | ~<!--v:date_next-->2026-12-18<!--/--> | 2nd voltage step (4460 mV) |
+| 300 cycles | ~<!--v:date_after-->2027-01-26<!--/--> | 3rd step (4440 mV) |
 | 500 cycles | ~<!--v:date_half-->2027-06<!--/--> | — |
-| **1000 cycles** | **~<!--v:date_kilo-->2028-07-20<!--/-->** | ≥1000 step (extrapolated 4390 mV) |
+| **1000 cycles** | **~<!--v:date_kilo-->2028-07-21<!--/-->** | ≥1000 step (extrapolated 4390 mV) |
 
 ### B. Usable capacity per full charge
 
@@ -230,7 +230,7 @@ a hot environment, and high-current fast charging.
 | Derating slows chemical ageing | **High (direction)** — well-established electrochemistry; magnitude not quantified for this cell |
 | Dates for future nodes | Medium — assumes <!--v:rate-->1.29<!--/--> cycles/day (current measured usage) continues |
 
-Revisit after the 250-cycle node (~<!--v:date_next-->2026-12-17<!--/-->): a new analytics snapshot
+Revisit after the 250-cycle node (~<!--v:date_next-->2026-12-18<!--/-->): a new analytics snapshot
 will show whether `VacVoltageLimit = 4460 mV` and whether displayed health
 moves at all.
 

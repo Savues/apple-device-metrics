@@ -11,7 +11,7 @@ in a separate directory and is **not** merged into the
 | **Nominal voltage** | **3.887 V** | **3.83 V** |
 | **Charge limit (nameplate)** | **4.50 V** | **4.45 V** |
 | **Cell / battery energy** | **14.499 / 14.351 Wh** | **10.90 / 10.78 Wh** |
-| Analytics date | 11-09 … <!--v:base_date-->2026-11-24<!--/--> (<!--v:snap_n-->16<!--/--> files) | 2026-11-15 (1 file) |
+| Analytics date | 11-09 … <!--v:base_date-->2026-11-25<!--/--> (<!--v:snap_n-->17<!--/--> files) | 2026-11-15 (1 file) |
 | Cycles | 200 → 208 | **1420** |
 | `VacVoltageLimit` | 4480 mV | **4340 mV** |
 | `MaximumPackVoltage` (lifetime peak) | 4496 mV | **4450 mV** |

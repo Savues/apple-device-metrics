@@ -21,9 +21,9 @@ Reproduce: `python3 scripts/forecast.py` →
 
 | Parameter | Value | Source on `iphone-01` |
 |-----------|-------|------------------------|
-| Base date / cycle | <!--v:base_date-->2026-11-24<!--/--> / <!--v:base_cycle-->220<!--/--> | <!--v:base_md-->11-24<!--/--> analytics (latest snapshot) |
-| Base NCC / health | <!--v:base_ncc-->3660<!--/--> mAh / **<!--v:base_health-->99.133<!--/-->%** | <!--v:base_md-->11-24<!--/--> analytics, `NCC/3692` |
-| Apple `MaximumCapacityPercent` | **101** | all <!--v:snap_n-->16<!--/--> analytics files |
+| Base date / cycle | <!--v:base_date-->2026-11-25<!--/--> / <!--v:base_cycle-->220<!--/--> | <!--v:base_md-->11-25<!--/--> analytics (latest snapshot) |
+| Base NCC / health | <!--v:base_ncc-->3660<!--/--> mAh / **<!--v:base_health-->99.133<!--/-->%** | <!--v:base_md-->11-25<!--/--> analytics, `NCC/3692` |
+| Apple `MaximumCapacityPercent` | **101** | all <!--v:snap_n-->17<!--/--> analytics files |
 | Cycle rate (current) | **<!--v:rate-->1.29<!--/--> /day = <!--v:mah_day-->4769<!--/--> mAh/day** | <!--v:span_days-->85<!--/-->-day charging diary (<!--v:charged_sum-->10980<!--/-->% = <!--v:charged_mah-->405,382<!--/--> mAh). Cross-check: <!--v:gauge_n-->14<!--/--> non-stale analytics gauge writes (CycleCount <!--v:gauge_cycles-->200→220<!--/--> over <!--v:gauge_span-->15.24<!--/--> days) = <!--v:gauge_rate-->1.336<!--/-->/day by regression; both rely on coulomb counting, so this is not independent |
 | Plateau slope | **0.00476 pp/day = 0.176 mAh/day** | mean of 3 non-step segments in that export |
 | Step per 20 mV node | **−0.43 pp = −15.9 mAh** | the 200-node step (3675→3659 mAh) |
@@ -72,7 +72,7 @@ Two curves are drawn:
 The SVG's **right axis is mAh**, so both curves can be read as real capacity.
 
 `MaximumCapacityPercent` (Apple's displayed health) is **not modelled**:
-this device has shown a constant 101 across all <!--v:snap_word-->sixteen<!--/--> analytics files,
+this device has shown a constant 101 across all <!--v:snap_word-->seventeen<!--/--> analytics files,
 including across the 200-cycle step. There is no observed change from which
 to fit a curve. Do not assume it follows the blue line.
 
@@ -82,10 +82,10 @@ to fit a curve. Do not assume it follows the blue line.
 
 | Date | Cycles | Voltage | NCC health | **NCC mAh** | Lock-in mAh | Chemical-only mAh |
 |------|--------|---------|-----------|-------------|-------------|-------------------|
-| 2026-11-24 (now) | 220 | 4480 mV | **99.133%** | **3660** | 0 | 3660 |
-| **2026-12-17** | 250 | 4460 mV | **98.593%** | **3640** | 16 | 3656 |
-| **2027-01-25** | 300 | 4440 mV | **97.978%** | **3617** | 32 | 3649 |
-| **2028-07-20** | 1000 | 4390 mV | **94.965%** | **3506** | 48 | **3554** |
+| 2026-11-25 (now) | 220 | 4480 mV | **99.133%** | **3660** | 0 | 3660 |
+| **2026-12-18** | 250 | 4460 mV | **98.593%** | **3640** | 16 | 3656 |
+| **2027-01-26** | 300 | 4440 mV | **97.978%** | **3617** | 32 | 3649 |
+| **2028-07-21** | 1000 | 4390 mV | **94.965%** | **3506** | 48 | **3554** |
 
 <!--/b-->
 
@@ -108,12 +108,12 @@ health at a given cycle barely changes, but the **dates** move a lot.
 
 | Usage window | cycles/day | mAh/day | 250 node | 1000 node | NCC mAh @1000 |
 |--------------|-----------|---------|----------|-----------|---------------|
-| recent 7 days | 1.09 | 4024 | 2026-12-21 | 2028-11-08 | 3487 |
-| recent 14 days | 1.11 | 4098 | 2026-12-21 | 2028-10-26 | 3489 |
-| independent gauge snapshots (regression) | 1.336 | 4933 | 2026-12-16 | 2028-06-29 | 3510 |
-| **full 85-day diary (primary)** | **1.29** | **4769** | **2026-12-17** | **2028-07-20** | **3506** |
-| recent 30 days | 1.34 | 4947 | 2026-12-16 | 2028-06-28 | 3510 |
-| old 57-day regression (withdrawn) | 1.5386 | 5681 | 2026-12-13 | 2028-04-13 | 3523 |
+| recent 7 days | 1.09 | 4024 | 2026-12-22 | 2028-11-09 | 3487 |
+| recent 14 days | 1.11 | 4098 | 2026-12-22 | 2028-10-27 | 3489 |
+| independent gauge snapshots (regression) | 1.336 | 4933 | 2026-12-17 | 2028-06-30 | 3510 |
+| **full 85-day diary (primary)** | **1.29** | **4769** | **2026-12-18** | **2028-07-21** | **3506** |
+| recent 30 days | 1.34 | 4947 | 2026-12-17 | 2028-06-29 | 3510 |
+| old 57-day regression (withdrawn) | 1.5386 | 5681 | 2026-12-14 | 2028-04-14 | 3523 |
 
 <!--/b-->
 
@@ -142,7 +142,7 @@ at current usage it is **~2028-07**, three months later.
 |--------|------------|
 | Current usage rate (<!--v:mah_day-->4769<!--/--> mAh/day) | **Medium** — diary and gauge regression (<!--v:gauge_rate-->1.336<!--/-->/day) agree within <!--v:gauge_agree-->4<!--/-->%, but share the coulomb-count source; an uncalibrated SOC gain error would shift calendar dates, not the curve shape. See [`shallow-charging-accuracy.md`](shallow-charging-accuracy.md) §5 |
 | Plateau slope | **High** — measured on this device |
-| Base NCC (<!--v:base_ncc-->3660<!--/--> mAh, <!--v:base_md-->11-24<!--/--> single point) | Medium — daily jitter ±1–2 mAh; a 3-day mean would be steadier |
+| Base NCC (<!--v:base_ncc-->3660<!--/--> mAh, <!--v:base_md-->11-25<!--/--> single point) | Medium — daily jitter ±1–2 mAh; a 3-day mean would be steadier |
 | 250 / 300 node dates | Medium — assumes <!--v:rate-->1.29<!--/-->/day continues; see §3.1 sensitivity |
 | −0.43 pp (−15.9 mAh) per node | Medium — one node observed; assumes later nodes same size |
 | ≥1000 band (4390 mV) | **Low** — extrapolated from the iPhone 13 series |
@@ -153,7 +153,7 @@ The model has **no ageing acceleration term**. That makes
 it optimistic beyond ~500 cycles. Treat everything past 1000 cycles as an
 extrapolation, not a prediction.
 
-Revisit at the 250-cycle node (~<!--v:date_next-->2026-12-17<!--/--> at current usage): one new
+Revisit at the 250-cycle node (~<!--v:date_next-->2026-12-18<!--/--> at current usage): one new
 analytics file will confirm `VacVoltageLimit = 4460 mV`, show whether the
 step is again −0.43 pp / −15.9 mAh, and whether Apple's displayed 101
 finally moves. These are registered in advance in

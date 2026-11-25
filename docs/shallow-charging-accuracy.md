@@ -61,10 +61,10 @@ is configured but pre-empted.
 
 | Evidence | Value | Weight |
 |---|---|---|
-| `DailyMaxSoc` in all <!--v:snap_n-->16<!--/--> analytics files | <!--v:maxsoc_list-->`42, 72, 72, 72, 74, 59, 63, 71, 69, 69, 75, 74, 77, 75, 41, 58`<!--/-->: **max <!--v:maxsoc_max-->77<!--/-->%, never ≥80%** | strongest: written by iOS itself, but covers <!--v:snap_n-->16<!--/--> days only |
+| `DailyMaxSoc` in all <!--v:snap_n-->17<!--/--> analytics files | <!--v:maxsoc_list-->`42, 72, 72, 72, 74, 59, 63, 71, 69, 69, 75, 74, 77, 75, 41, 58, 58`<!--/-->: **max <!--v:maxsoc_max-->77<!--/-->%, never ≥80%** | strongest: written by iOS itself, but covers <!--v:snap_n-->17<!--/--> days only |
 | Charging diary, <!--v:sessions-->357<!--/--> sessions / <!--v:span_days-->85<!--/--> days | `soc_end` max **81%**; only **4** sessions ≥80% | covers the whole window |
 | `MaximumPackVoltage` | **4496 mV**, constant, lifetime peak from before 09-01 under the ~4.50 V ceiling | confirms a full charge once existed before the window; a lifetime max cannot by itself prove none happened later |
-| `CycleCountLastQmax` | **138**, identical in all <!--v:snap_n-->16<!--/--> files; `QmaxCell0 = 3824` unchanged | no Qmax learning event during the <!--v:snap_n-->16<!--/--> analytics days |
+| `CycleCountLastQmax` | **138**, identical in all <!--v:snap_n-->17<!--/--> files; `QmaxCell0 = 3824` unchanged | no Qmax learning event during the <!--v:snap_n-->17<!--/--> analytics days |
 
 Caveats kept explicit:
 

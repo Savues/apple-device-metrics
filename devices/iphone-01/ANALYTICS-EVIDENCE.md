@@ -42,7 +42,7 @@ target:
 | Current software target | 4480 mV | cannot produce a 4496 mV pack voltage |
 
 `MaximumPackVoltage` is a lifetime maximum (paired with
-`MinimumPackVoltage = 2765`), constant across all <!--v:snap_word-->sixteen<!--/--> archived snapshots.
+`MinimumPackVoltage = 2765`), constant across all <!--v:snap_word-->seventeen<!--/--> archived snapshots.
 A pack cannot reach 4496 mV while the charge target is 4480 mV, so the peak
 was necessarily recorded **before** the step, under the ~4.50 V target.
 
@@ -110,8 +110,8 @@ There are **two** percentages in this dataset. conflating them is wrong.
 |---|---|---|
 | Source | third-party export tool | Apple's own gauge field (`last_value_MaximumCapacityPercent`) |
 | Formula | `NominalChargeCapacity / 3692 × 100` (verified ≤0.005 pp over 6 rows) | Apple internal algorithm, uses its own design-capacity / calibration baseline — **not** a simple division by 3692 |
-| <!--v:base_md-->11-24<!--/--> value | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->** (integer) |
-| <!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-24<!--/--> | 99.079 → <!--v:base_health-->99.133<!--/--> (and 99.54 → 99.11 across the 6-row export) | **101 on all <!--v:snap_word-->sixteen<!--/--> days, unchanged** |
+| <!--v:base_md-->11-25<!--/--> value | **<!--v:base_health_two-->99.13<!--/-->%** | **<!--v:apple-->101<!--/-->** (integer) |
+| <!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-25<!--/--> | 99.079 → <!--v:base_health-->99.133<!--/--> (and 99.54 → 99.11 across the 6-row export) | **101 on all <!--v:snap_word-->seventeen<!--/--> days, unchanged** |
 | Granularity | 0.01 pp, derived from mAh | coarse integer, only moves on recalibration |
 | What it is | a ratio of two published numbers | the value Apple's battery-health feature uses (per multiple iOS analytics references) |
 
@@ -185,7 +185,7 @@ So the two cliffs plausibly have **different** causes:
 | 09-23 → 10-13 | 126→152, contains **138** | −0.41 pp | Qmax / gauge recalibration |
 | 11-05 → 11-09 | 194→200, ends at the **200** node | −0.43 pp | `VacVoltageLimit` 4500→4480 |
 
-This is a hypothesis, not yet proven: the <!--v:snap_word-->sixteen<!--/--> analytics files available all
+This is a hypothesis, not yet proven: the <!--v:snap_word-->seventeen<!--/--> analytics files available all
 sit at <!--v:cycle_range-->200–220<!--/--> cycles, i.e. at or after the step. An analytics snapshot from
 **before 200 cycles** (and ideally one from around 138) would show whether
 `VacVoltageLimit` was 4500 mV and
@@ -220,8 +220,8 @@ The parser reads the first header line plus two named records
 aggregated files are fine as long as those records are present. The header
 timestamp determines the archive filename — no manual naming needed.
 
-**Retention limit**: iOS keeps only about 7 days of analytics. The <!--v:snap_word-->sixteen<!--/-->
-files archived here (<!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-24<!--/-->) are the complete obtainable window. No
+**Retention limit**: iOS keeps only about 7 days of analytics. The <!--v:snap_word-->seventeen<!--/-->
+files archived here (<!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-25<!--/-->) are the complete obtainable window. No
 pre-200 snapshot exists, so a direct `VacVoltageLimit = 4500 mV` reading is
 unobtainable; see §1.1 for the indirect evidence that replaces it. Snapshots
 near cycle 138 (the Qmax hypothesis) are likewise out of reach.
@@ -263,7 +263,8 @@ python3 scripts/verify.py
 | 2026-11-21 | 11-20 04:10:58 | 216 | 4480 mV (4.48V) | 200–249 ✓ | 3688 | 3660 | 99.133% | 20 |
 | 2026-11-22 | 11-21 07:03:01 | 217 | 4480 mV (4.48V) | 200–249 ✓ | 3700 | 3660 | 99.133% | 17 |
 | 2026-11-23 | 11-22 09:12:28 | 219 | 4480 mV (4.48V) | 200–249 ✓ | 3705 | 3660 | 99.133% | 27 |
-| 2026-11-24 | 11-23 14:57:46 | **220** | 4480 mV (4.48V) | 200–249 ✓ | 3679 | 3660 | 99.133% | 36 |
+| 2026-11-24 | 11-23 14:57:46 | 220 | 4480 mV (4.48V) | 200–249 ✓ | 3679 | 3660 | 99.133% | 36 |
+| 2026-11-25 | 11-23 14:57:46 (stale) | **220** | 4480 mV (4.48V) | 200–249 ✓ | 3679 | 3660 | 99.133% | 36 |
 
 <!--/b-->
 
@@ -288,7 +289,7 @@ Combined with the 11-05 export (cycle 194, NCC 3675, 99.54%):
   `UpdateTime = 2026-11-08T09:08:37Z` = **2026-11-08 17:08 local (+0800)**,
   and `CycleCount`, `TotalOperatingTime`, SOC range and Raw all differ from
   11-10. So the step is bounded to **no later than 2026-11-08 17:08 local**.
-- <!--v:snap_word_cap-->Sixteen<!--/--> consecutive snapshots (<!--v:cycle_list-->200/202/203/203/205/207/208/209/212/212/213/215/216/217/219/220<!--/-->) all show NCC
+- <!--v:snap_word_cap-->Seventeen<!--/--> consecutive snapshots (<!--v:cycle_list-->200/202/203/203/205/207/208/209/212/212/213/215/216/217/219/220/220<!--/-->) all show NCC
   <!--v:ncc_range-->3658–3660<!--/--> and 4480 mV: a stable post-step state, not a transient.
 - Note 11-09 was a light-use day: `DailyMinSoc = 33`, `DailyMaxSoc = 42`
   (only a 9-point SOC band), consistent with the cycle counter sitting at
@@ -310,9 +311,9 @@ actually written rather than when the file was generated.
   ~7–8 days of analytics, so none is obtainable. See §1.1 for the indirect
   evidence that substitutes for it.
 
-**Noise scale.** Over the <!--v:snap_word-->sixteen<!--/--> archived files NCC varies by only **1 mAh =
+**Noise scale.** Over the <!--v:snap_word-->seventeen<!--/--> archived files NCC varies by only **1 mAh =
 0.027 pp** (including a +1 mAh rebound), while `AppleRawMaxCapacity` swings
-**<!--v:raw_list-->3707 → 3708 → 3678 → 3678 → 3690 → 3683 → 3692 → 3708 → 3681 → 3681 → 3692 → 3667 → 3688 → 3700 → 3705 → 3679<!--/--> mAh = <!--v:raw_range-->41<!--/--> mAh = <!--v:raw_range_pp-->1.111<!--/--> pp**.
+**<!--v:raw_list-->3707 → 3708 → 3678 → 3678 → 3690 → 3683 → 3692 → 3708 → 3681 → 3681 → 3692 → 3667 → 3688 → 3700 → 3705 → 3679 → 3679<!--/--> mAh = <!--v:raw_range-->41<!--/--> mAh = <!--v:raw_range_pp-->1.111<!--/--> pp**.
 The raw estimate is ~**<!--v:raw_ratio-->41<!--/-->× noisier** than the nominal capacity, which is
 exactly why it is not used for the health figure. The −0.43 pp cliff is ~16×
 the daily NCC noise, so it is a real step, not sampling jitter.
