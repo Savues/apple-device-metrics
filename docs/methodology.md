@@ -73,7 +73,7 @@ This file confirms the exact source of each health-table column:
 | `iOS` | header `os_version` |
 | `Hrs Soc` | no matching field found |
 
-Note `MaximumCapacityPercent` in the analytics is **101**, not <!--v:base_health_two-->99.13<!--/--> — the
+Note `MaximumCapacityPercent` in the analytics is **101**, not <!--v:base_health_two-->99.16<!--/--> — the
 export tool's `Nominal Health` is its own ratio, not that system field.
 See [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.md) §6:
 all stepwise-decay conclusions in this repo describe the NCC-derived ratio,
@@ -157,7 +157,7 @@ Source-log integrity: <!--v:sessions-->357<!--/-->/<!--v:sessions-->357<!--/--> 
   final analysis — the curve is steep near full charge. An earlier linear
   estimate of 4.132 V at 70% was wrong (see `corrections.md`).
 - **Retention ceiling**: iOS keeps only ~7–8 days of daily analytics. The
-  archive (<!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-25<!--/-->) is the complete obtainable window; no pre-200 or
+  archive (<!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-27<!--/-->) is the complete obtainable window; no pre-200 or
   ~138-cycle snapshot exists. A direct 4500 mV reading and the exact step
   timestamp are unrecoverable. The lifetime `MaximumPackVoltage = 4496 mV`
   is used as indirect evidence of the earlier ceiling instead.

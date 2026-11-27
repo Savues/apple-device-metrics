@@ -65,7 +65,7 @@ D 标注，而充电日志使用自然日。
 | `iOS` | 文件头 `os_version` |
 | `Hrs Soc` | 未找到对应字段 |
 
-注意 analytics 中的 `MaximumCapacityPercent` 为 **101**，而不是 <!--v:base_health_two-->99.13<!--/--> —— 导出工具的 `Nominal Health` 是它自己计算的比值，并非该系统字段。
+注意 analytics 中的 `MaximumCapacityPercent` 为 **101**，而不是 <!--v:base_health_two-->99.16<!--/--> —— 导出工具的 `Nominal Health` 是它自己计算的比值，并非该系统字段。
 见 [`ANALYTICS-EVIDENCE.md`](../devices/iphone-01/ANALYTICS-EVIDENCE.zh.md) §6：
 本仓库中所有阶跃式衰减的结论描述的都是基于 NCC 推导的比值，而 Apple 自己的健康度字段在跨越 200 循环阶跃时始终保持 101。
 
@@ -129,5 +129,5 @@ D 标注，而充电日志使用自然日。
 - 电压核对中使用的 OCV 曲线是 4.5 V 级电芯的典型曲线，而非该电芯的实测曲线。该映射仅供参考。
 - 循环节点电压表来自第三方，且不同来源之间相互矛盾；见 `voltage-nodes.md`。
 - 最终分析中明确**不**使用 SOC 与电压之间的线性假设 —— 曲线在接近满充时很陡。早先对 70% 处 4.132 V 的线性估计是错误的（见 `corrections.md`）。
-- **保留期上限**：iOS 只保留约 7–8 天的每日 analytics。归档（<!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-25<!--/-->）已是可获取的完整窗口；不存在 200 循环之前或约 138 循环时的快照。直接的 4500 mV 读数和阶跃的确切时间戳均无法恢复。改为以生命周期内的 `MaximumPackVoltage = 4496 mV`
+- **保留期上限**：iOS 只保留约 7–8 天的每日 analytics。归档（<!--v:first_md-->11-09<!--/--> … <!--v:base_md-->11-27<!--/-->）已是可获取的完整窗口；不存在 200 循环之前或约 138 循环时的快照。直接的 4500 mV 读数和阶跃的确切时间戳均无法恢复。改为以生命周期内的 `MaximumPackVoltage = 4496 mV`
   作为此前上限的间接证据。

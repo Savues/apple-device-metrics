@@ -129,6 +129,11 @@ def values():
         "cycle_list": "/".join(map(str, cycles)),
         "cycle_last": str(cycles[-1]),
         "ncc_range": f"{min(ncc)}–{max(ncc)}",
+        "ncc_chain": "→".join(str(x) for x in sorted(set(ncc))),
+        # The cliff measured against the whole NCC spread, not a single 1 mAh
+        # step: the file set has widened to 3 mAh, which makes the old "16×
+        # one step" claim read as stronger evidence than it is.
+        "cliff_over_ncc": f"{P['step_pp_per_node'] / ((max(ncc) - min(ncc)) / RATED * 100):.1f}",
         "raw_list": " → ".join(map(str, raw)),
         "raw_range": str(raw_range),
         "raw_range_pp": f"{raw_range / RATED * 100:.3f}",
